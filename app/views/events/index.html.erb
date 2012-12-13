@@ -1,0 +1,25 @@
+<div style="float:right"><%= link_to 'Sign out', {:controller => "devise/sessions", :action => "destroy" }, :method => :delete %>
+</div>
+<h1>Listing events</h1>
+<%= flash[:notice] %>
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @events.each do |event| %>
+  <tr>
+		<td style="align:left"><%= event.name %></td>
+		<td style="align:center"><%= "from " + event.start_date.strftime("%m/%d/%Y") + " to "+event.end_date.strftime("%m/%d/%Y") %></td>
+    <td><%= link_to 'Show', event %></td>
+    <td><%= link_to 'Edit', edit_event_path(event) %></td>
+    <td><%= link_to 'Destroy', event, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Event', new_event_path %>

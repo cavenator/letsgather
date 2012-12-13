@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+<p>
+<%= "Name: " %>
+<%= @event.name %>
+</p>
+<p>
+<%= "Start Date: " %>
+<%= @event.start_date %>
+</p>
+<p>
+<%= "End Date: " %>
+<%= @event.end_date %>
+</p>
+<%= link_to 'Edit', edit_event_path(@event) %> |
+<%= link_to 'Back', events_path %>
+
+<div id="plan_itinerary" style="display:inline-table;width:100%">
+<span id="left_pane" style="width: 30%; display: inline-block;">
+
+<input id="guests" type="button" value="Guests" style="
+    font-size: 20px;
+    border-radius: 1px;
+    color: blue;
+    background-color: lightgrey;
+    padding: 10px 50px;
+" onclick="render_content('guests');"><br><input id="the_plan" type="button" value="The Plan" style="
+    font-size: 20px;
+    border-radius: 1px;
+    color: blue;
+    background-color: lightgrey;
+    padding: 10px 50px;
+"><input id="travel_accommodations" type="button" value="Travel Accommodations" style="
+    font-size: 20px;
+    border-radius: 1px;
+    color: blue;
+    background-color: lightgrey;
+    padding: 10px 50px;
+"><input id="discussions" type="button" value="Discussions" style="
+    font-size: 20px;
+    border-radius: 1px;
+    color: blue;
+    background-color: lightgrey;
+    padding: 10px 50px;
+"><input id="supplemental_info" type="button" value="Supplemental Info" style="
+    font-size: 20px;
+    border-radius: 1px;
+    color: blue;
+    background-color: lightgrey;
+    padding: 10px 50px;
+" onclick="render_content('supplemental_info')"><input id="photos" type="button" value="Photos" style="
+    font-size: 20px;
+    border-radius: 1px;
+    color: blue;
+    background-color: lightgrey;
+    padding: 10px 50px;
+">
+</span><span><iframe id="frame_content" style="width: 65%; height: 100%; float: right; display: inline-block;"></iframe></span>
+</div>
+
