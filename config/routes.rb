@@ -1,10 +1,14 @@
 MaximusSamurai::Application.routes.draw do
+#  resources :attendees
+
   devise_for :views
 
 	match 'events/load_frame_content' => 'events#422'
 	match 'events/load_other_content' => 'events#404'
 
-  resources :events
+  resources :events do
+		resources :attendees
+  end
 
   devise_for :users
 

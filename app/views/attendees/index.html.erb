@@ -1,0 +1,27 @@
+<h1>Listing attendees <%= @event.attendees.count %></h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+		<th></th>
+		<th></th>
+		<th></th>
+  </tr>
+
+<% @event.attendees.each do |attendee| %>
+  <tr>
+		<td style="width:20%"><%= attendee.full_name %></td>
+		<td style="width:20%"><%= attendee.email %></td>
+		<td style="width:20%"><%= attendee.rsvp %></td>
+    <td style="width:15%;float:left;"><%= link_to 'Show', event_attendee_url(@event, attendee) %></td>
+    <td style="width:15%;float:left;"><%= link_to 'Edit', edit_event_attendee_url(@event, attendee) %></td>
+    <td style="width:10%;float:left;"><%= link_to 'Destroy', event_attendee_url(@event, attendee), confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Attendee', new_event_attendee_path %>

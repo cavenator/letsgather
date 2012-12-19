@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+	<label for="full_name">Full name: </label>
+	<%= @attendee.full_name %>
+</p>
+
+<p>
+	<label for="email">Email: </label>
+	<%= @attendee.email %>
+</p>
+
+<p>
+	<label for="rsvp">RSVP: </label>
+	<%= @attendee.rsvp %>
+</p>
+
+<%= link_to 'Edit', edit_event_attendee_url(@event, @attendee) %> |
+<%= link_to 'Back', event_attendees_url(@event) %>

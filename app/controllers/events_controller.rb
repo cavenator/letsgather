@@ -5,10 +5,10 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
-    @events = Event.all
+    @events = current_user.events
 	
 	if user_signed_in?
-	   flash[:notice] = "Welcome back, stranger!"
+	   flash[:notice] = "Welcome back, #{current_user.full_name}!"
     else
 	   flash[:notice] = "You need to sign in first"
 	end
@@ -50,9 +50,10 @@ class EventsController < ApplicationController
   # POST /events.json
   def create
     @event = Event.new(params[:event])
-
+		@event.user_id = current_user.id
     respond_to do |format|
       if @event.save
+				Attendee.create(:user_id => current_user.id, :full_name => current_user.full_name, :email => current_user.email, :rsvp => 'Going')
         format.html { redirect_to @event, notice: 'Event was successfully created.' }
         format.json { render json: @event, status: :created, location: @event }
       else
