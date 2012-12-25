@@ -3,8 +3,8 @@ MaximusSamurai::Application.routes.draw do
 
   devise_for :views
 
-	match 'events/load_frame_content' => 'events#422'
-	match 'events/load_other_content' => 'events#404'
+	match 'events/:id/supplemental_info' => 'events#supplemental_info'
+	match 'events/:id/supplmenetal_info/edit' => 'events#edit_supplemental_info'
 
   resources :events do
 		resources :attendees

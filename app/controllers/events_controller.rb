@@ -6,7 +6,7 @@ class EventsController < ApplicationController
     @events = current_user.events
 	
 	if user_signed_in?
-	   flash[:notice] = "Welcome back, #{current_user.full_name}!"
+	   flash.now[:notice] = "Welcome back, #{current_user.full_name}!"
     else
 	   flash[:notice] = "You need to sign in first"
 	end
@@ -89,11 +89,12 @@ class EventsController < ApplicationController
     end
   end
 
-	def load_frame_content
-		render "422"
+	def supplemental_info
+		@event = Event.find(params[:id])
 	end
 
-	def load_other_content
-		render "404"
+	def edit_supplemental_info
+		@event = Event.find(params[:id])
 	end
+
 end
