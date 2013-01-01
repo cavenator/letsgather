@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MaximusSamurai</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+</head>
+<body style="background-color:lightgrey;margin-left:10em;margin-right:10em">
+<div class="container-fluid" style="background-color:white;margin-left:10em;margin-right:20em">
+<%= yield %>
+</div>
+</body>
+</html>
