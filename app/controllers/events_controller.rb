@@ -91,10 +91,12 @@ class EventsController < ApplicationController
 
 	def supplemental_info
 		@event = Event.find(params[:id])
+		render :layout => false
 	end
 
 	def edit_supplemental_info
 		@event = Event.find(params[:id])
+		render :layout => false
 	end
 
 end

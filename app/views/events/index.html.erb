@@ -3,22 +3,28 @@
 		<div class="alert alert-success"><%= flash[:notice] %></div>
 <% end %>
 
-<table>
+<table class="table table-hover table-striped">
+  <thead>
   <tr>
+    <th>Event Name</th>
+    <th>Time Frame</th>
     <th></th>
-    <th></th>
-    <th></th>
+		<th></th>
+		<th></th>
   </tr>
+	</thead>
 
+	<tbody>
 <% @events.each do |event| %>
   <tr>
-		<td style="align:left"><%= event.name %></td>
-		<td style="align:center"><%= "from " + event.start_date.strftime("%m/%d/%Y") + " to "+event.end_date.strftime("%m/%d/%Y") %></td>
+		<td style="font-size:16px"><%= event.name %></td>
+		<td style="font-size:16px"><%= "from " + event.start_date.strftime("%m/%d/%Y") + " to "+event.end_date.strftime("%m/%d/%Y") %></td>
     <td><%= link_to 'Show', event %></td>
     <td><%= link_to 'Edit', edit_event_path(event) %></td>
     <td><%= link_to 'Destroy', event, confirm: 'Are you sure?', method: :delete %></td>
   </tr>
 <% end %>
+</tbody>
 </table>
 
 <br />

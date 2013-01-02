@@ -17,10 +17,13 @@
 		}
 </script>
 </head>
-<body>
-<div style="float:right"><%= link_to 'Sign out', {:controller => "devise/sessions", :action => "destroy" }, :method => :delete %>¬
+<body style="padding:1em 5em 5em 5em;">
+<div class="container-fluid">
+<div class="navbar"><div class="navbar-inner">
+<div class="nav" style="float:right;color:black;font-size:16px"><%= link_to 'Sign out', {:controller => "devise/sessions", :action => "destroy" }, {:method => :delete, :class=>"brand"} %>¬
 </div>
+</div></div>
 <%= yield %>
-
+</div>
 </body>
 </html>
