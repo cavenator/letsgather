@@ -99,4 +99,9 @@ class EventsController < ApplicationController
 		render :layout => false
 	end
 
+	def edit_location
+		@event = Event.find(params[:id])
+		render :layout => false
+	end
+
 end

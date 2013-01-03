@@ -5,6 +5,7 @@ MaximusSamurai::Application.routes.draw do
 
 	match 'events/:id/supplemental_info' => 'events#supplemental_info'
 	match 'events/:id/supplmenetal_info/edit' => 'events#edit_supplemental_info'
+	match 'events/:id/change_location' => 'events#edit_location'
 
   resources :events do
 		resources :attendees

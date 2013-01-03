@@ -1,4 +1,6 @@
-<p id="notice"><%= notice %></p>
+<% if flash[:notice] %>
+<div class="alert alert-success" id="notice"><%= notice %></div>
+<% end %>
 <div class="row">
 <div class="span4">
 <div>
@@ -11,7 +13,13 @@
 <%= link_to 'Edit', edit_event_path(@event) %> | <%= link_to 'Back', events_path %></div>
 </div>
 </div><div id="location_div" class="span4">
-	<button id="location-href" href="#locationModal" data-toggle="modal">Update Location</button>
+	<% if @event.location %>
+		<%= @event.location1 %><br />
+		<%= @event.location2 %>
+	<% end %>
+	<div>
+		<button id="location-href" href="#locationModal" data-toggle="modal" style="margin:10px 0px 0px 0px">Update Location</button>
+	</div>
 </div>
 <div class="span4"> Put potluck outstanding items here</div>
 </div>
@@ -29,25 +37,12 @@
 </div><div class="span9"><iframe id="frame_content" style="width:100%;height:100%;position:relative"></iframe></div>
 </div>
 
-	<div id="locationModal" class="modal hide">
+	<div id="locationModal" class="modal hide" data-remote="">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal">×</button>
 			<h2>Edit Location</h3>
 		</div>
 		<div class="modal-body">
-			<form id="location_form" method="PUT">
-				<label for="address1">Address (Line 1):</label>
-				<input type="text" id="address1" placeholder="Enter first line here ..." />
-				<label for="address2">Address (Line 2 optional):</label>
-				<input type="text" id="address2" />
-				<label for="city">City: </label>
-				<input type="text" id="city" />
-				<label for="state">State: </label>
-				<input type="text" id="state" />
-				<label for="zip_code">Zip Code: </label>
-				<input type="text" id="zip_code" />
-				<input type="submit" class="btn btn-primary" value="Update" />
-			</form>
 		</div>
 		<div class="modal-footer">
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
@@ -55,6 +50,7 @@
 	</div>
 <script>
 	$(document).ready(function() {
+	$("#locationModal").attr('data-remote',document.location.pathname+"/change_location");
 	$("#guests").click(function(){
 			$("#supplemental_info").removeClass("active");
 			$(this).addClass("active");
