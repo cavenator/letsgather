@@ -10,7 +10,7 @@
 <span style="font-weight:bold;font-size:14px">Start Date: </span>
 <span style="font-size:14px"><%= @event.start_date %></span>
 <div style="margin-top:1em">
-<%= link_to 'Edit', edit_event_path(@event) %> | <%= link_to 'Back', events_path %></div>
+<%= link_to 'Edit', edit_event_path(@event), :class=>"btn btn-link" %> | <%= link_to 'Back', events_path, :class=>"btn btn-link" %></div>
 </div>
 </div><div id="location_div" class="span4">
 	<% if @event.location %>
@@ -18,10 +18,16 @@
 		<%= @event.location2 %>
 	<% end %>
 	<div>
-		<button id="location-href" href="#locationModal" data-toggle="modal" style="margin:10px 0px 0px 0px">Update Location</button>
+		<button id="location-href" href="#locationModal" class="btn btn-primary" data-toggle="modal" style="margin:10px 0px 0px 0px">Update Location</button>
 	</div>
 </div>
-<div class="span4"> Put potluck outstanding items here</div>
+	<div class="span4"> Put potluck outstanding items
+		<div><span class="label label-success">Appetizers and Sides (0)</span></div>
+		<div><span class="label label-warning">Salads (2)</span></div>
+		<div><span class="label label-warning">Main Dishes (3)</span></div>
+		<div><span class="label label-warning">Sides (1)</span></div>
+		<div><span class="label label-success">Desserts (0)</span></div>
+	</div>
 </div>
 <div class="row">
 <hr/>
@@ -31,7 +37,7 @@
 	<a>Guest list</a>
 	</li>
 	<li id="supplemental_info">
-		<a>Good to know</a>
+		<a href="#" data-target="#supplementalInfoModal" data-toggle="modal">Good to know</a>
 	</li>
 </ul>
 </div><div class="span9"><iframe id="frame_content" style="width:100%;height:100%;position:relative"></iframe></div>
@@ -48,9 +54,23 @@
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
 		</div>
 	</div>
+
+
+	<div id="supplementalInfoModal" class="modal hide" data-remote="">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h2>Provide info here</h3>
+		</div>
+		<div class="modal-body">
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
 <script>
 	$(document).ready(function() {
 	$("#locationModal").attr('data-remote',document.location.pathname+"/change_location");
+	$("#supplementalInfoModal").attr('data-remote',document.location.pathname+"/supplemental_info");
 	$("#guests").click(function(){
 			$("#supplemental_info").removeClass("active");
 			$(this).addClass("active");
@@ -59,7 +79,8 @@
 	$("#supplemental_info").click(function(){
 			$("#guests").removeClass("active");
 			$(this).addClass("active");
-			render_content("supplemental_info");
+			$("#frame_content").attr('src',"");
+			$("#supplementalInfoModal").modal('show');
 		});
 	});
 	

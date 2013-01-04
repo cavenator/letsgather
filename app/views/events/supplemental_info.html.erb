@@ -1,3 +1,5 @@
-<%= @event.supplemental_info %>
-
-<%= link_to 'Edit',:action=>'edit_supplemental_info', :id=>@event.id %>
+<%= form_for(@event) do |f| %>
+	<%= f.text_area :supplemental_info, :placeholder=> "Enter info like 'We are passed the pool on the left-side when you turn left at the first stop sign' or 'Gate code is 9832. Enter through the visitors side' and so on  ...", :style => "width:500px;margin:0px 0px 10px;height:200px" %>
+<p>
+	<%= f.submit 'Update', :class=>"btn btn-primary" %></p>
+<% end %>

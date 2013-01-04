@@ -5,7 +5,6 @@ class AttendeesController < ApplicationController
   # GET /attendees.json
   def index
 		@event = Event.find(params[:event_id])
-		puts "Attendees count = #{@event.attendees.count}"
 
     respond_to do |format|
       format.html # index.html.erb

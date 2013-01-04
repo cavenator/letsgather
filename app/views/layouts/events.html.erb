@@ -19,10 +19,21 @@
 <body style="padding:1em 5em 5em 5em;">
 <div class="container-fluid">
 <div class="navbar"><div class="navbar-inner">
-<div class="nav" style="float:right;color:black;font-size:16px"><%= link_to 'Sign out', {:controller => "devise/sessions", :action => "destroy" }, {:method => :delete, :class=>"brand"} %>¬
+<div class="nav" style="float:right">
+<a id="accountLink" class="brand" data-toggle="modal" data-target="#userModal" onclick="$('#userModal').modal('show');">Edit Profile</a>
+<%= link_to 'Sign out', {:controller => "devise/sessions", :action => "destroy" }, {:method => :delete, :class=>"brand"} %>
 </div>
 </div></div>
 <%= yield %>
+</div>
+<div class="modal hide" id="userModal" data-remote="/users/edit">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	</div>
+	<div class="modal-body"></div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal">Close</button>
+	</div>
 </div>
 </body>
 </html>
