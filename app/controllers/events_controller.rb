@@ -5,12 +5,6 @@ class EventsController < ApplicationController
   def index
     @events = current_user.events
 	
-	if user_signed_in?
-	   flash.now[:notice] = "Welcome back, #{current_user.full_name}!"
-    else
-	   flash[:notice] = "You need to sign in first"
-	end
-
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @events }

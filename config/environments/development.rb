@@ -15,17 +15,16 @@ MaximusSamurai::Application.configure do
 
   require 'tlsmail'       
   Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)   
-  ActionMailer::Base.delivery_method = :smtp   
-  ActionMailer::Base.perform_deliveries = true   
-  ActionMailer::Base.raise_delivery_errors = true   
-  ActionMailer::Base.smtp_settings = {   
+  config.action_mailer.delivery_method = :smtp   
+  config.action_mailer.perform_deliveries = true   
+  config.action_mailer.raise_delivery_errors = true   
+  config.action_mailer.smtp_settings = {   
     :address => "smtp.gmail.com",
     :port => 587,
     :authentication => :plain,
-	:tls => true,  
 	 :domain => 'gmail.com',
-	 :user_name => 'cavenator',
-	 :password => 'Leonidas-300',
+	 :user_name => 'mydevmailer@gmail.com',
+	 :password => 'MyD3vM#*l3r',
     :enable_starttls_auto => true
   }
   # Don't care if the mailer can't send
