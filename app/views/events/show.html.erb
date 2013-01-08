@@ -9,6 +9,7 @@
 </div><div>
 <span style="font-weight:bold;font-size:14px">Start Date: </span>
 <span style="font-size:14px"><%= @event.start_date %></span>
+<span style="font-size:14px"><%= @event.rsvp_date %></span>
 <div style="margin-top:1em">
 <%= link_to 'Edit', edit_event_path(@event), :class=>"btn btn-link" %> | <%= link_to 'Back', events_path, :class=>"btn btn-link" %></div>
 </div>
@@ -22,11 +23,11 @@
 	</div>
 </div>
 	<div class="span4"> Put potluck outstanding items
-		<div><span class="label label-success">Appetizers and Sides (0)</span></div>
-		<div><span class="label label-warning">Salads (2)</span></div>
-		<div><span class="label label-warning">Main Dishes (3)</span></div>
-		<div><span class="label label-warning">Sides (1)</span></div>
-		<div><span class="label label-success">Desserts (0)</span></div>
+		<div><span class="label label-success">Appetizers and Sides (<%= @event.inventory_count.app_count %>)</span></div>
+		<div><span class="label label-success">Salads (<%= @event.inventory_count.salads_count %>)</span></div>
+		<div><span class="label label-success">Main Dishes (<%= @event.inventory_count.main_dish_count %>)</span></div>
+		<div><span class="label label-success">Sides (<%= @event.inventory_count.sides_count %>)</span></div>
+		<div><span class="label label-success">Desserts (<%= @event.inventory_count.desserts_count %>)</span></div>
 	</div>
 </div>
 <div class="row">

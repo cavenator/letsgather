@@ -19,7 +19,7 @@
   <tr>
 		<div class="event-line">
 		<td style="font-size:16px"><%= event.name %></td>
-		<td style="font-size:16px"><%= "from " + event.start_date.strftime("%m/%d/%Y") + " to "+event.end_date.strftime("%m/%d/%Y") %></td>
+		<td style="font-size:16px"><%= "Starts on "+ event.start_date.strftime("%m/%d/%Y") %></td>
     <td><%= link_to 'Show', event %></td>
     <td><%= link_to 'Edit', edit_event_path(event) %></td>
     <td><%= link_to 'Destroy', event, confirm: 'Are you sure?', method: :delete %></td>

@@ -1,16 +1,28 @@
 class Event < ActiveRecord::Base
 		has_many :attendees
 		belongs_to :user
+		has_one :inventory_count
 
-		validates :name,:user_id, :start_date, :presence => true
+		validates :name,:user_id, :start_date, :rsvp_date, :presence => true
 		validate :start_date_must_be_in_the_future
+		validate :rsvp_date_should_be_less_than_start_date
 
-   attr_accessible :name, :start_date, :end_date, :user_id, :supplemental_info, :address1, :address2, :city, :state, :zip_code
+   attr_accessible :name, :start_date, :end_date, :user_id, :rsvp_date, :supplemental_info, :address1, :address2, :city, :state, :zip_code
+
+	after_create do |event|
+		InventoryCount.create(:event_id => event.id)
+	end
 
 	def start_date_must_be_in_the_future
 			unless self.start_date.eql?(nil)
 				errors.add(:start_date,"cannot start in the past") if self.start_date < Date.today
 			end
+	end
+
+	def rsvp_date_should_be_less_than_start_date
+		unless self.rsvp_date.eql?(nil) || self.start_date.eql?(nil)
+			errors.add(:rsvp_date, "rsvp date must be before the event start date") if self.rsvp_date >= self.start_date
+		end
 	end
 
 	def location
