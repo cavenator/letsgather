@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MaximusSamurai</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<%= yield %>
+
+</body>
+<script>
+  $(document).ready(function(){
+		$("#add-more").click(function(){
+			var form = $("#form-proxy");
+			var additionalDiv = $("<div></div>");
+			var emailText = $("<input type='text' class='input-large' placeholder='Email'>");
+			var removeButton = $("<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em'>Remove</button>");
+			removeButton.click(function(){
+				additionalDiv.remove();
+			});
+			emailText.click(function(){
+				$(this).removeAttr('style');
+			});
+			additionalDiv.appendTo(form);
+			emailText.appendTo(additionalDiv);
+			removeButton.appendTo(additionalDiv);
+		});
+		$("#submit").click(function(){
+			var outputJSON = {};
+			var emailArray = [];
+			$(".input-large").each(function(index, data){
+					var value = $(data).val();
+					if ($.trim(value).length == 0){
+						$(data).css('background-color','red');
+						return true;
+					}
+					emailArray.push(value);
+			});
+			if ( $(".input-large[style]").length > 0){
+				var count = $(".input-large[style]").length;
+				$("#alert-flash").addClass("alert alert-error");
+				$("#alert-flash").text("There are currently "+count+" blank email entries. Please either remove them or populate them.");
+			}
+			else {
+				outputJSON["email"] = emailArray;
+//Be sure to post this and do some work.
+			}
+		});
+
+		//Need this for the first entry since the others are dynamically added.
+		$(".input-large").click(function(){ $(this).removeAttr('style'); });
+	});
+</script>
+</html>

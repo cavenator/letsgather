@@ -82,6 +82,9 @@ class AttendeesController < ApplicationController
     end
   end
 
+	def add_attendees
+	end
+
   # DELETE /attendees/1
   # DELETE /attendees/1.json
   def destroy

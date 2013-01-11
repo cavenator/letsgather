@@ -8,7 +8,8 @@ MaximusSamurai::Application.routes.draw do
 	match 'events/:id/change_location' => 'events#edit_location'
 
   resources :events do
-		resources :attendees
+		get 'attendees/add_attendees', :to => 'attendees#add_attendees'
+		resources :attendees 
   end
 
   devise_for :users
