@@ -1,0 +1,27 @@
+<h1>Invite Confirmation</h1>
+<% if @invites["successful"].length > 0 %>
+<div class="alert alert-success">The following emails have been successfully delivered:</div>
+<div class="row">
+<div class="span6 offset2">
+<% @invites["successful"].each do |email| %>
+	<br/>
+	<%= email %>
+<% end %>
+</div>
+</div>
+<% end %>
+
+<% if @invites["unsuccessful"].length > 0 %>
+<div class="alert alert-error">These emails were invalid and could not be sent:</div>
+<div class="row">
+<div class="span6 offset2">
+<% @invites["unsuccessful"].each do |email| %>
+	<br/>
+	<%= email %>
+<% end %>
+</div>
+</div>
+<% end %>
+
+
+<%= link_to 'Back To event', @event %>

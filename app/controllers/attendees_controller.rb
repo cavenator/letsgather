@@ -1,6 +1,9 @@
 
 class AttendeesController < ApplicationController
 
+	#The reason why I did this was because I was getting a "WARNING: Can't verify CSRF token authenticity" and would sign the user out.
+
+	protect_from_forgery :except => :invite_guests 
   # GET /attendees
   # GET /attendees.json
   def index
@@ -83,6 +86,16 @@ class AttendeesController < ApplicationController
   end
 
 	def add_attendees
+	end
+
+	def invite_guests
+		@event = Event.find(params[:event_id])
+		email_invites = JSON.parse(params[:email_invites])
+		@invites = Attendee.invite(email_invites["email"], @event)
+		respond_to do |format|
+			format.html { render "invite_guests", layout: false }
+      format.json  { render json: params[:email_invites] }
+    end
 	end
 
   # DELETE /attendees/1

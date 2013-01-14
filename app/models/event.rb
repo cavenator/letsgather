@@ -26,7 +26,7 @@ class Event < ActiveRecord::Base
 	end
 
 	def location
-		return (self.address1 + self.address2 + self.city + self.state + self.zip_code).length > 0
+		return true unless self.address1.eql?(nil)
 	end
 
 	def location1

@@ -9,6 +9,7 @@ MaximusSamurai::Application.routes.draw do
 
   resources :events do
 		get 'attendees/add_attendees', :to => 'attendees#add_attendees'
+		post 'attendees/invite_guests', :to => 'attendees#invite_guests'
 		resources :attendees 
   end
 
