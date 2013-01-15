@@ -20,6 +20,24 @@ MaximusSamurai::Application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
 
+  require 'tlsmail'       
+  Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)   
+  config.action_mailer.delivery_method = :smtp   
+  config.action_mailer.perform_deliveries = true   
+  config.action_mailer.raise_delivery_errors = true   
+  config.action_mailer.smtp_settings = {   
+    :address => "smtp.gmail.com",
+    :port => 587,
+    :authentication => :plain,
+	 :domain => 'gmail.com',
+	 :user_name => 'mydevmailer@gmail.com',
+	 :password => 'MyD3vM#*l3r',
+    :enable_starttls_auto => true
+  }
+
+  # Don't care if the mailer can't send
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+
   # Defaults to nil and saved in location specified by config.assets.prefix
   # config.assets.manifest = YOUR_PATH
 

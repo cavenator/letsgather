@@ -7,7 +7,7 @@ gem 'rails', '3.2.4'
 
 gem 'devise'
 gem 'tlsmail'
-
+gem 'pg'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -25,7 +25,7 @@ gem 'jquery-rails'
 
 group :test, :development do
   gem 'rspec-rails'
-  gem 'sqlite3'
+#  gem 'sqlite3'
 #  gem 'mysql'
   gem 'factory_girl_rails'
 end
