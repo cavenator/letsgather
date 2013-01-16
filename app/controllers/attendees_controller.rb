@@ -73,6 +73,7 @@ class AttendeesController < ApplicationController
   def update
     @attendee = Attendee.find(params[:id])
 		@event = Event.find(params[:event_id])
+		@user = User.new
 
     respond_to do |format|
       if @attendee.update_attributes(params[:attendee])

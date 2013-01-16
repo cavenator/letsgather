@@ -6,7 +6,7 @@
   <body>
     <h1>Welcome, <%= @attendee.email %></h1>
     <p>
-      <%= @host.full_name %> has invited you to their event: <%= @event.name%>. This is scheduled to occur at <%= @event.start_date %>.  Please sign in and RSVP by the following date: <%= @event.rsvp_date %>. If you do not have an account with us, please sign into <a href="http://localhost:3000/users/sign_in">MaximusSamurai</a> and create an account using this email (otherwise, you will not be able to rsvp). If you do decide to create an account using a different email address, notify <%= @host.full_name %> at <%= @host.email %> and inform them which email you would prefer to use.<br /><br/>
+      <%= @host.full_name %> has invited you to their event: <%= @event.name%>. This is scheduled to occur at <%= @event.start_date %>.  Please sign in and RSVP by the following date: <%= @event.rsvp_date %>. If you do not have an account with us, please sign into <%= link_to 'Maximus Samurai', root_url %> and create an account using this email (otherwise, you will not be able to rsvp). If you do decide to create an account using a different email address, notify <%= @host.full_name %> at <%= @host.email %> and inform them which email you would prefer to use.<br /><br/>
       Your username is: <%= @attendee.email %>.<br/>
     </p>
     <p>Thanks and have a great day!</p>
