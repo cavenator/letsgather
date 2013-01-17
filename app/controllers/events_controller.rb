@@ -1,9 +1,12 @@
 
 class EventsController < ApplicationController
+	before_filter :align_attendee_events, :only => :index
   # GET /events
   # GET /events.json
   def index
-    @events = current_user.events
+		attendee_event_ids = Attendee.where("user_id=?",current_user.id).map{|attendee| attendee.event_id }
+		attendee_events = Event.find(attendee_event_ids)
+		@events = current_user.events | attendee_events
 	
     respond_to do |format|
       format.html # index.html.erb
@@ -95,6 +98,16 @@ class EventsController < ApplicationController
 	def edit_location
 		@event = Event.find(params[:id])
 		render :layout => false
+	end
+
+	protected
+
+	def align_attendee_events
+		user_attendee_event = Attendee.where("user_id is null and email=?",current_user.email)
+		user_attendee_event.each do |attendee_user|
+			attendee_user.user_id = current_user.id
+			attendee_user.save
+		end
 	end
 
 end
