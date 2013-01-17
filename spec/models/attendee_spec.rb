@@ -43,9 +43,6 @@ describe Attendee do
 			expect(invites["unsuccessful"].count) == 2
 		end
 
-		it "should deliver an email upon successful email validation" do
-
-		end
 	end
 
 end

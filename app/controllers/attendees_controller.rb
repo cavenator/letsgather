@@ -51,11 +51,7 @@ class AttendeesController < ApplicationController
     @attendee = Attendee.new(params[:attendee])
 		@event = Event.find(params[:event_id])
 		@attendee.event_id = @event.id
-		if (!User.find_by_email(@attendee.email).blank?)
-			@attendee.rsvp = 'Undecided'
-		else
-			@attendee.rsvp = 'Invitation Pending'
-		end
+		@attendee.rsvp = 'Undecided'
 		puts "Inside create;  attendee = ${@attendee}"
     respond_to do |format|
       if @attendee.save

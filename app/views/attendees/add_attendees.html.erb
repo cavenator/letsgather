@@ -17,17 +17,6 @@
 <form accept-charset="UTF-8" action="" class="form-horizontal" method="post">
 		<input type="hidden" name="email_invites" id="email_invites" value="" >
 </form>
-<div id="progressModal" class="modal hide">
-	<div class="modal-header">
-		<h3>Invitations in progress</h3>
-	</div>
-	<div class="modal-body">
-		<p>Please wait patiently ... </p>
-		<div class="progress progress-striped active">
-			<div class="bar" style="width: 50%;"></div>
-		</div>
-	</div>
-</div>
 <script>
   $(document).ready(function(){
 		$("#add-more").click(function(){
@@ -48,7 +37,6 @@
 		$("#submit").click(function(){
 			var outputJSON = {};
 			var emailArray = [];
-			$("#progressModal").modal('show');
 			$(".input-large").each(function(index, data){
 					var value = $(data).val();
 					if ($.trim(value).length == 0){

@@ -12,7 +12,7 @@ class Attendee < ActiveRecord::Base
 				if email.match(/^([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})$/i)
 					email_hash["successful"] << email
 					attendee = Attendee.create(:event_id => event.id, :email => email, :rsvp => "Undecided")
-					AttendeeMailer.welcome_guest(attendee).deliver
+					Thread.new { AttendeeMailer.welcome_guest(attendee).deliver }
 				else
 					email_hash["unsuccessful"] << email
 				end

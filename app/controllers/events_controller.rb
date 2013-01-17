@@ -45,7 +45,6 @@ class EventsController < ApplicationController
 		@event.user_id = current_user.id
     respond_to do |format|
       if @event.save
-				Attendee.create(:user_id => current_user.id, :full_name => current_user.full_name, :email => current_user.email, :rsvp => 'Going')
         format.html { redirect_to @event, notice: 'Event was successfully created.' }
         format.json { render json: @event, status: :created, location: @event }
       else
