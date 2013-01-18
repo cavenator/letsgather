@@ -48,6 +48,7 @@ class EventsController < ApplicationController
 		@event.user_id = current_user.id
     respond_to do |format|
       if @event.save
+				Role.create(:user_id => current_user.id, :event_id => @event.id, :privilege => "host")
         format.html { redirect_to @event, notice: 'Event was successfully created.' }
         format.json { render json: @event, status: :created, location: @event }
       else
@@ -106,6 +107,7 @@ class EventsController < ApplicationController
 		user_attendee_event = Attendee.where("user_id is null and email=?",current_user.email)
 		user_attendee_event.each do |attendee_user|
 			attendee_user.user_id = current_user.id
+			Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => "guest")
 			attendee_user.save
 		end
 	end

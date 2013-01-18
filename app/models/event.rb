@@ -1,7 +1,7 @@
 class Event < ActiveRecord::Base
-		has_many :attendees
+		has_many :attendees, :dependent => :destroy
 		belongs_to :user
-		has_one :inventory_count
+		has_one :inventory_count, :dependent => :destroy
 
 		validates :name,:user_id, :start_date, :rsvp_date, :presence => true
 		validate :start_date_must_be_in_the_future
