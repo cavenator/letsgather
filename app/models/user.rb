@@ -17,4 +17,17 @@ class User < ActiveRecord::Base
 	def full_name
 		return self.first_name+" "+self.last_name
 	end
+
+	def find_role_for(event)
+		role = self.roles.where("event_id = ?", event.id).first
+		if role
+			return role.privilege
+		else
+			return "Unauthorized"
+		end
+	end
+
+	def is_host_for?(event)
+		return self.find_role_for(event) == "host"
+	end
 end

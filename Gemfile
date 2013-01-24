@@ -26,6 +26,7 @@ gem 'jquery-rails'
 
 group :test, :development do
   gem 'rspec-rails'
+	gem 'webrat'
 #  gem 'sqlite3'
 #  gem 'mysql'
   gem 'factory_girl_rails'

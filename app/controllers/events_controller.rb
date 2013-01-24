@@ -18,9 +18,13 @@ class EventsController < ApplicationController
   # GET /events/1.json
   def show
     @event = Event.find(params[:id])
+		view = 'show'
+		unless current_user.is_host_for?(@event)
+			view = 'guest_view'
+		end
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html { render view }# show.html.erb
       format.json { render json: @event }
     end
   end
@@ -46,17 +50,19 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(params[:event])
 		@event.user_id = current_user.id
-    respond_to do |format|
-      if @event.save
+    if @event.save
 				Role.create(:user_id => current_user.id, :event_id => @event.id, :privilege => "host")
-        format.html { redirect_to @event, notice: 'Event was successfully created.' }
-        format.json { render json: @event, status: :created, location: @event }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
-      end
+				respond_to do |format|
+        	format.html { redirect_to @event, notice: 'Event was successfully created.' }
+        	format.json { render json: @event, status: :created, location: @event }
+  			end
+		else
+				respond_to do |format|
+        	format.html { render action: "new" }
+        	format.json { render json: @event.errors, status: :unprocessable_entity }
+				end
     end
-  end
+	end
 
   # PUT /events/1
   # PUT /events/1.json
