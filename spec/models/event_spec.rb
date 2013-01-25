@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Event do
 
-
 	describe "minimal event requirements" do
 		it "should always have a name" do
 			event = FactoryGirl.build(:event, :name=>nil)
@@ -35,6 +34,10 @@ describe Event do
 	end
 
 	describe "user minimum requirements before creating event" do
+		before(:all) do
+			User.destroy_all
+		end
+
 		it "should check to ensure that a user has an email" do
 			event = FactoryGirl.create(:event)
 			Event.should have(1).record
@@ -46,6 +49,23 @@ describe Event do
 			event = FactoryGirl.create(:event)
 			expect(event.inventory_count).to be_valid
 		end
+	end
+
+	describe "Finding the responses for an event" do
+		before(:all) do
+			User.destroy_all
+			@event = FactoryGirl.create(:event)
+			@host = @event.user
+			@bob = FactoryGirl.create(:bob)
+			@rico = FactoryGirl.create(:rico)
+			Attendee.create(:event_id => @event.id, :user_id => @bob.id, :rsvp => "Going", :email => @bob.email)
+			Attendee.create(:event_id => @event.id, :user_id => @rico.id, :rsvp => "Not Going", :email => @rico.email)
+		end
+
+		it "should tell you the amount of people going" do
+			expect(@event.attending_guest_count) == 1
+		end
+
 	end
 
 end

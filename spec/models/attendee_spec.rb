@@ -3,6 +3,11 @@ require 'spec_helper'
 describe Attendee do
 
 	describe "attendee minimal requirements" do
+		before(:all) do
+			User.destroy_all
+			Event.destroy_all
+		end
+
 		it "should have an email, event_id, and rsvp at a minimum" do
 			event = FactoryGirl.create(:event)
 			attendee = Attendee.new
@@ -14,6 +19,12 @@ describe Attendee do
 	end
 
 	describe "sending invites to guests" do
+
+		before(:all) do
+			User.destroy_all
+			Event.destroy_all
+			Attendee.destroy_all
+		end
 
 		describe "email validation" do
 			it "finds a good email" do
@@ -43,6 +54,20 @@ describe Attendee do
 			expect(invites["unsuccessful"].count) == 2
 		end
 
+	end
+
+	describe "Attendee fetching" do
+		before(:all) do
+			User.destroy_all
+
+			@user = FactoryGirl.create(:rico)
+			@attendee = FactoryGirl.create(:attendee, :user_id => @user.id, :email => @user.email)
+			@event = @attendee.event
+		end
+
+		it "should be able to find guests' attendee record" do
+			expect(Attendee.find_attendee_for(@user, @event)).to eql(@attendee)
+		end
 	end
 
 end

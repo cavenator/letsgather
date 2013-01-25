@@ -15,6 +15,15 @@ class AttendeesController < ApplicationController
     end
   end
 
+	def rsvp
+		@attendee = Attendee.find(params[:id])
+		@attendee.rsvp = params[:rsvp]
+		@attendee.save
+		respond_to do |format|
+			format.json { render json: @attendee.to_json }
+		end
+	end
+
   # GET /attendees/1
   # GET /attendees/1.json
   def show

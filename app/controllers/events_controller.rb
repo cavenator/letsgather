@@ -21,6 +21,7 @@ class EventsController < ApplicationController
 		view = 'show'
 		unless current_user.is_host_for?(@event)
 			view = 'guest_view'
+			@attendee = Attendee.find_attendee_for(current_user, @event)
 		end
 
     respond_to do |format|

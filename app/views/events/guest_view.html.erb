@@ -4,3 +4,30 @@
 	<div class="span4">This is one span</div>
 	<div class="span6">This is another span</div>
 </div>
+<div class="row-fluid">
+	<div class="span6 offset2">You are currently <span id='text-rsvp'><%= @attendee.rsvp %></span>
+	</div>
+	<div class="span9">
+		<input type="text" class="btn btn-success" id="going-button" value="Going" onclick="rsvp('Going',<%= @attendee.id %>)" />
+		<input type="text" class="btn btn-danger" id="not-going-button" value="Not Going" onclick="rsvp('Not Going', <%= @attendee.id %>)" />
+		<input type="text" class="btn btn-warning" id="undecided-button" value="Undecided" onclick="rsvp('Undecided', <%= @attendee.id %>)" />
+	</div>
+</div>
+<script type="text/javascript">
+		function rsvp(answer, id){
+			var jsonObject = {"id":id, "rsvp":answer};
+			$.ajax({
+					url: window.location.pathname+"/attendees/"+id+"/rsvp",
+					beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+					dataType: "json",
+					data: "rsvp="+answer,
+					type: "POST",
+					error: function(object, textStatus, errorThrown){
+						alert("ERROR: "+errorThrown+", STATUS: "+textStatus);
+					},
+					success: function(){
+						$("#text-rsvp").text(answer);
+					}
+			});
+		}
+</script>

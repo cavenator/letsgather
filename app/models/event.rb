@@ -25,6 +25,10 @@ class Event < ActiveRecord::Base
 		end
 	end
 
+	def attending_guest_count
+		return self.attendees.where("rsvp = 'Going'").count
+	end
+
 	def location
 		return true unless self.address1.eql?(nil)
 	end

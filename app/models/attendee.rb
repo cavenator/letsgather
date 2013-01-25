@@ -19,4 +19,8 @@ class Attendee < ActiveRecord::Base
 			end
 			return email_hash
 		end
+
+		def self.find_attendee_for(user, event)
+			return event.attendees.where('user_id = ?', user.id).first
+		end
 end
