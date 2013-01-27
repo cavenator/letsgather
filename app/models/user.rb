@@ -30,4 +30,8 @@ class User < ActiveRecord::Base
 	def is_host_for?(event)
 		return self.find_role_for(event) == "host"
 	end
+
+	def belongs_to_event?(event)
+		return self.roles.where("event_id = ?", event.id).count > 0
+	end
 end

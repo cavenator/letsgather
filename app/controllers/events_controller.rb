@@ -1,6 +1,8 @@
 
 class EventsController < ApplicationController
+	before_filter :verify_access, :except => [:index, :new, :create]
 	before_filter :align_attendee_events, :only => :index
+	before_filter :verify_privileges, :only => [:edit, :update]
   # GET /events
   # GET /events.json
   def index
@@ -119,4 +121,17 @@ class EventsController < ApplicationController
 		end
 	end
 
+	def verify_access
+		event = Event.find(params[:id])
+		unless current_user.belongs_to_event?(event)
+			render file: "public/401.html" , :formats => [:html], status: :unauthorized and return
+		end
+	end
+
+	def verify_privileges
+		event = Event.find(params[:id])
+		unless current_user.is_host_for?(event)
+			render file: "public/422.html", :formats => [:html], status: :unprocessable_entity and return
+		end
+	end
 end

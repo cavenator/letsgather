@@ -1,5 +1,5 @@
 <h2><%= @event.name %></h2>
-
+<div id="flash-message" class="row-fluid"></div>
 <div class="row-fluid">
 	<div class="span4">This is one span</div>
 	<div class="span6">This is another span</div>
@@ -16,6 +16,7 @@
 <script type="text/javascript">
 		function rsvp(answer, id){
 			var jsonObject = {"id":id, "rsvp":answer};
+			$("#flash-message").addClass("alert");
 			$.ajax({
 					url: window.location.pathname+"/attendees/"+id+"/rsvp",
 					beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
@@ -23,11 +24,17 @@
 					data: "rsvp="+answer,
 					type: "POST",
 					error: function(object, textStatus, errorThrown){
-						alert("ERROR: "+errorThrown+", STATUS: "+textStatus);
+						$("#flash-message").removeClass("alert-success");
+						$("#flash-message").addClass("alert-error");
+						$("#flash-message").text("You have entered an incorrect value: "+answer+".  Please rsvp with either Going, Not Going, or Undecided");
 					},
 					success: function(){
+						$("#flash-message").removeClass("alert-error");
+						$("#flash-message").addClass("alert-success");
+						$("#flash-message").text("Your RSVP has been submitted successfully");
 						$("#text-rsvp").text(answer);
 					}
 			});
 		}
+
 </script>

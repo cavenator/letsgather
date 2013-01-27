@@ -48,4 +48,15 @@ describe EventsController do
 			get 'show', :id => @event.id
 		end
 	end
+
+	describe "unauthorized handling" do
+		it "should only allow users to access their events or events they are invited to only" do
+			@event = FactoryGirl.create(:event_secondary)
+			Role.create(:user_id => @event.user.id, :event_id => @event.id, :privilege => "host")
+			login
+			get 'show', :id => @event.id
+			response.should render_template(:file => "#{Rails.root}/public/401.html")
+			response.status.should == 401
+		end
+	end
 end

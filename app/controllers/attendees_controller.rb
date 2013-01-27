@@ -1,6 +1,7 @@
 
 class AttendeesController < ApplicationController
-
+	before_filter :verify_access
+	before_filter :verify_privileges, :except => :rsvp
 	#The reason why I did this was because I was getting a "WARNING: Can't verify CSRF token authenticity" and would sign the user out.
 
 	protect_from_forgery :except => :invite_guests 
@@ -18,9 +19,14 @@ class AttendeesController < ApplicationController
 	def rsvp
 		@attendee = Attendee.find(params[:id])
 		@attendee.rsvp = params[:rsvp]
-		@attendee.save
-		respond_to do |format|
-			format.json { render json: @attendee.to_json }
+		if @attendee.save
+			respond_to do |format|
+				format.json { render json: @attendee.to_json }
+			end
+		else 
+			respond_to do |format|
+				format.json { render json: @attendee.errors, status: :unprocessable_entity }
+			end
 		end
 	end
 
@@ -61,7 +67,6 @@ class AttendeesController < ApplicationController
 		@event = Event.find(params[:event_id])
 		@attendee.event_id = @event.id
 		@attendee.rsvp = 'Undecided'
-		puts "Inside create;  attendee = ${@attendee}"
     respond_to do |format|
       if @attendee.save
         format.html { redirect_to [@event,@attendee], notice: 'Attendee was successfully created.' }
@@ -116,5 +121,22 @@ class AttendeesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+	protected
+
+	def verify_access
+		event = Event.find(params[:event_id])
+		unless current_user.belongs_to_event?(event)
+			render file: "public/401.html" ,status: :unauthorized
+		end
+	end
+
+	def verify_privileges
+		event = Event.find(params[:event_id])
+		unless current_user.is_host_for?(event)
+			render file: "public/422.html", status: :unprocessable_entity
+		end
+	end
+
 
 end

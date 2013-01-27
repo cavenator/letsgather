@@ -9,11 +9,15 @@ describe Attendee do
 		end
 
 		it "should have an email, event_id, and rsvp at a minimum" do
-			event = FactoryGirl.create(:event)
 			attendee = Attendee.new
 			expect(attendee).to_not be_valid
 			attendee.email = "person@gmail.com"
-			attendee.event_id = event.id
+			attendee.event_id = 12
+			expect(attendee).to_not be_valid
+		end
+
+		it "should have rsvp status of 'Going', 'Not Going', or 'Undecided'" do
+			attendee = FactoryGirl.build(:attendee, :rsvp => 'Bringing it', :email =>'random.person@gmail.com')
 			expect(attendee).to_not be_valid
 		end
 	end
@@ -67,6 +71,10 @@ describe Attendee do
 
 		it "should be able to find guests' attendee record" do
 			expect(Attendee.find_attendee_for(@user, @event)).to eql(@attendee)
+		end
+
+		it "should be able to fetch the rsvp for an attendee" do
+			expect(Attendee.find_rsvp_for(@user, @event)).to eql("Undecided")
 		end
 	end
 

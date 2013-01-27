@@ -53,4 +53,25 @@ describe User do
 			expect(@user.is_host_for?(@event)) == true
 		end
 	end
+
+	describe "authorization of events" do
+		before(:all) do
+			User.destroy_all
+			Event.destroy_all
+		end
+
+		it "should determine if a user is associated with the event" do
+			@event = FactoryGirl.create(:event)
+			@user = @event.user
+			@rico = FactoryGirl.create(:rico)
+			expect(@user.belongs_to_event?(@event)) == true
+			expect(@rico.belongs_to_event?(@event)) == false
+		end
+	
+		after(:all) do
+			User.destroy_all
+			Event.destroy_all
+		end
+
+	end
 end
