@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe Event do
 
+	before(:all) do
+		User.destroy_all
+	end
+
 	describe "minimal event requirements" do
 		it "should always have a name" do
 			event = FactoryGirl.build(:event, :name=>nil)
@@ -66,6 +70,19 @@ describe Event do
 			expect(@event.attending_guest_count) == 1
 		end
 
+	end
+
+	describe "Start Date and RSVP parsing" do
+		before(:all) do
+			User.destroy_all
+		end
+
+		it "should be able to parse dates into valid datetime formats in PST" do
+			event = FactoryGirl.build(:event)
+			expect(event).to be_valid
+			start_date = "2014-02-02 22:10 -0800"
+			expect(event).to be_valid
+		end
 	end
 
 end

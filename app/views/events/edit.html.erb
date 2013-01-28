@@ -4,3 +4,22 @@
 
 <%= link_to 'Show', @event %> |
 <%= link_to 'Back', events_path %>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+		$("#start_date").datetimepicker({
+		dateFormat: 'yy-mm-dd',
+		timeFormat: 'HH:mm z',
+		timezoneList: [ 
+			{ value: '-0700', label: 'Pacific' } 
+		]
+		});
+		$("#rsvp_date").datetimepicker({
+		dateFormat: 'yy-mm-dd',
+		timeFormat: 'HH:mm z',
+		timezoneList: [ 
+			{ value: '-0700', label: 'Pacific' } 
+		]
+		});
+	});
+</script>

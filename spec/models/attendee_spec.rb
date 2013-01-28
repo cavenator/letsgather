@@ -6,6 +6,13 @@ describe Attendee do
 		before(:all) do
 			User.destroy_all
 			Event.destroy_all
+			Attendee.destroy_all
+		end
+
+		after(:all) do
+			User.destroy_all
+			Event.destroy_all
+			Attendee.destroy_all
 		end
 
 		it "should have an email, event_id, and rsvp at a minimum" do
@@ -20,11 +27,24 @@ describe Attendee do
 			attendee = FactoryGirl.build(:attendee, :rsvp => 'Bringing it', :email =>'random.person@gmail.com')
 			expect(attendee).to_not be_valid
 		end
+
+		it "should have a distinct email per event" do
+			attendee = FactoryGirl.create(:attendee)
+			expect(Attendee.all.count) == 1
+			attendee2 = FactoryGirl.build(:attendee, :event_id => attendee.event_id, :email => attendee.email )
+			expect(attendee2).to_not be_valid
+		end
 	end
 
 	describe "sending invites to guests" do
 
 		before(:all) do
+			User.destroy_all
+			Event.destroy_all
+			Attendee.destroy_all
+		end
+
+		after(:all) do
 			User.destroy_all
 			Event.destroy_all
 			Attendee.destroy_all
@@ -58,6 +78,12 @@ describe Attendee do
 			expect(invites["unsuccessful"].count) == 2
 		end
 
+		it "should not send out duplicates" do
+			event = FactoryGirl.create(:event)
+			invites = Attendee.invite(["sameperson@gmail.com","samperson@gmail.com"], event)
+			expect(Attendee.all.count) == 1
+			expect(invites["successful"].count) == 1
+		end
 	end
 
 	describe "Attendee fetching" do
@@ -67,6 +93,12 @@ describe Attendee do
 			@user = FactoryGirl.create(:rico)
 			@attendee = FactoryGirl.create(:attendee, :user_id => @user.id, :email => @user.email)
 			@event = @attendee.event
+		end
+
+		after(:all) do
+			User.destroy_all
+			Event.destroy_all
+			Attendee.destroy_all
 		end
 
 		it "should be able to find guests' attendee record" do

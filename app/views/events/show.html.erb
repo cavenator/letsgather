@@ -8,9 +8,9 @@
 <span style="font-size:14px"><%= @event.name %></span>
 </div><div>
 <span style="font-weight:bold;font-size:14px">Start Date: </span>
-<span style="font-size:14px"><%= @event.start_date %></span>
+<span style="font-size:14px"><%= @event.display_start_time %></span>
 <span style="font-weight:bold;font-size:14px">RSVP Date: </span>
-<span style="font-size:14px"><%= @event.rsvp_date %></span>
+<span style="font-size:14px"><%= @event.display_rsvp_time %></span>
 <div style="margin-top:1em">
 <%= link_to 'Edit', edit_event_path(@event), :class=>"btn btn-link" %> | <%= link_to 'Back', events_path, :class=>"btn btn-link" %></div>
 </div>

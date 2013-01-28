@@ -2,6 +2,7 @@
 class AttendeesController < ApplicationController
 	before_filter :verify_access
 	before_filter :verify_privileges, :except => :rsvp
+	#Also, be sure to include a verification filter in which attendees can only update their settings (will have to check for attendee.user_id == current_user.id)
 	#The reason why I did this was because I was getting a "WARNING: Can't verify CSRF token authenticity" and would sign the user out.
 
 	protect_from_forgery :except => :invite_guests 

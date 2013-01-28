@@ -4,11 +4,11 @@
 <div class="row">
 <div class="span6 offset2">
 <% @invites["successful"].each do |email| %>
-	<br/>
 	<%= email %>
 <% end %>
 </div>
 </div>
+<br/>
 <% end %>
 
 <% if @invites["unsuccessful"].length > 0 %>
@@ -16,12 +16,23 @@
 <div class="row">
 <div class="span6 offset2">
 <% @invites["unsuccessful"].each do |email| %>
-	<br/>
 	<%= email %>
 <% end %>
 </div>
 </div>
+<br/>
 <% end %>
 
+<% if @invites["duplicated"].length > 0 %>
+<div class="alert alert-info">These emails were already sent out sometime ago: </div>
+<div class="row">
+<div class="span6 offset2">
+<% @invites["duplicated"].each do |email| %>
+	<%= email %>
+<% end %>
+</div>
+</div>
+<br/>
+<% end %>
 
 <%= link_to 'Back To event', @event %>
