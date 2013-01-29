@@ -11,30 +11,51 @@
 		<input type="text" class="btn btn-success" id="going-button" value="Going" onclick="rsvp('Going',<%= @attendee.id %>)" />
 		<input type="text" class="btn btn-danger" id="not-going-button" value="Not Going" onclick="rsvp('Not Going', <%= @attendee.id %>)" />
 		<input type="text" class="btn btn-warning" id="undecided-button" value="Undecided" onclick="rsvp('Undecided', <%= @attendee.id %>)" />
+		<div id="comment-box">
+			<input type="hidden" id="attendee-id" value="<%= @attendee.id %>" ><br />
+			<input type="hidden" id="attendee-rsvp" value="<%= @attendee.rsvp %>" ><br />
+			<input type="text" id="attendee-comment" value="<%= @attendee.comment %>" ><br/>
+			<button id="submit" class="btn btn-primary">Update</button>
+		</div>
 	</div>
 </div>
 <script type="text/javascript">
 		function rsvp(answer, id){
-			var jsonObject = {"id":id, "rsvp":answer};
+			$("#attendee-rsvp").val(answer);
+			$("#comment-box").show();
+		}
+
+		$(document).ready(function(){
+
+			$("#comment-box").hide();
+
+			$("#submit").click(function(){
+				var attendee_id = $("#attendee-id").val();
+				var attendee_comment = $("#attendee-comment").val();
+				var attendee_rsvp = $("#attendee-rsvp").val();
+				var attendeeJson = { id: attendee_id, comment: attendee_comment, rsvp: attendee_rsvp };
+
 			$("#flash-message").addClass("alert");
 			$.ajax({
-					url: window.location.pathname+"/attendees/"+id+"/rsvp",
+					url: window.location.pathname+"/attendees/"+attendee_id,
 					beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
 					dataType: "json",
-					data: "rsvp="+answer,
-					type: "POST",
+					data: "attendee="+JSON.stringify(attendeeJson),
+					type: "PUT",
 					error: function(object, textStatus, errorThrown){
 						$("#flash-message").removeClass("alert-success");
 						$("#flash-message").addClass("alert-error");
-						$("#flash-message").text("You have entered an incorrect value: "+answer+".  Please rsvp with either Going, Not Going, or Undecided");
+						$("#flash-message").text("There was something wrong with your RSVP. It couldn't update successfully");
 					},
 					success: function(){
 						$("#flash-message").removeClass("alert-error");
 						$("#flash-message").addClass("alert-success");
 						$("#flash-message").text("Your RSVP has been submitted successfully");
-						$("#text-rsvp").text(answer);
+						$("#text-rsvp").text(attendee_rsvp);
+						$("#comment-box").hide();
 					}
 			});
-		}
+			});
+		});
 
 </script>

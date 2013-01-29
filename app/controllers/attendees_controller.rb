@@ -1,7 +1,8 @@
 
 class AttendeesController < ApplicationController
 	before_filter :verify_access
-	before_filter :verify_privileges, :except => :rsvp
+	before_filter :verify_privileges, :only => [:new, :create]
+	before_filter :verify_correct_attendee, :only => [:rsvp, :show, :edit, :update, :destroy]
 	#Also, be sure to include a verification filter in which attendees can only update their settings (will have to check for attendee.user_id == current_user.id)
 	#The reason why I did this was because I was getting a "WARNING: Can't verify CSRF token authenticity" and would sign the user out.
 
@@ -87,7 +88,7 @@ class AttendeesController < ApplicationController
 		@user = User.new
 
     respond_to do |format|
-      if @attendee.update_attributes(params[:attendee])
+      if @attendee.update_attributes(JSON.parse(params[:attendee]))
         format.html { redirect_to [@event, @attendee], notice: 'Attendee was successfully updated.' }
         format.json { head :no_content }
       else
@@ -139,5 +140,11 @@ class AttendeesController < ApplicationController
 		end
 	end
 
-
+	def verify_correct_attendee
+		event = Event.find(params[:event_id])
+		attendee = Attendee.find(params[:id])
+		unless current_user.is_host_for?(event) || attendee.user_id == current_user.id
+			render file: "public/422.html", status: :unprocessable_entity
+		end
+	end
 end
