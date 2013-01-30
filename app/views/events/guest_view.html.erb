@@ -14,7 +14,11 @@
 		<div id="comment-box">
 			<input type="hidden" id="attendee-id" value="<%= @attendee.id %>" ><br />
 			<input type="hidden" id="attendee-rsvp" value="<%= @attendee.rsvp %>" ><br />
+			<label for="attendee-comment">Comments?</label>
 			<input type="text" id="attendee-comment" value="<%= @attendee.comment %>" ><br/>
+			<label for="attendee-guestcount">Number of guests you are bringing (excluding yourself):</label>
+			<input type="text" id="attendee-guestcount" value="<%= @attendee.num_of_guests %>" ><br/>
+			<button id="cancel" class="btn">Cancel</button>
 			<button id="submit" class="btn btn-primary">Update</button>
 		</div>
 	</div>
@@ -23,17 +27,27 @@
 		function rsvp(answer, id){
 			$("#attendee-rsvp").val(answer);
 			$("#comment-box").show();
+			if (answer == "Going")
+				$("#attendee-guestcount").show();
+			else
+				$("#attendee-guestcount").val(0);
 		}
 
 		$(document).ready(function(){
-
+			$("#attendee-guestcount").hide();
 			$("#comment-box").hide();
+
+			$("#cancel").click(function(){
+					$("#attendee-guestcount").hide();
+					$("#comment-box").hide();
+			});
 
 			$("#submit").click(function(){
 				var attendee_id = $("#attendee-id").val();
 				var attendee_comment = $("#attendee-comment").val();
 				var attendee_rsvp = $("#attendee-rsvp").val();
-				var attendeeJson = { id: attendee_id, comment: attendee_comment, rsvp: attendee_rsvp };
+				var attendee_guestcount = $("#attendee-guestcount").val();
+				var attendeeJson = { id: attendee_id, comment: attendee_comment, rsvp: attendee_rsvp, num_of_guests: attendee_guestcount };
 
 			$("#flash-message").addClass("alert");
 			$.ajax({

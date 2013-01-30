@@ -23,6 +23,8 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem "jquery-ui-rails", "~> 3.0.1"
+gem 'twitter-bootstrap-rails'
 
 group :test, :development do
   gem 'rspec-rails'

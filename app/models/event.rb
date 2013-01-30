@@ -26,15 +26,20 @@ class Event < ActiveRecord::Base
 	end
 
 	def display_start_time
-		return self.start_date.in_time_zone('Pacific Time (US & Canada)').strftime("%b %d,%Y %I:%M %P")
+		return self.start_date.in_time_zone("Pacific Time (US & Canada)").strftime("%b %d,%Y %I:%M %P")
 	end
 
 	def display_rsvp_time
-		return self.rsvp_date.in_time_zone('Pacific Time (US & Canada)').strftime("%b %d,%Y %I:%M %P")
+		return self.rsvp_date.in_time_zone("Pacific Time (US & Canada)").strftime("%b %d,%Y %I:%M %P")
 	end
 
 	def attending_guest_count
-		return self.attendees.where("rsvp = 'Going'").count
+		attending_guests = self.attendees.where("rsvp = 'Going'")
+		guest_count = attending_guests.count
+		attending_guests.each do |attendee|
+			guest_count += attendee.num_of_guests
+		end
+		return guest_count
 	end
 
 	def location
