@@ -88,11 +88,11 @@ class AttendeesController < ApplicationController
 		@user = User.new
 
     respond_to do |format|
-      if @attendee.update_attributes(JSON.parse(params[:attendee]))
-        format.html { redirect_to [@event, @attendee], notice: 'Attendee was successfully updated.' }
+      if @attendee.update_attributes(params[:attendee])
+        format.html { redirect_to event_url(@event), notice: 'RSVP was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: "edit" }
+        format.html { redirect_to event_url(@event), notice: "RSVP couldn't be updated since it did not receive any of the following responses" }
         format.json { render json: @attendee.errors, status: :unprocessable_entity }
       end
     end
