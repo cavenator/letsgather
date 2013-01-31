@@ -55,6 +55,7 @@ module MaximusSamurai
 
     # Enable the asset pipeline
     config.assets.enabled = true
+		config.assets.compile = true
 
 		# UNCOMMENT LINE when deploying to Heroku
 		config.assets.initialize_on_precompile = false
