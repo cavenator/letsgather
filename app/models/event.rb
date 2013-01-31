@@ -19,6 +19,16 @@ class Event < ActiveRecord::Base
 			end
 	end
 
+	def rsvp_countdown
+		days = ((self.rsvp_date.in_time_zone("Pacific Time (US & Canada)") - Time.now.in_time_zone("Pacific Time (US & Canada)"))/86400).ceil
+		unless days == 1
+			statement = "You have "+days.to_s+" days left to RSVP"
+		else
+			statement = "You have 1 day left to RSVP"
+		end
+		return statement
+	end
+
 	def rsvp_date_should_be_less_than_start_date
 		unless self.rsvp_date.eql?(nil) || self.start_date.eql?(nil)
 			errors.add(:rsvp_date, "rsvp date must be before the event start date") if self.rsvp_date >= self.start_date

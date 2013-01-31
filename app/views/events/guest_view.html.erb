@@ -1,8 +1,43 @@
-<h2><%= @event.name %></h2>
+<h2 style="text-align:center;margin:0em 1em 1em 0em"><%= @event.name %></h2>
 <div id="flash-message" class="row-fluid"></div>
 <div class="row-fluid">
-	<div class="span4">This is one span</div>
-	<div class="span6">This is another span</div>
+	<div class="span4">
+		<div>
+			<span style="font-weight:bold;font-size:14px">Host: </span>
+			<span style="font-size:14px"><%= @event.user.full_name %></span>
+		</div>
+		<div>
+			<span style="font-weight:bold;font-size:14px">Host Email: </span>
+			<span style="font-size:14px"><%= @event.user.email %></span>
+		</div>
+		<div>
+			<span style="font-weight:bold;font-size:14px">Start Date: </span>
+			<span style="font-size:14px"><%= @event.display_start_time %></span>
+		</div>
+		<div>
+			<span style="font-weight:bold;font-size:14px">RSVP Date: </span>
+			<span style="font-size:14px"><%= @event.display_rsvp_time %></span>
+		<div style="font-size:14px;margin-top:1em;"><%= @event.rsvp_countdown %></div>
+		<div style="margin-top:1em"><span style="font-size:14px;font-weight:bold;">Number of guest attending: </span><%= @event.attending_guest_count %></div>
+		<div style="margin-top:1em">
+		<%= link_to 'Back', events_path, :class=>"btn btn-link" %></div>
+	</div>
+</div>
+	<div class="span3">
+	<span style="font-weight:bold;font-size:14px">Event Location: </span>
+	<% if @event.location %>
+		<%= @event.location1 %><br />
+		<%= @event.location2 %>
+	<% end %>
+</div>
+	<div class="span4">
+		<span style="font-weight:bold;font-size:14px;">Need to know info from the host:</span>
+		<% if @event.supplemental_info %>
+			<%= @event.supplemental_info %>
+		<% else %>
+			<%= "Undecided" %>
+		<% end %>
+	</div>
 </div>
 <div class="row-fluid">
 	<div class="span6 offset2">You are currently <span id='text-rsvp'><%= @attendee.rsvp %></span>
@@ -16,8 +51,10 @@
 			<input type="hidden" id="attendee-rsvp" value="<%= @attendee.rsvp %>" ><br />
 			<label for="attendee-comment">Comments?</label>
 			<input type="text" id="attendee-comment" value="<%= @attendee.comment %>" ><br/>
-			<label for="attendee-guestcount">Number of guests you are bringing (excluding yourself):</label>
-			<input type="text" id="attendee-guestcount" value="<%= @attendee.num_of_guests %>" ><br/>
+			<div id="guestcount_div">
+				<label for="attendee-guestcount">Number of guests you are bringing (excluding yourself):</label>
+				<input type="text" id="attendee-guestcount" value="<%= @attendee.num_of_guests %>" ><br/>
+			</div>
 			<button id="cancel" class="btn">Cancel</button>
 			<button id="submit" class="btn btn-primary">Update</button>
 		</div>
@@ -28,17 +65,15 @@
 			$("#attendee-rsvp").val(answer);
 			$("#comment-box").show();
 			if (answer == "Going")
-				$("#attendee-guestcount").show();
-			else
-				$("#attendee-guestcount").val(0);
+				$("#guestcount_div").show();
 		}
 
 		$(document).ready(function(){
-			$("#attendee-guestcount").hide();
+			$("#guestcount_div").hide();
 			$("#comment-box").hide();
 
 			$("#cancel").click(function(){
-					$("#attendee-guestcount").hide();
+					$("#guestcount_div").hide();
 					$("#comment-box").hide();
 			});
 
@@ -47,6 +82,8 @@
 				var attendee_comment = $("#attendee-comment").val();
 				var attendee_rsvp = $("#attendee-rsvp").val();
 				var attendee_guestcount = $("#attendee-guestcount").val();
+					if (attendee_rsvp != "Going")
+						attendee_guestcount = 0;
 				var attendeeJson = { id: attendee_id, comment: attendee_comment, rsvp: attendee_rsvp, num_of_guests: attendee_guestcount };
 
 			$("#flash-message").addClass("alert");
@@ -56,6 +93,7 @@
 					dataType: "json",
 					data: "attendee="+JSON.stringify(attendeeJson),
 					type: "PUT",
+					
 					error: function(object, textStatus, errorThrown){
 						$("#flash-message").removeClass("alert-success");
 						$("#flash-message").addClass("alert-error");
