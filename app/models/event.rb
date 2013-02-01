@@ -1,17 +1,12 @@
 class Event < ActiveRecord::Base
 		has_many :attendees, :dependent => :destroy
 		belongs_to :user
-		has_one :inventory_count, :dependent => :destroy
 
 		validates :name,:user_id, :start_date, :rsvp_date, :presence => true
 		validate :start_date_must_be_in_the_future
 		validate :rsvp_date_should_be_less_than_start_date
 
    attr_accessible :name, :start_date, :end_date, :user_id, :rsvp_date, :supplemental_info, :address1, :address2, :city, :state, :zip_code
-
-	after_create do |event|
-		InventoryCount.create(:event_id => event.id)
-	end
 
 	def start_date_must_be_in_the_future
 			unless self.start_date.eql?(nil)

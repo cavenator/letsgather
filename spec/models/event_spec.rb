@@ -49,10 +49,6 @@ describe Event do
 			expect(event.user.email).to eql("alice.cooper@gmail.com")
 		end
 
-		it "should create an Inventory Count object after create" do
-			event = FactoryGirl.create(:event)
-			expect(event.inventory_count).to be_valid
-		end
 	end
 
 	describe "Finding the responses for an event" do
