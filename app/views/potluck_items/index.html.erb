@@ -1,0 +1,21 @@
+<h1>Listing potluck_items</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @potluck_items.each do |potluck_item| %>
+  <tr>
+    <td><%= link_to 'Show', event_potluck_item_path(@event, potluck_item) %></td>
+    <td><%= link_to 'Edit', edit_event_potluck_item_path(@event, potluck_item) %></td>
+    <td><%= link_to 'Destroy', event_potluck_item_path(@event, potluck_item), confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Potluck item', new_event_potluck_item_path %>

@@ -1,5 +1,4 @@
 MaximusSamurai::Application.routes.draw do
-#  resources :attendees
 
   devise_for :views
 
@@ -12,6 +11,7 @@ MaximusSamurai::Application.routes.draw do
 		post 'attendees/invite_guests', :to => 'attendees#invite_guests'
 		post 'attendees/:id/rsvp', :to => 'attendees#rsvp'
 		resources :attendees 
+		resources :potluck_items
   end
 
   devise_for :users
