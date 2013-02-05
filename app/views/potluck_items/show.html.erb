@@ -1,5 +1,9 @@
 <p id="notice"><%= notice %></p>
-
-
+<div>
+Category: <%= @potluck_item.category %>
+</div>
+<div>
+Dishes: <%= @potluck_item.dishes.join(",") %> 
+</div>
 <%= link_to 'Edit', edit_event_potluck_item_path(@event, @potluck_item) %> |
 <%= link_to 'Back', event_potluck_items_path %>

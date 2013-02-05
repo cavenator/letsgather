@@ -1,5 +1,47 @@
-<h1>New potluck_item</h1>
-
-<%= render 'form' %>
+<h1>New List Category</h1>
+<div id="flash_notice"><%= flash[:notice] %></div>
+<%= render 'form_new' %>
 
 <%= link_to 'Back', event_potluck_items_path %>
+<script>
+
+	$(document).ready(function(){
+		$("#add_more_items").click(function(){
+			var item_list = $("#list_items");
+			var additionalDiv = $("<div></div>");
+			var itemText = $("<input type='text' class='input-large' placeholder='List item here ....'>");
+			var removeButton = $("<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em'>Remove</button>");
+			removeButton.click(function(){
+				additionalDiv.remove();
+			});
+			additionalDiv.appendTo(item_list);
+			itemText.appendTo(additionalDiv);
+			removeButton.appendTo(additionalDiv);
+		});
+
+		$("#submit_button").click(function(){
+			var dish_array = [];
+			$(".input-large").each(function(index, input){
+				if ($.trim($(input).val()) == ""){
+					$(input).css('background-color','red');
+					$(input).click(function(){
+						$(this).removeAttr('style');
+					});
+				} else {
+					dish_array.push($(input).val());
+				}
+			});
+
+			if (dish_array.length > 0){
+				$("#potluck_item_dishes").val(JSON.stringify(dish_array));
+			} else {
+				$("#flash_notice").text("");
+				$("#flash_notice").addClass("alert alert-error");
+				$("#flash_notice").text("You must specify at least one item for the specified category");
+				return false;
+			}
+		});
+
+	});
+
+</script>

@@ -45,6 +45,12 @@
 	<li>
 		<a id="invite_guests" href="">Invite Guests</a>
 	</li>
+	<li>
+		<a id="potluck_list" href="">View my potluck list</a>
+	</li>
+	<li>
+		<a id="new_category" href="">Add new category to potluck list</a>
+	</li>
 </ul>
 </div><div class="span9"><iframe id="frame_content" style="width:100%;height:100%;position:relative"></iframe></div>
 </div>
@@ -91,6 +97,8 @@
 	});
 
 	$("#invite_guests").attr('href',document.location.pathname+"/attendees/add_attendees");
+	$("#potluck_list").attr('href', document.location.pathname+"/potluck_items");
+	$("#new_category").attr('href', document.location.pathname+"/potluck_items/new");
 	
 	$("#location-href").click(function(){
 		$("#locationModal").modal('show');

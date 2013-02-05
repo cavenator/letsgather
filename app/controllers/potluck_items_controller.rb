@@ -5,7 +5,7 @@ class PotluckItemsController < ApplicationController
   # GET /potluck_items
   # GET /potluck_items.json
   def index
-    @potluck_items = PotluckItem.all
+    @potluck_items = @event.potluck_items
 
     respond_to do |format|
       format.html # index.html.erb
@@ -47,7 +47,7 @@ class PotluckItemsController < ApplicationController
 
     respond_to do |format|
       if @potluck_item.save
-        format.html { redirect_to @potluck_item, notice: 'Potluck item was successfully created.' }
+        format.html { redirect_to [@event, @potluck_item], notice: 'Potluck item was successfully created.' }
         format.json { render json: @potluck_item, status: :created, location: @potluck_item }
       else
         format.html { render action: "new" }
@@ -79,7 +79,7 @@ class PotluckItemsController < ApplicationController
     @potluck_item.destroy
 
     respond_to do |format|
-      format.html { redirect_to potluck_items_url }
+      format.html { redirect_to event_potluck_items_url }
       format.json { head :no_content }
     end
   end

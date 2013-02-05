@@ -1,17 +1,25 @@
 <h1>Listing potluck_items</h1>
 
-<table>
+<table style="width:100%;margin: 1em 1em 1em 1em">
   <tr>
-    <th></th>
-    <th></th>
-    <th></th>
+    <th>Category</th>
+    <th>Dishes</th>
+    <th>Options</th>
   </tr>
 
 <% @potluck_items.each do |potluck_item| %>
-  <tr>
-    <td><%= link_to 'Show', event_potluck_item_path(@event, potluck_item) %></td>
-    <td><%= link_to 'Edit', edit_event_potluck_item_path(@event, potluck_item) %></td>
-    <td><%= link_to 'Destroy', event_potluck_item_path(@event, potluck_item), confirm: 'Are you sure?', method: :delete %></td>
+  <tr style="text-align:center">
+	<td>
+		<%= potluck_item.category %>
+	</td>
+	<td>
+		<%= potluck_item.dishes.join(",") %>
+	</td>
+		<td><div>
+		<div>
+    <%= link_to 'Show', event_potluck_item_path(@event, potluck_item) %> | 
+    <%= link_to 'Edit', edit_event_potluck_item_path(@event, potluck_item) %> | 
+    <%= link_to 'Destroy', event_potluck_item_path(@event, potluck_item), confirm: 'Are you sure?', method: :delete %></div></td>
   </tr>
 <% end %>
 </table>
