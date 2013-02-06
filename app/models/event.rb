@@ -66,4 +66,13 @@ class Event < ActiveRecord::Base
 		returnString += "  "+self.zip_code if self.zip_code && self.state
 		return returnString
 	end
+
+	def get_potluck_items_for_guests
+		items_for_guests = []
+		self.potluck_items.each do |item|
+			items_for_guests << {"category" => item.category, "dishes" => item.dishes}
+		end
+		return items_for_guests
+	end
+	
 end

@@ -9,7 +9,7 @@ class PotluckItemsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @potluck_items }
+      format.json { render json: @event.get_potluck_items_for_guests }
     end
   end
 

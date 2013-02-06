@@ -57,6 +57,9 @@
 		<div id="guestcount_div">
 			<%= f.label :num_of_guests, "Number of guests you are bringing (excluding yourself):" %>
 			<%= f.text_field :num_of_guests %>
+			<label>I am bringing </label>
+			<%= f.select(:category, options_for_select(@event.potluck_items.map{|item| [item.category, item.category]})) %>
+			<select id='attendee_dish' name='attendee[dish]'><option value="">Undecided</option></select>
 		</div>
 		<input type="button" id="cancel" class="btn" value="Cancel" />
   	<div>
@@ -75,7 +78,28 @@
 		}
 
 		$(document).ready(function(){
-			var flash_message = $("#flash-message");
+			var category_array = [], dishes = {}, flash_message = $("#flash-message"), category_select = $("#attendee_category");
+/*			$.getJSON(window.location.pathname+"/potluck_items.json", function(data){
+				$.each(data, function(index, item){
+					category_array.push(item.category);
+					dishes[item.category] = item.dishes
+				});
+			});*/
+
+			$.ajax({
+				url: window.location.pathname+"/potluck_items.json",
+				dataType: "json",
+				type: "GET",
+				async: false,
+				success: function(data){
+					$.each(data, function(index, item){
+						category_array.push(item.category);
+						dishes[item.category] = item.dishes
+					});
+				}
+			});
+ 
+			category_select.prepend("<option value=''>Undecided</option>");
 			if (flash_message.text().length > 0)
 				flash_message.addClass("alert alert-info");
 			$("#guestcount_div").hide();
@@ -87,11 +111,43 @@
 					return false;
 			});
 
+	/*		$.getJSON($("form").attr('action'), function(data){
+				var dish = data.dish, category = data.category;
+				$("#attendee_category").val(category);
+				$("#attendee_dish").val(dish);
+			});*/
+
+			category_select.change(function(){
+				var data = $(this).val();
+				var dish_array = dishes[data];
+				var dish_select = $("#attendee_dish");
+				dish_select.empty();
+				dish_select.append("<option value=''>Undecided</option>");
+				$.each(dish_array, function(index, item){
+					dish_select.append("<option value='"+item+"'>"+item+"</option>");
+				});
+			});
+
+			$.ajax({
+				url: $("form").attr('action'),
+				dataType: "json",
+				async: false,
+				type: "GET",
+				success: function(data){
+					var dish = data.dish, category = data.category;
+					$("#attendee_category").val(category).change();
+					$("#attendee_dish").val(dish).change();
+				}
+			});
+
 		$("#submit").click(function(){
 				var attendee_rsvp = $("#attendee_rsvp").val();
 				var attendee_guestcount = $("#attendee_num_of_guests").val();
-				if (attendee_rsvp != "Going")
+				if (attendee_rsvp != "Going"){
 					$("#attendee_num_of_guests").val(0);
+					$("#attendee_category").val("");
+					$("#attendee_dish").val("");
+				}
 			});
 		});
 

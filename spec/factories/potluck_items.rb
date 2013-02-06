@@ -2,5 +2,7 @@
 
 FactoryGirl.define do
   factory :potluck_item do
+		
+		event
   end
 end

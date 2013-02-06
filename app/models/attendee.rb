@@ -1,7 +1,7 @@
 class Attendee < ActiveRecord::Base
 		belongs_to :event
   # attr_accessible :title, :body
-		attr_accessible :event_id, :user_id, :invitation_id, :full_name, :email, :rsvp, :num_of_guests, :comment
+		attr_accessible :event_id, :user_id, :invitation_id, :full_name, :email, :rsvp, :num_of_guests, :comment, :category, :dish
 
 		validates :event_id, :email, :rsvp, :presence => true
 		validates :email, :uniqueness => { :scope => :event_id, :message => "should be unique per event" }

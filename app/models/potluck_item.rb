@@ -2,7 +2,7 @@ class PotluckItem < ActiveRecord::Base
 	belongs_to :event
 
 	before_validation do |potluck_item|
-		potluck_item.dishes = JSON.parse(potluck_item.dishes)
+		potluck_item.dishes = JSON.parse(potluck_item.dishes) unless potluck_item.dishes.is_a?(Array)
 	end
 
 	validates :event_id, :category, :dishes, :host_quantity, :presence => true
@@ -11,5 +11,5 @@ class PotluckItem < ActiveRecord::Base
 
 	attr_accessible :event_id, :category, :dishes, :host_quantity
 	serialize :dishes
-	
+
 end
