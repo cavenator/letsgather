@@ -3,39 +3,37 @@
 <div class="row-fluid">
 	<div class="span4">
 		<div>
-			<span style="font-weight:bold;font-size:14px">Host: </span>
-			<span style="font-size:14px"><%= @event.user.full_name %></span>
+			<span style="font-weight:bold;font-size:1em">Host: </span>
+			<span style="font-size:1em"><%= @event.user.full_name %></span>
 		</div>
 		<div>
-			<span style="font-weight:bold;font-size:14px">Host Email: </span>
-			<span style="font-size:14px"><%= @event.user.email %></span>
+			<span style="font-weight:bold;font-size:1em">Host Email: </span>
+			<span style="font-size:1em"><%= @event.user.email %></span>
 		</div>
 		<div>
-			<span style="font-weight:bold;font-size:14px">Start Date: </span>
-			<span style="font-size:14px"><%= @event.display_start_time %></span>
+			<span style="font-weight:bold;font-size:1em">Start Date: </span>
+			<span style="font-size:1em"><%= @event.display_start_time %></span>
 		</div>
 		<div>
-			<span style="font-weight:bold;font-size:14px">RSVP Date: </span>
-			<span style="font-size:14px"><%= @event.display_rsvp_time %></span>
-		<div style="font-size:14px;margin-top:1em;"><%= @event.rsvp_countdown %></div>
-		<div style="margin-top:1em"><span style="font-size:14px;font-weight:bold;">Number of guest attending: </span><%= @event.attending_guest_count %></div>
-		<div style="margin-top:1em">
-		<%= link_to 'Back', events_path, :class=>"btn btn-link" %></div>
+			<span style="font-weight:bold;font-size:1em">RSVP Date: </span>
+			<span style="font-size:1em"><%= @event.display_rsvp_time %></span>
+		<div style="font-size:1em;margin-top:1em;"><%= @event.rsvp_countdown %></div>
+		<div style="margin-top:1em"><span style="font-size:1em;font-weight:bold;">Number of guest attending: </span><%= @event.attending_guest_count %></div>
 	</div>
 </div>
 	<div class="span3">
-	<span style="font-weight:bold;font-size:14px">Event Location: </span>
+	<span style="font-weight:bold;font-size:1em">Event Location: </span>
 	<% if @event.location %>
 		<%= @event.location1 %><br />
 		<%= @event.location2 %>
 	<% end %>
 </div>
 	<div class="span4">
-		<span style="font-weight:bold;font-size:14px;">Need to know info from the host:</span>
+		<span style="font-weight:bold;font-size:1em;">Need to know info from the host:</span>
 		<% if @event.supplemental_info %>
 			<%= @event.supplemental_info %>
 		<% else %>
-			<%= "Undecided" %>
+			<%= "TBD" %>
 		<% end %>
 	</div>
 </div>
@@ -48,6 +46,7 @@
 		<input type="text" class="btn btn-warning" id="undecided-button" value="Undecided" onclick="rsvp('Undecided', <%= @attendee.id %>)" />
 		<div id="comment-box">
 		<%= form_for(@attendee, :url=> [@event,@attendee], :method=>"PUT") do |f| %>
+
 		<%= f.hidden_field :id %>
 		<%= f.hidden_field :rsvp %>
 		<div>
@@ -61,13 +60,16 @@
 			<%= f.select(:category, options_for_select(@event.potluck_items.map{|item| [item.category, item.category]})) %>
 			<select id='attendee_dish' name='attendee[dish]'><option value="">Undecided</option></select>
 		</div>
-		<input type="button" id="cancel" class="btn" value="Cancel" />
   	<div>
+			<button id="cancel" class="btn">Cancel</button>
     	<button id="submit" class="btn btn-primary">RSVP</button>
   	</div>
 		<% end %>
 		</div>
 	</div>
+</div>
+<div style="margin-top:1em">
+	<%= link_to 'Back', events_path, :class=>"btn btn-link" %>
 </div>
 <script type="text/javascript">
 		function rsvp(answer, id){
@@ -79,12 +81,6 @@
 
 		$(document).ready(function(){
 			var category_array = [], dishes = {}, flash_message = $("#flash-message"), category_select = $("#attendee_category");
-/*			$.getJSON(window.location.pathname+"/potluck_items.json", function(data){
-				$.each(data, function(index, item){
-					category_array.push(item.category);
-					dishes[item.category] = item.dishes
-				});
-			});*/
 
 			$.ajax({
 				url: window.location.pathname+"/potluck_items.json",
@@ -110,12 +106,6 @@
 					$("#comment-box").hide();
 					return false;
 			});
-
-	/*		$.getJSON($("form").attr('action'), function(data){
-				var dish = data.dish, category = data.category;
-				$("#attendee_category").val(category);
-				$("#attendee_dish").val(dish);
-			});*/
 
 			category_select.change(function(){
 				var data = $(this).val();

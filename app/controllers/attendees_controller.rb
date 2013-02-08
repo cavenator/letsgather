@@ -86,13 +86,17 @@ class AttendeesController < ApplicationController
     @attendee = Attendee.find(params[:id])
 		@event = Event.find(params[:event_id])
 		@user = User.new
+		error_message = String.new
 
     respond_to do |format|
       if @attendee.update_attributes(params[:attendee])
         format.html { redirect_to event_url(@event), notice: 'RSVP was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { redirect_to event_url(@event), notice: "RSVP couldn't be updated since it did not receive any of the following responses" }
+				@attendee.errors.full_messages.each do |message|
+					error_message += " #{message}\n,"
+				end
+        format.html { redirect_to event_url(@event), notice: "RSVP couldn't be updated since it did not receive any of the following responses:#{error_message.chop}" }
         format.json { render json: @attendee.errors, status: :unprocessable_entity }
       end
     end

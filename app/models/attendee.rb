@@ -5,8 +5,8 @@ class Attendee < ActiveRecord::Base
 
 		validates :event_id, :email, :rsvp, :presence => true
 		validates :email, :uniqueness => { :scope => :event_id, :message => "should be unique per event" }
-		validates :rsvp, :inclusion => { :in => ["Going", "Not Going", "Undecided"] , :message => "Please submit your RSVP with 'Going', 'Not Going', 'Undecided'" }
-		validates :num_of_guests, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
+		validates :rsvp, :inclusion => { :in => ["Going", "Not Going", "Undecided"] , :message => "needs to be submitted with 'Going', 'Not Going', 'Undecided'" }
+		validates :num_of_guests, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :message => "need to be specified with a number" }
 
 		#accepts an email list in the form of an Array and the event object
 		def self.invite(email_list, event)

@@ -4,13 +4,13 @@
 <div class="row">
 <div class="span4">
 <div>
-<span style="font-weight:bold;font-size:14px">Name: </span>
-<span style="font-size:14px"><%= @event.name %></span>
+<span style="font-weight:bold;font-size:1em">Name: </span>
+<span style="font-size:1em"><%= @event.name %></span>
 </div><div>
-<span style="font-weight:bold;font-size:14px">Start Date: </span>
-<span style="font-size:14px"><%= @event.display_start_time %></span>
-<span style="font-weight:bold;font-size:14px">RSVP Date: </span>
-<span style="font-size:14px"><%= @event.display_rsvp_time %></span>
+<span style="font-weight:bold;font-size:1em">Start Date: </span>
+<span style="font-size:1em"><%= @event.display_start_time %></span>
+<span style="font-weight:bold;font-size:1em">RSVP Date: </span>
+<span style="font-size:1em"><%= @event.display_rsvp_time %></span>
 <div style="margin-top:1em">
 <%= link_to 'Edit', edit_event_path(@event), :class=>"btn btn-link" %> | <%= link_to 'Back', events_path, :class=>"btn btn-link" %></div>
 </div>
