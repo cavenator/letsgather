@@ -13,7 +13,11 @@
 			<button id="add-more" class="btn btn-success">Add more ...</button>
 			<button id="submit" class="btn btn-primary">Send</button>
 	</div>
-<div>
+</div>
+<div class="row">
+	<div class="span6" style="margin-top: 1.5em;">
+	<span class="btn"><%= link_to 'Back to Event', @event, {:style=>"color:black"} %></span></div>
+</div>
 <form accept-charset="UTF-8" action="" class="form-horizontal" method="post">
 		<input type="hidden" name="email_invites" id="email_invites" value="" >
 </form>

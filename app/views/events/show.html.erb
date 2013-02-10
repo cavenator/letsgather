@@ -58,7 +58,7 @@
 	<div id="locationModal" class="modal hide" data-remote="">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal">×</button>
-			<h2>Edit Location</h3>
+			<h2>Edit Location</h2>
 		</div>
 		<div class="modal-body">
 		</div>
@@ -71,7 +71,7 @@
 	<div id="supplementalInfoModal" class="modal hide" data-remote="">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal">×</button>
-			<h2>Provide info here</h3>
+			<h2>Provide info here</h2>
 		</div>
 		<div class="modal-body">
 		</div>
@@ -81,26 +81,29 @@
 	</div>
 <script>
 	$(document).ready(function() {
-	$("#locationModal").attr('data-remote',document.location.pathname+"/change_location");
-	$("#supplementalInfoModal").attr('data-remote',document.location.pathname+"/supplemental_info");
-	$("#guests").click(function(){
-			$("#supplemental_info").removeClass("active");
-			$(this).addClass("active");
-			render_content("guests");
+		$("#guests").click(function(){
+				$("#supplemental_info").removeClass("active");
+				$(this).addClass("active");
+				render_content("guests");
+			});
+		$("#locationModal").attr('data-remote',document.location.pathname+"/change_location");
+		$("#supplementalInfoModal").attr('data-remote',document.location.pathname+"/supplemental_info");
+		$("#invite_guests").attr('href',document.location.pathname+"/attendees/add_attendees");
+		$("#potluck_list").attr('href', document.location.pathname+"/potluck_items");
+		$("#new_category").attr('href', document.location.pathname+"/potluck_items/new");
+	
+		$("#location-href").click(function(){
+			$(this).show();
 		});
-	$("#supplemental_info").click(function(){
+
+		$("#supplemental_info").click(function(){
 			$("#guests").removeClass("active");
 			$(this).addClass("active");
 			$("#frame_content").attr('src',"");
-			$("#supplementalInfoModal").modal('show');
+			console.log("I've been pushed");
+			$("#supplementalInfoModal").show();
+			console.log("Location should be shown");
 		});
 	});
 
-	$("#invite_guests").attr('href',document.location.pathname+"/attendees/add_attendees");
-	$("#potluck_list").attr('href', document.location.pathname+"/potluck_items");
-	$("#new_category").attr('href', document.location.pathname+"/potluck_items/new");
-	
-	$("#location-href").click(function(){
-		$("#locationModal").modal('show');
-	});
 </script>

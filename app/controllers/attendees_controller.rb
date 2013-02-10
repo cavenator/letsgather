@@ -103,6 +103,7 @@ class AttendeesController < ApplicationController
   end
 
 	def add_attendees
+		@event = Event.find(params[:event_id])
 	end
 
 	def invite_guests

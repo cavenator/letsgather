@@ -2,7 +2,10 @@
 <div id="flash_notice"><%= flash[:notice] %></div>
 <%= render 'form_new' %>
 
-<%= link_to 'Back', event_potluck_items_path %>
+<%= link_to 'Back to List', event_potluck_items_path %>
+<div style="margin-top: 1.5em">
+	<span class="btn"><%= link_to 'Back to Event', @event, {:style=>"color:black"} %></span>
+</div>
 <script>
 
 	$(document).ready(function(){
