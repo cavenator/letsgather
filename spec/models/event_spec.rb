@@ -18,7 +18,7 @@ describe Event do
 			event = FactoryGirl.build(:event, :start_date => nil)
 			expect(event).to_not be_valid
 			event.save
-			event.should have(1).error_on(:start_date)
+			event.should have(2).error_on(:start_date)
 		end
 
 		it "should always start in the future" do
@@ -40,6 +40,7 @@ describe Event do
 	describe "user minimum requirements before creating event" do
 		before(:all) do
 			User.destroy_all
+			Event.destroy_all
 		end
 
 		it "should check to ensure that a user has an email" do
@@ -54,6 +55,7 @@ describe Event do
 	describe "Finding the responses for an event" do
 		before(:all) do
 			User.destroy_all
+			Event.destroy_all
 			@event = FactoryGirl.create(:event)
 			@host = @event.user
 			@bob = FactoryGirl.create(:bob)
@@ -71,12 +73,13 @@ describe Event do
 	describe "Start Date and RSVP parsing" do
 		before(:all) do
 			User.destroy_all
+			Event.destroy_all
 		end
 
 		it "should be able to parse dates into valid datetime formats in PST" do
 			event = FactoryGirl.build(:event)
 			expect(event).to be_valid
-			start_date = "2014-02-02 22:10 -0800"
+			event.start_date = "2014-02-02 22:10 -0700"
 			expect(event).to be_valid
 		end
 	end

@@ -58,7 +58,12 @@
 			<%= f.text_field :num_of_guests %>
 			<label>I am bringing </label>
 			<%= f.select(:category, options_for_select(@event.potluck_items.map{|item| [item.category, item.category]})) %>
-			<select id='attendee_dish' name='attendee[dish]'><option value="">Undecided</option></select>
+			<select id='attendee_select_dish'><option value="">Undecided</option></select>
+			<%= f.text_field :dish %>
+			<div id="checkbox_div">
+				Do not like what you see?  Bring your own (and check the box): 
+				<%= f.check_box :bringing_custom %>
+			</div>
 		</div>
   	<div>
 			<button id="cancel" class="btn">Cancel</button>
@@ -80,7 +85,7 @@
 		}
 
 		$(document).ready(function(){
-			var category_array = [], dishes = {}, flash_message = $("#flash-message"), category_select = $("#attendee_category");
+			var category_array = [], dishes = {}, flash_message = $("#flash-message"), category_select = $("#attendee_category"), dish_select = $("#attendee_select_dish");
 
 			$.ajax({
 				url: window.location.pathname+"/potluck_items.json",
@@ -92,6 +97,18 @@
 						category_array.push(item.category);
 						dishes[item.category] = item.dishes
 					});
+				}
+			});
+
+			$("#attendee_bringing_custom").change(function(){
+				var attendee_dish = $("#attendee_dish"), attendee_select = $("#attendee_select_dish");
+				if ($(this).is(":checked")){
+					attendee_dish.show();
+					attendee_select.hide();
+				} else {
+					attendee_select.show();
+					attendee_dish.hide();
+					attendee_dish.val(attendee_select.val());
 				}
 			});
  
@@ -110,12 +127,17 @@
 			category_select.change(function(){
 				var data = $(this).val();
 				var dish_array = dishes[data];
-				var dish_select = $("#attendee_dish");
+				var dish_select = $("#attendee_select_dish");
 				dish_select.empty();
 				dish_select.append("<option value=''>Undecided</option>");
 				$.each(dish_array, function(index, item){
 					dish_select.append("<option value='"+item+"'>"+item+"</option>");
 				});
+			});
+
+			dish_select.change(function(){
+				var data = $(this).val();
+				$("#attendee_dish").val(data);
 			});
 
 			$.ajax({
@@ -126,7 +148,13 @@
 				success: function(data){
 					var dish = data.dish, category = data.category;
 					$("#attendee_category").val(category).change();
-					$("#attendee_dish").val(dish).change();
+					if (data.bringing_custom){
+						$("#attendee_bringing_custom").attr('checked','checked').change();
+						$("#attendee_dish").val(dish);
+					} else {
+						$("#attendee_select_dish").val(dish).change();
+						$("#attendee_dish").hide();
+					}
 				}
 			});
 

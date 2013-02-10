@@ -4,6 +4,8 @@ class Event < ActiveRecord::Base
 		belongs_to :user
 
 		validates :name,:user_id, :start_date, :rsvp_date, :presence => true
+		validate :start_date_must_be_in_right_format
+		validate :rsvp_date_must_be_in_right_format
 		validate :start_date_must_be_in_the_future
 		validate :rsvp_date_should_be_less_than_start_date
 
@@ -23,6 +25,14 @@ class Event < ActiveRecord::Base
 			statement = "You have 1 day left to RSVP"
 		end
 		return statement
+	end
+
+	def start_date_must_be_in_right_format
+		errors.add(:start_date, 'must be a valid datetime format (YYYY-MM-DD HH:MM -0700)') if ((DateTime.parse(self.start_date.to_s) rescue ArgumentError) == ArgumentError)
+	end
+
+	def rsvp_date_must_be_in_right_format
+		errors.add(:rsvp_date, 'must be a valid datetime format (YYYY-MM-DD HH:MM -0700)') if ((DateTime.parse(self.rsvp_date.to_s) rescue ArgumentError) == ArgumentError)
 	end
 
 	def rsvp_date_should_be_less_than_start_date

@@ -9,6 +9,12 @@ describe EventsController do
 		@user = FactoryGirl.create(:user,:email=>"testperson@gmail.com")
 		sign_in @user
 	end
+
+	def login_for_bob
+		@request.env["devise.mapping"] = Devise.mappings[:user]
+		sign_in @bob
+	end
+
 	context "list of events index page" do
 
 		it "should be able to see list of created events" do
@@ -35,7 +41,7 @@ describe EventsController do
 		after(:all) do
 			User.destroy_all
 			Event.destroy_all
-			Host.destroy_all
+			Role.destroy_all
 		end
 	end
 
@@ -50,6 +56,11 @@ describe EventsController do
 	end
 
 	describe "unauthorized handling" do
+		before(:all) do
+			User.destroy_all
+			Event.destroy_all
+		end
+
 		it "should only allow users to access their events or events they are invited to only" do
 			@event = FactoryGirl.create(:event_secondary)
 			Role.create(:user_id => @event.user.id, :event_id => @event.id, :privilege => "host")
@@ -58,5 +69,19 @@ describe EventsController do
 			response.should render_template(:file => "#{Rails.root}/public/401.html")
 			response.status.should == 401
 		end
+
+		it "should ensure that attendees that have been removed from the event should not be allowed" do
+			@event = FactoryGirl.create(:event)
+			@bob = FactoryGirl.create(:bob)
+			attendee = Attendee.create(:event_id => @event.id, :user_id => @bob.id, :rsvp => "Going", :email => @bob.email)
+			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => "guest")
+
+			Attendee.destroy(attendee)
+			login_for_bob
+			get 'show', :id => @event.id
+			response.should render_template(:file => "#{Rails.root}/public/401.html")
+			response.status.should == 401
+		end
 	end
+
 end

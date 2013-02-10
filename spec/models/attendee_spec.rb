@@ -110,4 +110,50 @@ describe Attendee do
 		end
 	end
 
+	describe "Attendee RSVP" do
+
+		before(:each) do
+			User.destroy_all
+			Event.destroy_all
+
+			@attendee = FactoryGirl.build(:attendee)
+		end
+
+		it "should be allowed to have both a blank category and dish if custom is not selected" do
+			expect(@attendee).to be_valid
+		end
+
+		it "should verify that dish is not empty if bringing a custom dish" do
+			@attendee.bringing_custom = true
+			@attendee.category = "Salads"
+			expect(@attendee).to_not be_valid
+			expect(@attendee.errors["dish"][0]).to eql("should not be empty if bringing custom dish")
+			@attendee.dish = "Potato Salad"
+			expect(@attendee).to be_valid
+		end
+
+		it "should verify that category is not null when bringing a custom dish" do
+			@attendee.bringing_custom = true
+			@attendee.dish = "Pizza"
+			expect(@attendee).to_not be_valid
+			@attendee.category = "Main Dish"
+			expect(@attendee).to be_valid
+		end
+	end
+
+	describe "Removing Guests" do
+		before(:all) do
+			User.destroy_all
+			Event.destroy_all
+			@event = FactoryGirl.create(:event)
+			@bob = FactoryGirl.create(:bob)
+			@attendee = Attendee.create(:event_id => @event.id, :user_id => @bob.id, :rsvp => "Going", :email => @bob.email)
+			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => "guest")
+		end
+
+		it "should remove the role(s) from the event" do
+			Attendee.destroy(@attendee)
+			expect(Role.where("user_id = ? and event_id = ?",@bob.id,@event.id).count).to eql(0)
+		end
+	end
 end

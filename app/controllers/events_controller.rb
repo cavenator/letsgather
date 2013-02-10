@@ -2,7 +2,7 @@
 class EventsController < ApplicationController
 	before_filter :verify_access, :except => [:index, :new, :create]
 	before_filter :align_attendee_events, :only => :index
-	before_filter :verify_privileges, :only => [:edit, :update]
+	before_filter :verify_privileges, :only => [:edit, :update, :destroy]
   # GET /events
   # GET /events.json
   def index
@@ -46,6 +46,8 @@ class EventsController < ApplicationController
   # GET /events/1/edit
   def edit
     @event = Event.find(params[:id])
+		@event.start_date = @event.start_date.in_time_zone("Pacific Time (US & Canada)").strftime("%Y-%m-%d %H:%M %z")
+		@event.rsvp_date = @event.rsvp_date.in_time_zone("Pacific Time (US & Canada)").strftime("%Y-%m-%d %H:%M %z")
   end
 
   # POST /events
