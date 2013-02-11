@@ -33,26 +33,30 @@
 	</div>
 </div>
 <div class="row">
-<hr/>
-<div class="span3">
-<ul class="nav nav-pills nav-stacked">
-	<li id="guests">
-	<a>Guest list</a>
-	</li>
-	<li id="supplemental_info">
-		<a href="#" data-target="#supplementalInfoModal" data-toggle="modal">Good to know</a>
-	</li>
-	<li>
-		<a id="invite_guests" href="">Invite Guests</a>
-	</li>
-	<li>
-		<a id="potluck_list" href="">View my potluck list</a>
-	</li>
-	<li>
-		<a id="new_category" href="">Add new category to potluck list</a>
-	</li>
-</ul>
-</div><div class="span9"><iframe id="frame_content" style="width:100%;height:100%;position:relative"></iframe></div>
+	<hr/>
+	<div class="span5">
+	<ul class="nav nav-pills nav-stacked">
+		<li id="guests">
+		<a>Review the guest list</a>
+		</li>
+		<li id="supplemental_info">
+			<a href="#" data-target="#supplementalInfoModal" data-toggle="modal">Add info for guests</a>
+		</li>
+		<li>
+			<a id="invite_guests" href="">Invite Guests</a>
+		</li>
+	</ul>
+	</div>
+	<div class="span5">
+	<ul class="nav nav-pills nav-stacked">
+		<li>
+			<a id="potluck_list" href="">view my potluck list</a>
+		</li>
+		<li>
+			<a id="new_category" href="">add new category to potluck list</a>
+		</li>
+	</ul>
+	</div>
 </div>
 
 	<div id="locationModal" class="modal hide" data-remote="">
@@ -81,11 +85,7 @@
 	</div>
 <script>
 	$(document).ready(function() {
-		$("#guests").click(function(){
-				$("#supplemental_info").removeClass("active");
-				$(this).addClass("active");
-				render_content("guests");
-			});
+		$("#guests").find("a").attr('href',document.location.pathname+"/attendees");
 		$("#locationModal").attr('data-remote',document.location.pathname+"/change_location");
 		$("#supplementalInfoModal").attr('data-remote',document.location.pathname+"/supplemental_info");
 		$("#invite_guests").attr('href',document.location.pathname+"/attendees/add_attendees");
@@ -99,10 +99,7 @@
 		$("#supplemental_info").click(function(){
 			$("#guests").removeClass("active");
 			$(this).addClass("active");
-			$("#frame_content").attr('src',"");
-			console.log("I've been pushed");
 			$("#supplementalInfoModal").show();
-			console.log("Location should be shown");
 		});
 	});
 

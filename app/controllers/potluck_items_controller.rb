@@ -63,7 +63,7 @@ class PotluckItemsController < ApplicationController
 
     respond_to do |format|
       if @potluck_item.update_attributes(params[:potluck_item])
-        format.html { redirect_to @potluck_item, notice: 'Potluck item was successfully updated.' }
+        format.html { redirect_to [@event, @potluck_item], notice: 'Potluck item was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

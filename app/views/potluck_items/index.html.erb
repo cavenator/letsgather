@@ -17,9 +17,9 @@
 	</td>
 		<td><div>
 		<div>
-    <%= link_to 'Show', event_potluck_item_path(@event, potluck_item) %> | 
-    <%= link_to 'Edit', edit_event_potluck_item_path(@event, potluck_item) %> | 
-    <%= link_to 'Destroy', event_potluck_item_path(@event, potluck_item), confirm: 'Are you sure?', method: :delete %></div></td>
+    <span class="btn btn-success"><%= link_to 'Show', event_potluck_item_path(@event, potluck_item), {:style=>"color:white"} %></span> | 
+    <span class="btn btn-warning"><%= link_to 'Edit', edit_event_potluck_item_path(@event, potluck_item), {:style=>"color:white"} %></span> | 
+    <span class="btn btn-danger"><%= link_to 'Destroy', event_potluck_item_path(@event, potluck_item), {confirm: 'Are you sure?', method: :delete, :style=>"color:white"} %></span></div></td>
   </tr>
 <% end %>
 </table>

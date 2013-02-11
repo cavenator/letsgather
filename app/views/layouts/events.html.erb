@@ -5,22 +5,12 @@
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
-  <script type="text/javascript">
-   function render_content(category){
-			var frame = $("#frame_content"), protocol = document.location.protocol, host = document.location.host, pathname = document.location.pathname;
-			var window_url = protocol + "//" + host + pathname;
-			if(category == "guests")
-				frame.attr('src', window_url+'/attendees');
-			else
-				frame.attr('src',pathname+'/supplemental_info');
-		}
-</script>
 </head>
 <body style="padding:1em 5em 5em 5em;">
 <div class="container-fluid">
 <div class="navbar"><div class="navbar-inner">
 <div class="nav" style="float:right">
-<a id="accountLink" class="brand" data-toggle="modal" data-target="#userModal" onclick="$('#userModal').modal('show');">Edit Profile</a>
+<a id="accountLink" class="brand" data-toggle="modal" data-target="#userModal" onclick="$(this).show();">Edit Profile</a>
 <%= link_to 'Sign out', {:controller => "devise/sessions", :action => "destroy" }, {:method => :delete, :class=>"brand"} %>
 </div>
 </div></div>
