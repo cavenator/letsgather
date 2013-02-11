@@ -7,7 +7,7 @@
     </td>
 		<td style="font-size:16px"><%= "Starts on "+ event.start_date.strftime("%m/%d/%Y") %>
 		<div>You are currently <%= Attendee.find_rsvp_for(current_user, event) %></div></td>
-    <td><%= link_to 'Show', event %></td>
+    <td><span class="btn btn-success"><%= link_to 'Show', event, { :style => "color:white" } %></span></td>
 		<td />
 		<td />
 		</div>
