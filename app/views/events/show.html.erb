@@ -34,7 +34,7 @@
 </div>
 <div class="row">
 	<hr/>
-	<div class="span5">
+	<div class="span3">
 	<ul class="nav nav-pills nav-stacked">
 		<li id="guests">
 		<a>Review the guest list</a>
@@ -47,7 +47,20 @@
 		</li>
 	</ul>
 	</div>
-	<div class="span5">
+	<div class="span3">
+		<ul class="nav nav-pills nav-stacked">
+		<li id="attending_guests">
+			<a href="#" data-target="#attendingGuests" data-toggle="modal">Who's coming?</a>
+		</li>
+		<li id="unattending_guests">
+			<a href="#" data-target="#notAttendingGuests" data-toggle="modal">Who's not coming?</a>
+		</li>
+		<li id="undecided_guests">
+			<a href="#" data-target="#undecidedGuests" data-toggle="modal">Who's undecided?</a>
+		</li>
+		</ul>
+	</div>
+	<div class="span3">
 	<ul class="nav nav-pills nav-stacked">
 		<li>
 			<a id="potluck_list" href="">view my potluck list</a>
@@ -83,6 +96,62 @@
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
 		</div>
 	</div>
+
+	<div id="attendingGuests" class="modal hide">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">x</button>
+			<h2>Attending</h2>
+		</div>
+		<div class="modal-body">
+			<% @event.attendees.where("rsvp = 'Going'").each do |attendee| %>
+				<div class="guest_breakpoint">
+					<p><%= attendee.email %></p>
+					<p>Additional guests:  <%= attendee.num_of_guests %></p>
+					<p>Comment(s): <%= attendee.comment %></p>
+					<p>Dish:  <% if attendee.dish.blank? %> Undecided <% else %><%= attendee.dish %>(<%= attendee.category %>) <% end %>
+				</div>
+			<% end %>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
+
+	<div id="notAttendingGuests" class="modal hide">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">x</button>
+			<h2>Not Coming</h2>
+		</div>
+		<div class="modal-body">
+			<% @event.attendees.where("rsvp = 'Not Going'").each do |attendee| %>
+				<div class="guest_breakpoint">
+					<p><%= attendee.email %></p>
+					<p>Comment(s): <%= attendee.comment %></p>
+				</div>
+			<% end %>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
+	<div id="undecidedGuests" class="modal hide">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">x</button>
+			<h2>Undecided</h2>
+		</div>
+		<div class="modal-body">
+			<% @event.attendees.where("rsvp = 'Undecided'").each do |attendee| %>
+				<div class="guest_breakpoint">
+					<p><%= attendee.email %></p>
+					<p>Comment(s): <% if attendee.comment.blank? %>None<% else %><%= attendee.comment %><% end %></p>
+				</div>
+			<% end %>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
+
 <script>
 	$(document).ready(function() {
 		$("#guests").find("a").attr('href',document.location.pathname+"/attendees");
@@ -96,10 +165,18 @@
 			$(this).show();
 		});
 
-		$("#supplemental_info").click(function(){
-			$("#guests").removeClass("active");
-			$(this).addClass("active");
-			$("#supplementalInfoModal").show();
+		function removeActiveClass(){
+			$("#supplemental_info").removeClass("active");
+			$("#attending_guests").removeClass("active");
+			$("#unattending_guests").removeClass("active");
+			$("#undecided_guests").removeClass("active");
+		}
+
+		$("li").each(function (index, data){
+			$(this).click(function(){
+				removeActiveClass();
+				$(this).addClass("active");
+			});
 		});
 	});
 
