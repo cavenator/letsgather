@@ -46,8 +46,6 @@ class EventsController < ApplicationController
   # GET /events/1/edit
   def edit
     @event = Event.find(params[:id])
-		@event.start_date = @event.start_date.in_time_zone("Pacific Time (US & Canada)").strftime("%Y-%m-%d %H:%M %z")
-		@event.rsvp_date = @event.rsvp_date.in_time_zone("Pacific Time (US & Canada)").strftime("%Y-%m-%d %H:%M %z")
   end
 
   # POST /events

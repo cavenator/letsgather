@@ -15,12 +15,22 @@
 	<%= f.text_field :name %>
 </p>
 <p>¬
-  <%= f.label(:start_date, "Start Date (format: YYYY-MM-DD HH:MM -0700):") %>
-▸ <%= f.text_field :start_date, :id => "start_date" %>¬
+	<% if @event.start_date.blank? %>
+		<%= f.label(:start_date, "Start Date (format: YYYY-MM-DD HH:MM -0700):") %>
+▸ 	<%= f.text_field :start_date, :id => "start_date" %>
+	<% else %>
+		<%= f.label(:start_date, "Start Date (format: YYYY-MM-DD HH:MM -0700):") %>
+		<input type="text" id="start_date" name="event[start_date]" value="<%= @event.start_date.in_time_zone('Pacific Time (US & Canada)').strftime('%Y-%m-%d %H:%M %z') %>" />
+	<% end %>
 </p>
 <p>
-	<%= f.label(:rsvp_date, "RSVP Date (format: YYYY-MM-DD HH:MM -0700:") %>
-	<%= f.text_field :rsvp_date, :id => "rsvp_date" %>
+	<% if @event.rsvp_date.blank? %>
+		<%= f.label(:rsvp_date, "RSVP Date (format: YYYY-MM-DD HH:MM -0700:") %>
+		<%= f.text_field :rsvp_date, :id => "rsvp_date" %>
+	<% else %>
+		<%= f.label(:rsvp_date, "RSVP Date (format: YYYY-MM-DD HH:MM -0700:") %>
+		<input type="text" id="rsvp_date" name="event[rsvp_date]" value="<%= @event.rsvp_date.in_time_zone('Pacific Time (US & Canada)').strftime('%Y-%m-%d %H:%M %z') %>" />
+	<% end %>
 </p>
   <div class="actions">
     <%= f.submit %>
