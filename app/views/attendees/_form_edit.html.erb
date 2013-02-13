@@ -23,7 +23,7 @@
 
 	<p>
 		<%= f.label :rsvp %>
-		<%= f.text_field :rsvp %>
+		<%= f.select(:rsvp, options_for_select([['Going','Going'],['Not Going','Not Going'],['Undecided','Undecided']])) %>
 	</p>
 
 

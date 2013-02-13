@@ -2,19 +2,23 @@
 <div class="alert alert-success" id="notice"><%= notice %></div>
 <% end %>
 <div class="row">
-<div class="span4">
-<div>
-<span style="font-weight:bold;font-size:1em">Name: </span>
-<span style="font-size:1em"><%= @event.name %></span>
-</div><div>
-<span style="font-weight:bold;font-size:1em">Start Date: </span>
-<span style="font-size:1em"><%= @event.display_start_time %></span>
-<span style="font-weight:bold;font-size:1em">RSVP Date: </span>
-<span style="font-size:1em"><%= @event.display_rsvp_time %></span>
-<div style="margin-top:1em">
-<%= link_to 'Edit', edit_event_path(@event), :class=>"btn btn-link" %> | <%= link_to 'Back', events_path, :class=>"btn btn-link" %></div>
-</div>
-</div><div id="location_div" class="span4">
+	<div class="span3">
+		<div>
+			<span style="font-weight:bold;font-size:1em">Name: </span>
+			<span style="font-size:1em"><%= @event.name %></span>
+		</div>
+		<div>
+			<div>
+			<span style="font-weight:bold;font-size:1em">Start Date: </span>
+			<span style="font-size:1em"><%= @event.display_start_time %></span></div>
+			<div>
+			<span style="font-weight:bold;font-size:1em">RSVP Date: </span>
+			<span style="font-size:1em"><%= @event.display_rsvp_time %></span></div>
+			<div style="margin-top:1em">
+				<%= link_to 'Edit', edit_event_path(@event), :class=>"btn btn-link" %> | <%= link_to 'Back', events_path, :class=>"btn btn-link" %></div>
+		</div>
+	</div>
+	<div id="location_div" class="span3">
 	<% if @event.location %>
 		<%= @event.location1 %><br />
 		<%= @event.location2 %>
@@ -23,12 +27,14 @@
 		<button id="location-href" href="#locationModal" class="btn btn-primary" data-toggle="modal" style="margin:10px 0px 0px 0px">Update Location</button>
 	</div>
 </div>
-	<div class="span4"> Put potluck outstanding items
-		<div><span class="label label-success">Appetizers and Sides (0)</span></div>
-		<div><span class="label label-success">Salads (0)</span></div>
-		<div><span class="label label-success">Main Dishes (0)</span></div>
-		<div><span class="label label-success">Sides (0)</span></div>
-		<div><span class="label label-success">Desserts (0)</span></div>
+	<div class="span4"> Potluck statistics: <br /><span class="label">Category</span><br /><span class="badge badge-success">quantity of dishes you requested</span><br /><span class="badge badge-info">quantity guests are bringing</span><br /><br />
+		<% if @event.potluck_items.count > 0 %>
+			<% @event.potluck_items.each do |item| %>
+				<div><span class="label"><%= item.category %></span> | <span class="badge badge-success"><%= item.host_quantity %></span> | <span class="badge badge-info"><%= @event.find_attendee_dish_count(item.category) %></span></div>
+			<% end %>
+		<% else %>
+			<div><span class="label label-info">Currently you have no potluck categories created</span></div>
+		<% end %>
 		<div>Number of guest attending: <%= @event.attending_guest_count %></div>
 	</div>
 </div>

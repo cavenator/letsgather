@@ -117,6 +117,7 @@
 				flash_message.addClass("alert alert-info");
 			$("#guestcount_div").hide();
 			$("#comment-box").hide();
+			$("#attendee_dish").hide();
 
 			$("#cancel").click(function(){
 					$("#guestcount_div").hide();
@@ -152,6 +153,7 @@
 						$("#attendee_bringing_custom").attr('checked','checked').change();
 						$("#attendee_dish").val(dish);
 					} else {
+						
 						$("#attendee_select_dish").val(dish).change();
 						$("#attendee_dish").hide();
 					}
@@ -165,6 +167,7 @@
 					$("#attendee_num_of_guests").val(0);
 					$("#attendee_category").val("");
 					$("#attendee_dish").val("");
+					$("#attendee_bringing_custom").removeAttr('checked');
 				}
 			});
 		});

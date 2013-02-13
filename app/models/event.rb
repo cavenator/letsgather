@@ -58,6 +58,10 @@ class Event < ActiveRecord::Base
 		return guest_count
 	end
 
+	def find_attendee_dish_count(category)
+		return self.attendees.where("rsvp = 'Going' and category = ?", category).count
+	end
+
 	def location
 		return true unless self.address1.eql?(nil)
 	end
