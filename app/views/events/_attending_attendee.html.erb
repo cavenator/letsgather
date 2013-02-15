@@ -1,0 +1,9 @@
+
+<div class="guest_breakpoint">
+	<p><%= attending_attendee.email %></p>
+	<p>Additional guests:  <%= attending_attendee.num_of_guests %></p>
+	<p>Comment(s): <%= attending_attendee.comment %></p>
+	<p>Dish:  <% if attending_attendee.dish.blank? %> Undecided <% else %><%= attending_attendee.dish %>(<%= attending_attendee.category %>) <% end %>
+</div>
+
+

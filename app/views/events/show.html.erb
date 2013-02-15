@@ -109,14 +109,7 @@
 			<h2>Attending</h2>
 		</div>
 		<div class="modal-body">
-			<% @event.attendees.where("rsvp = 'Going'").each do |attendee| %>
-				<div class="guest_breakpoint">
-					<p><%= attendee.email %></p>
-					<p>Additional guests:  <%= attendee.num_of_guests %></p>
-					<p>Comment(s): <%= attendee.comment %></p>
-					<p>Dish:  <% if attendee.dish.blank? %> Undecided <% else %><%= attendee.dish %>(<%= attendee.category %>) <% end %>
-				</div>
-			<% end %>
+		<%= render :partial => "attending_attendee", :collection => @event.attendees.where("rsvp = 'Going'") %>
 		</div>
 		<div class="modal-footer">
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
@@ -129,12 +122,7 @@
 			<h2>Not Coming</h2>
 		</div>
 		<div class="modal-body">
-			<% @event.attendees.where("rsvp = 'Not Going'").each do |attendee| %>
-				<div class="guest_breakpoint">
-					<p><%= attendee.email %></p>
-					<p>Comment(s): <%= attendee.comment %></p>
-				</div>
-			<% end %>
+			<%= render :partial => "unattending_attendee", :collection => @event.attendees.where("rsvp = 'Not Going'") %>
 		</div>
 		<div class="modal-footer">
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
@@ -146,12 +134,7 @@
 			<h2>Undecided</h2>
 		</div>
 		<div class="modal-body">
-			<% @event.attendees.where("rsvp = 'Undecided'").each do |attendee| %>
-				<div class="guest_breakpoint">
-					<p><%= attendee.email %></p>
-					<p>Comment(s): <% if attendee.comment.blank? %>None<% else %><%= attendee.comment %><% end %></p>
-				</div>
-			<% end %>
+			<%= render :partial => "undecided_attendee", :collection => @event.attendees.where("rsvp = 'Undecided'") %>
 		</div>
 		<div class="modal-footer">
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
