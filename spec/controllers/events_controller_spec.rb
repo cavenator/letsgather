@@ -84,4 +84,23 @@ describe EventsController do
 		end
 	end
 
+	describe "emailing capabilities" do
+		before(:all) do
+			User.destroy_all
+			Event.destroy_all
+			@event = FactoryGirl.create(:event)
+			Role.create(:user_id => @event.user.id, :event_id => @event.id, :privilege => "host")
+			@attendees = []
+			@attendees << FactoryGirl.create(:attendee, :event_id => @event.id)
+			@attendees << FactoryGirl.create(:attendee, :event_id => @event.id)
+		end
+
+		it "should be able to email an entire group" do
+			@request.env["devise.mapping"] = Devise.mappings[:user]
+			sign_in @event.user
+	
+			get 'group_email', :id => @event.id
+			response.status.should == 200
+		end
+	end
 end

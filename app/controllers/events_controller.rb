@@ -2,7 +2,7 @@
 class EventsController < ApplicationController
 	before_filter :verify_access, :except => [:index, :new, :create]
 	before_filter :align_attendee_events, :only => :index
-	before_filter :verify_privileges, :only => [:edit, :update, :destroy]
+	before_filter :verify_privileges, :only => [:edit, :update, :destroy, :email_group]
   # GET /events
   # GET /events.json
   def index
@@ -98,6 +98,10 @@ class EventsController < ApplicationController
 	def supplemental_info
 		@event = Event.find(params[:id])
 		render :layout => false
+	end
+
+	def group_email
+		@event = Event.find(params[:id])
 	end
 
 	def edit_supplemental_info

@@ -9,4 +9,14 @@ class AttendeeMailer < ActionMailer::Base
 		subject = "You have been invited to #{@event.name} by #{@host.full_name}"
 		mail(to: guest.email, subject: subject)
 	end
+
+	#group = list of attendees (or guests)
+	def email_group(group)
+
+	end
+
+	#guest = an Attendee object
+	def email_guest(guest)
+
+	end
 end

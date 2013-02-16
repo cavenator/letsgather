@@ -1,6 +1,8 @@
 
 class PotluckItemsController < ApplicationController
 		before_filter :get_event
+		before_filter :verify_privileges
+
 
   # GET /potluck_items
   # GET /potluck_items.json
@@ -89,4 +91,11 @@ class PotluckItemsController < ApplicationController
 	def get_event
 		@event = Event.find(params[:event_id])
 	end
+
+	def verify_privileges
+		unless current_user.is_host_for?(@event)
+			render file: "public/422.html", :formats => [:html], status: :unprocessable_entity and return
+		end
+	end
+
 end

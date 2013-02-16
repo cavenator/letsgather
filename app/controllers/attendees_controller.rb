@@ -106,6 +106,9 @@ class AttendeesController < ApplicationController
 		@event = Event.find(params[:event_id])
 	end
 
+	def email_guest
+	end
+
 	def invite_guests
 		@event = Event.find(params[:event_id])
 		email_invites = JSON.parse(params[:email_invites])

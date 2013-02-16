@@ -1,5 +1,5 @@
 <div class="guest_breakpoint">
-	<p><%= unattending_attendee.email %></p>
+	<p><%= unattending_attendee.email %><span style="float:right"><%= link_to "Email guest", event_attendee_path(attending_attendee.event, unattending_attendee), {:style=>"color:blue", :class => "btn btn-link"} %></span></p>
 	<p>Comment(s): <%= unattending_attendee.comment %></p>
 </div>
 
