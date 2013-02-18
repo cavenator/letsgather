@@ -29,28 +29,41 @@ describe PotluckItemsController do
 #    { :event_id => @event.id, :category => "Beer", :dishes => ["IPA","Pale Ale"], :host_quantity => 1 }
 #  end
 
-	def login_for_bob
+	def login_for_user(user)
 		@request.env["devise.mapping"] = Devise.mappings[:user]
-		sign_in @bob
+		sign_in user
 	end
 
 	describe "Unauthorized handling" do
 		before(:all) do
 			User.destroy_all
 			Event.destroy_all
-		end
-
-		it "should not allow guests to access potlucks landing page (or any other page)" do
+			
 			@event = FactoryGirl.create(:event)
 			@bob = FactoryGirl.create(:bob)
-			attendee = Attendee.create(:event_id => @event.id, :user_id => @bob.id, :rsvp => "Going", :email => @bob.email)
+			@attendee = Attendee.create(:event_id => @event.id, :user_id => @bob.id, :rsvp => "Going", :email => @bob.email)
 			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => "guest")
+		end
 
-			login_for_bob
+		it "should allow guests to access potluck items landing page" do
+
+			login_for_user(@bob)
 			get 'index', :event_id => @event.id
-			response.should render_template(:file => "#{Rails.root}/public/422.html")
-			response.status.should == 422
+			response.status.should == 200
+		end
 
+		it "should not allow guests to create, edit or delete potluck items" do
+			login_for_user(@bob)
+			get 'new', :event_id => @event.id
+			response.status.should == 422
+		end
+
+		it "should not allow people not associated to the event to view potluck items" do
+			other_event = FactoryGirl.create(:event_secondary)
+			other_user = other_event.user
+			login_for_user(other_user)
+			get 'index', :event_id => @event.id
+			response.status.should == 401
 		end
 	end
 end

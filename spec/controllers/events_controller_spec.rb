@@ -102,5 +102,21 @@ describe EventsController do
 			get 'group_email', :id => @event.id
 			response.status.should == 200
 		end
+
+		it "should redirect back to event once the email has been sent" do
+			@request.env["devise.mapping"] =  Devise.mappings[:user]
+			sign_in @event.user
+
+			get 'send_group_email', :id => @event.id, :subject =>"Something here", :body => "body goes here"
+			response.should redirect_to(:action => 'show')
+		end
+
+		it "should redirect back to drafting email if the subject or body is blank" do
+			@request.env["devise.mapping"] =  Devise.mappings[:user]
+			sign_in @event.user
+
+			get 'send_group_email', :id => @event.id, :subject =>"", :body => "body goes here"
+			response.should redirect_to(:action => 'group_email')
+		end
 	end
 end

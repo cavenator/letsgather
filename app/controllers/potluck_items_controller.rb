@@ -1,8 +1,8 @@
 
 class PotluckItemsController < ApplicationController
 		before_filter :get_event
-		before_filter :verify_privileges
-
+		before_filter :verify_privileges, :except => [:index]
+		before_filter :verify_access, :only => [:index]
 
   # GET /potluck_items
   # GET /potluck_items.json
@@ -95,6 +95,12 @@ class PotluckItemsController < ApplicationController
 	def verify_privileges
 		unless current_user.is_host_for?(@event)
 			render file: "public/422.html", :formats => [:html], status: :unprocessable_entity and return
+		end
+	end
+
+	def verify_access
+		unless current_user.belongs_to_event?(@event)
+			render file: "public/401.html" , :formats => [:html], status: :unauthorized and return
 		end
 	end
 

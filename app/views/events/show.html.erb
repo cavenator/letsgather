@@ -109,7 +109,7 @@
 			<h2>Attending</h2>
 		</div>
 		<div class="modal-body">
-		<%= link_to "Email group",@event, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link"} %>
+		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Going"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link"} %>
 		<%= render :partial => "attending_attendee", :collection => @event.attendees.where("rsvp = 'Going'") %>
 		</div>
 		<div class="modal-footer">
@@ -123,7 +123,7 @@
 			<h2>Not Coming</h2>
 		</div>
 		<div class="modal-body">
-			<%= link_to "Email group",@event, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link"} %>
+		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Not Going"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link"} %>
 			<%= render :partial => "unattending_attendee", :collection => @event.attendees.where("rsvp = 'Not Going'") %>
 		</div>
 		<div class="modal-footer">
@@ -136,7 +136,7 @@
 			<h2>Undecided</h2>
 		</div>
 		<div class="modal-body">
-			<%= link_to "Email group",@event, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link"} %>
+		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Undecided"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link"} %>
 			<%= render :partial => "undecided_attendee", :collection => @event.attendees.where("rsvp = 'Undecided'") %>
 		</div>
 		<div class="modal-footer">

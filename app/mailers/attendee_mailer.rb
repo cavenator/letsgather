@@ -11,12 +11,19 @@ class AttendeeMailer < ActionMailer::Base
 	end
 
 	#group = list of attendees (or guests)
-	def email_group(group)
-
+	#The list of emails can be an array of email addresses or a single string with the addresses separated by commas. (Straight from ruby on rails guide)
+	# The @body is passed along and so is the event to the view
+	def email_group(group, event, subject, body)
+		email_list = group.map(&:email)
+		@event = event
+		@body = body
+		mail(to: email_list, subject: subject, :from => @event.user.email)
 	end
 
 	#guest = an Attendee object
-	def email_guest(guest)
-
+	def email_guest(guest, subject, body)
+		@body = body
+		@event = guest.event
+		mail(to: guest.email, subject: subject, :from => @event.user.email)
 	end
 end

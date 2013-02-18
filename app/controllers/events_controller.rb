@@ -102,6 +102,23 @@ class EventsController < ApplicationController
 
 	def group_email
 		@event = Event.find(params[:id])
+		@rsvp_group = params[:rsvp_group]
+	end
+
+	def send_group_email
+		@event = Event.find(params[:id])
+		@subject = params[:subject]
+		@body = params[:body]
+		@rsvp_group = params[:rsvp_group]
+		if @subject.blank? || @body.blank? || @rsvp_group.blank?
+			flash[:notice] = "You must include both a subject and body"
+			redirect_to(:action => :group_email) and return
+		else
+			attendees = @event.attendees.where('rsvp = ?',@rsvp_group)
+			Thread.new { AttendeeMailer.email_group(attendees, @event, @subject, @body).deliver }
+			flash[:notice] = "Message to guests have been sent"
+			redirect_to(:action => :show) and return
+		end
 	end
 
 	def edit_supplemental_info

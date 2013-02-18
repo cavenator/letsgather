@@ -6,12 +6,14 @@ MaximusSamurai::Application.routes.draw do
 	match 'events/:id/supplmenetal_info/edit' => 'events#edit_supplemental_info'
 	match 'events/:id/change_location' => 'events#edit_location'
 	get 'events/:id/group_email', :to => 'events#group_email'
+	get 'events/:id/send_group_email', :to => 'events#send_group_email'
   
 	resources :events do
 		get 'attendees/add_attendees', :to => 'attendees#add_attendees'
 		post 'attendees/invite_guests', :to => 'attendees#invite_guests'
 		post 'attendees/:id/rsvp', :to => 'attendees#rsvp'
 		get 'attendees/:id/email_guest', :to => "attendees#email_guest"
+		get 'attendees/:id/send_guest_email', :to => "attendees#send_guest_email"
 		resources :attendees 
 		resources :potluck_items
   end
