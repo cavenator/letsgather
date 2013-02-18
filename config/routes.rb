@@ -7,6 +7,8 @@ MaximusSamurai::Application.routes.draw do
 	match 'events/:id/change_location' => 'events#edit_location'
 	get 'events/:id/group_email', :to => 'events#group_email'
 	get 'events/:id/send_group_email', :to => 'events#send_group_email'
+	get 'events/:id/email_host', :to => 'events#email_host'
+	get 'events/:id/send_host_email', :to => 'events#send_host_email'
   
 	resources :events do
 		get 'attendees/add_attendees', :to => 'attendees#add_attendees'

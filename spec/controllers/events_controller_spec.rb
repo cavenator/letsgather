@@ -107,7 +107,7 @@ describe EventsController do
 			@request.env["devise.mapping"] =  Devise.mappings[:user]
 			sign_in @event.user
 
-			get 'send_group_email', :id => @event.id, :subject =>"Something here", :body => "body goes here"
+			get 'send_group_email', :id => @event.id, :subject =>"Something here", :body => "body goes here", :rsvp_group => "Undecided"
 			response.should redirect_to(:action => 'show')
 		end
 
@@ -117,6 +117,38 @@ describe EventsController do
 
 			get 'send_group_email', :id => @event.id, :subject =>"", :body => "body goes here"
 			response.should redirect_to(:action => 'group_email')
+		end
+	end
+
+	describe "Guest emailing host capabilities" do
+		before(:all) do
+			User.destroy_all
+			Event.destroy_all
+			@event = FactoryGirl.create(:event)
+			Role.create(:user_id => @event.user.id, :event_id => @event.id, :privilege => "host")
+
+			@bob = FactoryGirl.create(:bob)
+			Attendee.create(:full_name => @bob.full_name, :event_id=>@event.id, :user_id => @bob.id, :email => @bob.email, :rsvp => "Going")
+			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => "guest")
+		end
+
+		it "should allow guests to email the host" do
+			login_for_bob
+			get 'email_host', :id => @event.id
+			response.status.should == 200
+		end
+
+		it "should redirect you back to guest event page if sent correctly" do
+			login_for_bob
+			get 'send_host_email', :id => @event.id, :subject => "Something something", :body => "I am a message"
+			response.status.should == 302
+			response.should redirect_to(:action => :show)
+		end
+
+		it "should take you back to emailing draft page if subject or body is empty" do
+			login_for_bob
+			get 'send_host_email', :id => @event.id
+			response.should redirect_to(:action => :email_host)
 		end
 	end
 end

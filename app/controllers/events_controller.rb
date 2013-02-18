@@ -2,7 +2,7 @@
 class EventsController < ApplicationController
 	before_filter :verify_access, :except => [:index, :new, :create]
 	before_filter :align_attendee_events, :only => :index
-	before_filter :verify_privileges, :only => [:edit, :update, :destroy, :email_group]
+	before_filter :verify_privileges, :only => [:edit, :update, :destroy, :email_group, :send_group_email]
   # GET /events
   # GET /events.json
   def index
@@ -103,6 +103,26 @@ class EventsController < ApplicationController
 	def group_email
 		@event = Event.find(params[:id])
 		@rsvp_group = params[:rsvp_group]
+	end
+
+	def email_host
+		@event = Event.find(params[:id])
+		@host = @event.user
+	end
+
+	def send_host_email
+		@event = Event.find(params[:id])
+		@host = @event.user
+		@subject = params[:subject]
+		@body = params[:body]
+		if @subject.blank? || @body.blank?
+			flash[:notice] = "You must include both a subject and body"
+			redirect_to(:action => :email_host) and return
+		else
+			flash[:notice] = "Message to host has been sent"
+			Thread.new { AttendeeMailer.email_host(@host, @event, @subject, @body, current_user.email).deliver }
+			redirect_to(:action => :show) and return
+		end
 	end
 
 	def send_group_email

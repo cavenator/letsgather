@@ -1,0 +1,20 @@
+<h1>Email host <%= @host.full_name %></h1>
+<% if flash[:notice] %>
+		<div class="alert alert-error"><%= flash[:notice] %></div>
+<% end %>
+
+<%= form_tag "/events/#{@event.id}/send_host_email", :method=>:get do %>
+
+	<p>
+	<%= text_field_tag :subject, @subject || String.new, :placeholder => "Enter email subject here" %>
+	</p>
+	<p>
+	<%= text_area_tag :body, @body || String.new, :rows=>20, :style=>"width:80%" %>
+	</p>
+
+	<div>
+		<span class="btn"><%= link_to('Cancel',@event) %></span>
+		<%= submit_tag "Send", :class=>"btn btn-primary" %>
+	</div>
+
+<% end %>

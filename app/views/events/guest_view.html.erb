@@ -7,8 +7,7 @@
 			<span style="font-size:1em"><%= @event.user.full_name %></span>
 		</div>
 		<div>
-			<span style="font-weight:bold;font-size:1em">Host Email: </span>
-			<span style="font-size:1em"><%= @event.user.email %></span>
+			<%= link_to 'Email host', @event.id.to_s+'/email_host', {:style=>"color:blue"} %>
 		</div>
 		<div>
 			<span style="font-weight:bold;font-size:1em">Start Date: </span>
