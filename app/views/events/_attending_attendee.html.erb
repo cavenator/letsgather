@@ -1,6 +1,6 @@
 
 <div class="guest_breakpoint">
-	<p><%= attending_attendee.email %><span style="float:right"><%= link_to "Email guest", attending_attendee.event.id.to_s+'/attendees/'+attending_attendee.id.to_s+'/email_guest', {:style=>"color:blue", :class => "btn btn-link"} %></span></p>
+	<p><% if attending_attendee.full_name %> <%= attending_attendee.full_name %> <% else %> <%= attending_attendee.email %> <% end %><span style="float:right"><%= link_to "Email guest", attending_attendee.event.id.to_s+'/attendees/'+attending_attendee.id.to_s+'/email_guest', {:style=>"color:blue", :class => "btn btn-link"} %></span></p>
 	<p>Additional guests:  <%= attending_attendee.num_of_guests %></p>
 	<p>Comment(s): <%= attending_attendee.comment %></p>
 	<p>Dish:  <% if attending_attendee.dish.blank? %> Undecided <% else %><%= attending_attendee.dish %>(<%= attending_attendee.category %>) <% end %>

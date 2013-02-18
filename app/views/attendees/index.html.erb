@@ -2,8 +2,8 @@
 
 <table>
   <tr>
+		<th>Name</th>
     <th>Email address</th>
-		<th></th>
     <th>RSVP</th>
 		<th></th>
 		<th></th>
@@ -13,8 +13,8 @@
 
 <% @event.attendees.each do |attendee| %>
   <tr>
+		<td style="width:10%"><%= attendee.full_name %></td>
 		<td style="width:20%"><%= attendee.email %></td>
-		<td style="width:5%"></td>
 		<td style="width:20%;text-align:center"><%= attendee.rsvp %></td>
     <td style="width:20%;float:left;"><span class="btn btn-success"><%= link_to 'Show', event_attendee_url(@event, attendee), { :style=>"color:white" } %></span></td>
     <td style="width:20%;float:left;"><span class="btn btn-warning"><%= link_to 'Edit', edit_event_attendee_url(@event, attendee), { :style => "color:white" } %></span></td>
