@@ -1,7 +1,7 @@
 
 class AttendeesController < ApplicationController
 	before_filter :verify_access
-	before_filter :verify_host_privileges, :only => [:new, :create, :add_attendees, :invite_guests, :email_guest, :send_guest_email ]
+	before_filter :verify_host_privileges, :only => [:new, :create, :add_attendees, :invite_guests ]
 	before_filter :verify_correct_attendee, :only => [:rsvp, :show, :edit, :update, :destroy]
 	#Also, be sure to include a verification filter in which attendees can only update their settings (will have to check for attendee.user_id == current_user.id)
 	#The reason why I did this was because I was getting a "WARNING: Can't verify CSRF token authenticity" and would sign the user out.
@@ -120,7 +120,7 @@ class AttendeesController < ApplicationController
 			flash[:notice] = "You must include both a subject and body"
 			redirect_to(:action => :email_guest) and return
 		else
-			Thread.new { AttendeeMailer.email_guest(@attendee, @subject, @body).deliver }
+			Thread.new { AttendeeMailer.email_guest(@attendee, @subject, @body, current_user).deliver }
 			flash[:notice] = "Message to guest has been sent"
 			redirect_to(@event) and return
 		end

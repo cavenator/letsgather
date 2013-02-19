@@ -120,7 +120,7 @@ class EventsController < ApplicationController
 			redirect_to(:action => :email_host) and return
 		else
 			flash[:notice] = "Message to host has been sent"
-			Thread.new { AttendeeMailer.email_host(@host, @event, @subject, @body, current_user.email).deliver }
+			Thread.new { AttendeeMailer.email_host(@host, @event, @subject, @body, current_user).deliver }
 			redirect_to(:action => :show) and return
 		end
 	end

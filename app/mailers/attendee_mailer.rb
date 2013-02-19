@@ -21,16 +21,18 @@ class AttendeeMailer < ActionMailer::Base
 	end
 
 	#guest = an Attendee object
-	def email_guest(guest, subject, body)
+	def email_guest(guest, subject, body, sender)
 		@body = body
 		@event = guest.event
+		@host = @event.user
+		@sender = sender
 		mail(to: guest.email, subject: subject, from: @event.user.email)
 	end
 
-	def email_host(host, event, subject, body, guest_email)
+	def email_host(host, event, subject, body, sender)
 		@body = body
 		@event = event
-		puts "guest email = #{guest_email}"
-		mail(to: host.email, subject: subject, from: guest_email)
+		@sender = sender
+		mail(to: host.email, subject: subject )
 	end
 end

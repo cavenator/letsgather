@@ -44,10 +44,13 @@
 	<div class="span3">
 		<ul class="nav nav-pills nav-stacked">
 		<li id="attending_guests">
-			<a href="#">Who's coming?</a>
+			<a href="#" data-target="#attendingGuests" data-toggle="modal">Who's coming?</a>
 		</li>
 		<li id="unattending_guests">
-			<a href="#">Who's not coming?</a>
+			<a href="#" data-target="#notAttendingGuests" data-toggle="modal">Who's not coming?</a>
+		</li>
+		<li id="undecided_guests">
+			<a href="#" data-target="#undecidedGuests" data-toggle="modal" data-toggle="modal">Who's not sure?</a>
 		</li>
 		<li id="taken_items">
 			<a href="#">Taken potluck items</a>
@@ -90,6 +93,44 @@
 <div style="margin-top:1em">
 	<%= link_to 'Back', events_path, :class=>"btn btn-link" %>
 </div>
+	<div id="attendingGuests" class="modal hide">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">x</button>
+			<h2>Attending</h2>
+		</div>
+		<div class="modal-body">
+			<%= render :partial => "attending_attendee", :collection => @event.attendees.where("rsvp = 'Going' and id <> ?", @attendee.id) %>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
+
+	<div id="notAttendingGuests" class="modal hide">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">x</button>
+			<h2>Not Coming</h2>
+		</div>
+		<div class="modal-body">
+			<%= render :partial => "unattending_attendee", :collection => @event.attendees.where("rsvp = 'Not Going' and id <> ?", @attendee.id) %>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
+
+	<div id="undecidedGuests" class="modal hide">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">x</button>
+			<h2>Undecided</h2>
+		</div>
+		<div class="modal-body">
+			<%= render :partial => "undecided_attendee", :collection => @event.attendees.where("rsvp = 'Undecided' and id <> ?", @attendee.id) %>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
 <script type="text/javascript">
 		function rsvp(answer, id){
 			$("#attendee_rsvp").val(answer);
