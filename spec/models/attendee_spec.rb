@@ -119,26 +119,23 @@ describe Attendee do
 			@attendee = FactoryGirl.build(:attendee)
 		end
 
-		it "should be allowed to have both a blank category and dish if custom is not selected" do
+		it "should be allowed to have an empty dish selection" do
 			expect(@attendee).to be_valid
 		end
 
-		it "should verify that dish is not empty if bringing a custom dish" do
-			@attendee.bringing_custom = true
-			@attendee.category = "Salads"
+		it "should verify that neither category nor item is blank" do
+			@attendee.dish = [{ "category"=> "Beer", "item" => "IPA", "is_custom" => false },{ "category"=> "Snacks","item"=>"Doritos Nacho Cheese", "is_custom" => true }]
+			expect(@attendee).to be_valid
+			@attendee.dish[1] = {"category"=>"", "item" => "Something", "is_custom"=>true}
 			expect(@attendee).to_not be_valid
-			expect(@attendee.errors["dish"][0]).to eql("should not be empty if bringing custom dish")
-			@attendee.dish = "Potato Salad"
+			@attendee.dish.delete(@attendee.dish.last)
+			expect(@attendee).to be_valid
+			@attendee.dish << {"category" => "Beer", "item" => "", "is_custom" => false }
+			expect(@attendee).to_not be_valid
+			@attendee.dish = []
 			expect(@attendee).to be_valid
 		end
 
-		it "should verify that category is not null when bringing a custom dish" do
-			@attendee.bringing_custom = true
-			@attendee.dish = "Pizza"
-			expect(@attendee).to_not be_valid
-			@attendee.category = "Main Dish"
-			expect(@attendee).to be_valid
-		end
 	end
 
 	describe "Removing Guests" do

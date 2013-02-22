@@ -1,14 +1,18 @@
 class Attendee < ActiveRecord::Base
 		belongs_to :event
   # attr_accessible :title, :body
-		attr_accessible :event_id, :user_id, :invitation_id, :full_name, :email, :rsvp, :num_of_guests, :comment, :category, :dish, :bringing_custom
+		attr_accessible :event_id, :user_id, :invitation_id, :full_name, :email, :rsvp, :num_of_guests, :comment, :dish
+		serialize :dish
+
+		before_validation do |attendee|
+			attendee.dish = JSON.parse(attendee.dish) unless attendee.dish.is_a?(Array)
+		end
 
 		validates :event_id, :email, :rsvp, :presence => true
 		validates :email, :uniqueness => { :scope => :event_id, :message => "should be unique per event" }
 		validates :rsvp, :inclusion => { :in => ["Going", "Not Going", "Undecided"] , :message => "needs to be submitted with 'Going', 'Not Going', 'Undecided'" }
 		validates :num_of_guests, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :message => "need to be specified with a number" }
-		validates :category, :presence => {:message => "should be specified if bringing custom dish" }, :if => :bringing_custom?
-		validates :dish, :presence => { :message => "should not be empty if bringing custom dish"}, :if => :bringing_custom?
+		validate  :verify_correctness_of_dishes, :unless => :is_dish_empty?
 
 		after_destroy do |attendee|
 			if attendee.user_id.blank?
@@ -39,8 +43,16 @@ class Attendee < ActiveRecord::Base
 			return email_hash
 		end
 
-		def bringing_custom?
-			return self.bringing_custom
+		def is_dish_empty?
+			return self.dish.blank?
+		end
+
+		def verify_correctness_of_dishes
+			self.dish.each do |item|
+				if item["category"].blank? || item["item"].blank?
+					errors.add(:dish, " should have both a category and an item declared. You have selected #{item['category']} with item #{item['item']}")
+				end
+			end
 		end
 
 		def self.find_attendee_for(user, event)

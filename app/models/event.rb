@@ -59,7 +59,11 @@ class Event < ActiveRecord::Base
 	end
 
 	def find_attendee_dish_count(category)
-		return self.attendees.where("rsvp = 'Going' and category = ?", category).count
+		category_count = 0
+		self.attendees.where("rsvp = 'Going'").each do |attendee|
+			category_count += attendee.dish.find_all { |item| item["category"].eql?(category) }.count
+		end
+		return category_count
 	end
 
 	def location
