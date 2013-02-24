@@ -92,5 +92,16 @@ class Event < ActiveRecord::Base
 		end
 		return items_for_guests
 	end
-	
+
+	def get_potluck_list_per_category(category)
+		self.potluck_items.find_by_category(category)
+	end
+
+	def get_potluck_inventory_for_categories(category_array)
+		item_hash_array = []
+		self.potluck_items.where("category in (?)", category_array).each do |potluck_item|
+			item_hash_array << {"category" => potluck_item.category, "available_items" => potluck_item.dishes, "taken_items" => potluck_item.taken_items}
+		end
+		return item_hash_array
+	end
 end

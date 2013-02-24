@@ -117,6 +117,12 @@ describe Attendee do
 			Event.destroy_all
 
 			@attendee = FactoryGirl.build(:attendee)
+			@event = @attendee.event
+			@rico_suave = FactoryGirl.create(:rico)
+			@bob = FactoryGirl.create(:bob)
+			@potluck_items = FactoryGirl.create(:potluck_item, :event_id => @event.id)
+			@rico_attendee = FactoryGirl.create(:attendee, :event_id => @event.id, :user_id => @rico_suave.id, :email => @rico_suave.email, :rsvp => "Going")
+			@bob_attendee = FactoryGirl.create(:attendee, :event_id => @event.id, :user_id => @bob.id, :email => @bob.email, :rsvp => "Going")
 		end
 
 		it "should be allowed to have an empty dish selection" do
@@ -136,6 +142,54 @@ describe Attendee do
 			expect(@attendee).to be_valid
 		end
 
+		describe "Item re-arrangement" do
+			it "should verify if an item is available for the taking, mark it as taken" do
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}]
+				@rico_attendee.save
+
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+		
+				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id,"item" => "Brown Ale"}])
+				expect(refreshed_list.dishes).to eql(["Stout", "IPA", "Pale Ale"])
+
+				@rico_attendee.dish = []
+				@rico_attendee.save
+
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+				expect(refreshed_list.dishes).to eql(["Stout","IPA","Pale Ale","Brown Ale"])
+				expect(refreshed_list.taken_items).to be_blank
+			end
+
+			it "should reset the available items back if attendee does not attend or is undecided" do
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false},{"category" => "Beer", "item" => "Pliny the Younger", "is_custom" => true }]
+				@rico_attendee.save
+
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+		
+				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id,"item" => "Brown Ale"}])
+				expect(refreshed_list.dishes).to eql(["Stout", "IPA", "Pale Ale"])
+
+				@rico_attendee.rsvp = "Not Going"
+				@rico_attendee.save
+
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+				expect(@rico_attendee.rsvp).to eql("Not Going")
+				expect(refreshed_list.dishes).to eql(["Stout","IPA","Pale Ale","Brown Ale"])
+				expect(refreshed_list.taken_items).to eql([])
+			end
+
+			it "should remain constant if guest just changes comment or guest count, not items"
+		end
+
+		describe "Taken items validation" do
+			it "should not be valid if you are choosing an item that has been selected" do
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}]
+				@rico_attendee.save
+
+				@bob_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}]
+				expect(@bob_attendee).to_not be_valid
+			end
+		end
 	end
 
 	describe "Removing Guests" do

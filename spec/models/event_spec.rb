@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe Event do
 
-	before(:all) do
+	before(:each) do
 		User.destroy_all
+		Event.destroy_all
 	end
 
 	describe "minimal event requirements" do
@@ -81,6 +82,29 @@ describe Event do
 			expect(event).to be_valid
 			event.start_date = "2014-02-02 22:10 -0700"
 			expect(event).to be_valid
+		end
+	end
+
+	describe "Potluck Inventory per event" do
+		before(:all) do
+			User.destroy_all
+			Event.destroy_all
+			@attendee = FactoryGirl.create(:attendee)
+			@event = @attendee.event
+			@bob = FactoryGirl.create(:bob)
+		end
+
+		it "should be able to a potluck inventory of available and taken items per category" do
+			bob_attendee = FactoryGirl.create(:attendee, :event_id => @event.id, :user_id => @bob.id, :email => @bob.email, :rsvp => "Going")
+			snack_taken_items = [{"id"=>@bob.id,"item"=>"Nachos"},{"id" => @attendee.id, "item" => "Peanuts"}]
+			beer_taken_items = [{"id" => @bob.id, "item" => "Amber Ale"}]
+			potluck_list1 = FactoryGirl.create(:potluck_item, :event_id => @event.id, :taken_items => beer_taken_items)
+			potluck_list2 = FactoryGirl.create(:potluck_item, :event_id => @event.id, :category => "Snacks",:dishes => ["Ahi Tuna","Spring Rolls"], :taken_items => snack_taken_items)
+
+			expected_list = [{"category" => "Beer", "available_items" =>["Stout", "IPA", "Pale Ale","Brown Ale"], "taken_items" => beer_taken_items}, {"category" => "Snacks", "available_items" => ["Ahi Tuna","Spring Rolls"], "taken_items" => snack_taken_items }]
+
+			expect(@event.get_potluck_inventory_for_categories(["Beer","Snacks"])).to eql(expected_list)
+			expect(@event.get_potluck_list_per_category("Beer")).to eql(potluck_list1)
 		end
 	end
 

@@ -9,7 +9,8 @@ class PotluckItem < ActiveRecord::Base
 	validates :host_quantity, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
 	validates :category, :uniqueness => { :scope => :event_id, :message => "should be unique per event" }
 
-	attr_accessible :event_id, :category, :dishes, :host_quantity
+	attr_accessible :event_id, :category, :dishes, :host_quantity, :taken_items
 	serialize :dishes
+	serialize :taken_items
 
 end
