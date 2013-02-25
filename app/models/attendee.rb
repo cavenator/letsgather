@@ -16,25 +16,31 @@ class Attendee < ActiveRecord::Base
 		validate  :verify_items_are_available, :unless => Proc.new { |a| a.is_dish_empty? || a.id.blank? }
 
 		before_save do |attendee|
+			#only perform this block once the attendee has actually been created and has an id
 			if attendee.rsvp == "Going"
-				unless attendee.dish.blank?
+				unless attendee.dish.blank? #execute the block if attendee has items. Mark available items as taken
+						#find the delta (previous state versus what we have now) and run the loop
+						#should create a comprehensive map so that the deltas could be tracked. a map with each of the categories
+					previous_attendee = Attendee.find(attendee.id)
 					attendee.dish.each do |item|
 						potluck_item = attendee.event.get_potluck_list_per_category(item["category"])
 						if potluck_item.taken_items.blank?
 							potluck_item.taken_items = []
 						end
-						potluck_item.taken_items << {"id" => attendee.id, "item" => item["item"] } unless item["is_custom"]
-						potluck_item.dishes.delete(item["item"])
-						potluck_item.save
+						unless item["is_custom"]
+							potluck_item.taken_items << {"id" => attendee.id, "item" => item["item"] }
+							potluck_item.dishes.delete_at(potluck_item.dishes.find_index(item["item"]))
+							potluck_item.save
+						end
 					end
-				else
+				else #updated attendee dish selection is empty while previous state has items defined. Make items available for selection again
 					if attendee.id
 						previous_attendee = Attendee.find(attendee.id)
 						previous_attendee.dish.each do |dish|
 							unless dish["is_custom"]
 								potluck_item = attendee.event.get_potluck_list_per_category(dish["category"])
 								potluck_item.dishes << dish["item"]
-								potluck_item.taken_items.delete({"id" => attendee.id, "item" => dish["item"]})
+								potluck_item.taken_items.delete_at(potluck_item.taken_items.find_index({"id" => attendee.id, "item" => dish["item"]}))
 								potluck_item.save
 							end
 						end
@@ -98,16 +104,20 @@ class Attendee < ActiveRecord::Base
 		end
 
 		def verify_items_are_available
-			self.dish.each do |item|
-				potluck_item = self.event.get_potluck_list_per_category(item["category"])
-				#verify that an item is available
-				unless potluck_item.dishes.include?(item["item"])
-					unless potluck_item.taken_items.blank?
-						potluck_item.taken_items.each do |taken_item|
-							if taken_item["item"] == item["item"] && taken_item["id"] != (self.id)
-								errors.add(:dish, 'Item #{item["item"]} has been already taken')
-							end
-						end
+			complete_list = self.dish
+			unique_list = self.dish.uniq
+			unique_list.each do |uniq_item|
+				unless uniq_item["is_custom"]
+					potluck_item = self.event.get_potluck_list_per_category(uniq_item["category"])
+					items_available = potluck_item.dishes.find_all{|i| i == uniq_item["item"] }.count
+					attendee_item_count = complete_list.find_all{|i| i.eql?(uniq_item)}.count
+#					unless potluck_item.taken_items.blank?
+						taken_item_count = potluck_item.taken_items.find_all {|i| i.eql?({"id" => self.id, "item" => uniq_item["item"]})}.count
+#					else
+#						taken_item_count = 0
+#					end
+					unless (items_available + taken_item_count) >= attendee_item_count
+							errors.add(:dish, 'Attempted to use one too many of the same item to rsvp with')
 					end
 				end
 			end
