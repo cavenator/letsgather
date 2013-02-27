@@ -1,8 +1,8 @@
 
 class AttendeesController < ApplicationController
 	before_filter :verify_access
-	before_filter :verify_host_privileges, :only => [:new, :create, :add_attendees, :invite_guests ]
-	before_filter :verify_correct_attendee, :only => [:rsvp, :show, :edit, :update, :destroy]
+	before_filter :verify_host_privileges, :only => [:new, :create, :add_attendees, :invite_guests, :destroy ]
+	before_filter :verify_correct_attendee, :only => [:rsvp, :show, :edit, :update ]
 	#Also, be sure to include a verification filter in which attendees can only update their settings (will have to check for attendee.user_id == current_user.id)
 	#The reason why I did this was because I was getting a "WARNING: Can't verify CSRF token authenticity" and would sign the user out.
 

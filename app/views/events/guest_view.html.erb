@@ -137,7 +137,7 @@
 		}
 
 		$(document).ready(function(){
-			var category_array = [], dishes = {}, flash_message = $("#flash-message");
+			var category_array = [], dishes = {}, taken_items = {}, flash_message = $("#flash-message"), taken_queue = [];
 
 			$.ajax({
 				url: window.location.pathname+"/potluck_items.json",
@@ -147,7 +147,8 @@
 				success: function(data){
 					$.each(data, function(index, item){
 						category_array.push(item.category);
-						dishes[item.category] = item.dishes
+						dishes[item.category] = item.dishes;
+						taken_items[item.category] = item.taken_items;
 					});
 				}
 			});
@@ -181,7 +182,8 @@
 
 				//change the value in the hidden field
 				dishes_select.change(function(){
-					var data = $(this).val();
+					var data = $(this).val(), index = -1, category, dish, difference = [], present_values;
+					category = category_select.val();
 					//set the value()
 					attendee_dish.val(data);
 				});
@@ -236,6 +238,7 @@
 						item_div.find("#is_custom").attr('checked','checked').change();
 						item_div.find("#attendee_dish").val(item.item);
 					} else {
+						item_div.find("#attendee_select_dish").append("<option value='"+item.item+"'>"+item.item+"</option>");
 						item_div.find("#attendee_select_dish").val(item.item).change();
 					}
 				}
@@ -270,6 +273,7 @@
 								$("#is_custom").attr('checked','checked').change();
 								$("#attendee_dish").val(item.item);
 							} else {
+								$("<option value='"+item.item+"'>"+item.item+"</option>").appendTo("#attendee_select_dish");
 								$("#attendee_select_dish").val(item.item).change();
 							}
 						} else {

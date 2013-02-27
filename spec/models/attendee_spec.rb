@@ -212,6 +212,7 @@ describe Attendee do
 			end
 		end
 
+
 		describe "Taken items validation" do
 			it "should not be valid if you are choosing an item that has been selected" do
 				@rico_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}]
@@ -227,7 +228,6 @@ describe Attendee do
 			end
 
 			it "should be valid if attendee has taken item and then takes the last available item of the same type" do
-				puts "start of test"
 				@potluck_items.dishes << "Brown Ale"
 				@potluck_items.save
 
@@ -241,6 +241,71 @@ describe Attendee do
 
 				@rico_attendee.dish << {"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}
 				expect(@rico_attendee).to_not be_valid
+			end
+		end
+		
+		describe "Differences in RSVP items" do
+			it "should be able to add one more item without a problem" do
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "IPA", "is_custom" => false},{"category" => "Beer", "item" => "12-12-12", "is_custom" => true}]
+				@rico_attendee.save
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+				expect(refreshed_list.dishes).to eql(["Stout","Pale Ale","Brown Ale"])
+				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id, "item"=>"IPA"}])
+
+				@rico_attendee.dish << {"category"=>"Beer", "item" => "Pale Ale", "is_custom" => false}
+				@rico_attendee.dish << {"category"=>"Beer", "item" => "Brown Ale", "is_custom" => false}
+				@rico_attendee.dish << {"category"=>"Beer", "item" => "Stout", "is_custom" => false}
+				@rico_attendee.save
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+				expect(refreshed_list.dishes).to eql([])
+				expect(refreshed_list.taken_items).to eql([{"id" => @rico_attendee.id, "item" => "IPA"},{"id" => @rico_attendee.id, "item" => "Pale Ale"},{"id"=>@rico_attendee.id, "item"=>"Brown Ale"},{"id"=>@rico_attendee.id,"item"=>"Stout"}])
+			end
+
+			it "should be able to detect removals without a problem" do
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "IPA", "is_custom" => false},{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}]
+				@rico_attendee.save
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+				expect(refreshed_list.dishes).to eql(["Stout","Pale Ale"])
+				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id, "item"=>"IPA"},{"id"=>@rico_attendee.id, "item"=>"Brown Ale"}])
+
+				@rico_attendee.dish.delete_at(1)
+				expect(@rico_attendee.dish).to eql([{"category" => "Beer", "item" => "IPA", "is_custom" => false}])
+				@rico_attendee.save
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+				expect(refreshed_list.dishes).to eql(["Stout","Pale Ale","Brown Ale"])
+				expect(refreshed_list.taken_items).to eql([{"id" => @rico_attendee.id, "item" => "IPA"}])
+			end
+			
+			it "should still okay if no changes have been detected" do
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "IPA", "is_custom" => false},{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}]
+				@rico_attendee.save
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+				expect(refreshed_list.dishes).to eql(["Stout","Pale Ale"])
+				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id, "item"=>"IPA"},{"id"=>@rico_attendee.id, "item"=>"Brown Ale"}])
+
+				@rico_attendee.num_of_guests = 2
+				@rico_attendee.save
+
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+				expect(refreshed_list.dishes).to eql(["Stout","Pale Ale"])
+				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id, "item"=>"IPA"},{"id"=>@rico_attendee.id, "item"=>"Brown Ale"}])
+			end
+
+			it "should be able to detect additions and removals at various times" do
+				@rico_attendee.dish = [{"category"=>"Beer","item"=>"IPA","is_custom"=>false},{"category"=>"Beer","item"=>"Pale Ale","is_custom"=>false},{"category"=>"Beer","item"=>"12-12-12","is_custom"=>true}]
+				@rico_attendee.save
+
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+				expect(refreshed_list.dishes).to eql(["Stout","Brown Ale"])
+				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id,"item"=>"IPA"},{"id"=>@rico_attendee.id,"item"=>"Pale Ale"}])
+
+
+				@rico_attendee.dish = [{"category"=>"Beer","item"=>"IPA","is_custom"=>false},{"category"=>"Beer","item"=>"Lukcy Basterd","is_custom"=>true},{"category"=>"Beer","item"=>"Stout","is_custom"=>false}]
+				@rico_attendee.save
+
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+				expect(refreshed_list.dishes).to eql(["Brown Ale","Pale Ale"])
+				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id,"item"=>"IPA"},{"id"=>@rico_attendee.id,"item"=>"Stout"}])
 			end
 		end
 	end
