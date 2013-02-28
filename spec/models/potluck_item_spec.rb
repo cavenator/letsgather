@@ -18,5 +18,18 @@ describe PotluckItem do
 			expect(@potluck_items[0]).to eql({"category" => "Beer", "dishes" => ["IPA","Pale Ale"]})
 			expect(@potluck_items[1]).to eql({"category" => "Appetizers", "dishes" => ["Nachos","Buffalo Wings","Spring Rolls"]})
 		end
+
+		it "should not allow a potluck item to be created if dishes are null" do
+			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Boardgames", :host_quantity => 2, :dishes => [])
+			expect(@potluck_item).to_not be_valid
+		end
+
+		it "should allow empty dishes after initial create" do
+			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Desserts", :host_quantity => 2, :dishes => ["Brownies","Cookies"])
+			expect(@potluck_item).to be_valid
+
+			@potluck_item.dishes.clear
+			expect(@potluck_item).to be_valid
+		end
 	end
 end

@@ -86,11 +86,7 @@ class Event < ActiveRecord::Base
 	end
 
 	def get_potluck_items_for_guests
-		items_for_guests = []
-		self.potluck_items.each do |item|
-			items_for_guests << {"category" => item.category, "dishes" => item.dishes}
-		end
-		return items_for_guests
+		return self.potluck_items.map{|i| {"category" => i.category, "dishes" => i.dishes} }
 	end
 
 	def get_potluck_list_per_category(category)
