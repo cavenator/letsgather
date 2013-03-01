@@ -50,10 +50,10 @@
 			<a href="#" data-target="#notAttendingGuests" data-toggle="modal">Who's not coming?</a>
 		</li>
 		<li id="undecided_guests">
-			<a href="#" data-target="#undecidedGuests" data-toggle="modal" data-toggle="modal">Who's not sure?</a>
+			<a href="#" data-target="#undecidedGuests" data-toggle="modal">Who's not sure?</a>
 		</li>
 		<li id="taken_items">
-			<a href="#">Taken potluck items</a>
+			<a href="#" data-target="#takenItems" data-toggle="modal">Taken potluck items</a>
 		</li>
 		</ul>
 	</div>
@@ -128,11 +128,21 @@
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
 		</div>
 	</div>
+
+	<div id="takenItems" class="modal hide">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">x</button>
+			<h2>Items others are bringing</h2>
+		</div>
+		<div class="modal-body">
+			<%= render :partial=> "taken_items", :collection => @event.get_items_guests_are_bringing %>
+		</div>
+	</div>
 <script type="text/javascript">
 		function rsvp(answer, id){
 			$("#attendee_rsvp").val(answer);
 			$("#comment-box").show();
-			if (answer == "Going")
+			if (answer == "going")
 				$("#guestcount_div").show();
 		}
 
@@ -141,8 +151,8 @@
 
 			$.ajax({
 				url: window.location.pathname+"/potluck_items.json",
-				dataType: "json",
-				type: "GET",
+				datatype: "json",
+				type: "get",
 				async: false,
 				success: function(data){
 					$.each(data, function(index, item){
@@ -152,7 +162,7 @@
 				}
 			});
 
-			function updateAllDishSelects(){
+			function updatealldishselects(){
 				var item_divs = $(".item");
 		//		$.each(item_divs, function(position, item_div){
 				for (var i = 0; i < item_divs.length; i++){
@@ -162,7 +172,7 @@
 					available_for_category = dishes[category];
 					
 					$.each(available_for_category, function(index, available_item){
-						var available_index = $.inArray(available_item, options);
+						var available_index = $.inarray(available_item, options);
 						if (available_index == -1){
 							$(".item").eq(i).find("#attendee_select_dish").append("<option value='"+available_item+"'>"+available_item+"</option>");
 						}
@@ -171,7 +181,7 @@
 					//consider removing stuff
 					$.each(taken_queue, function(index, remove_item){
 						if (selected_value != remove_item.item){
-							var remove_index = $.inArray(remove_item.item, options);
+							var remove_index = $.inarray(remove_item.item, options);
 							if (remove_index >= 0){
 								$(".item").eq(i).find("#attendee_select_dish option:eq("+remove_index+")").remove();
 							}
@@ -181,15 +191,15 @@
 			//	});
 			}
 
-			// This should return the div class='item' so that the add and/or remove button could be appended to it
-			function createItemForRSVP(){
+			// this should return the div class='item' so that the add and/or remove button could be appended to it
+			function createitemforrsvp(){
 				var item_div = $("<div class='item'></div>"), 
 						dish_div = $("<div id='dish_div'></div>"),
-						category_select = $("<select id='attendee_category' style='margin: 0 0.5em 0 0'><option value=''>Undecided</option></select>"), 
-						dishes_select = $("<select id='attendee_select_dish' style='margin: 0 0.5em 0 0'><option value=''>Undecided</option></select>"), 
+						category_select = $("<select id='attendee_category' style='margin: 0 0.5em 0 0'><option value=''>undecided</option></select>"), 
+						dishes_select = $("<select id='attendee_select_dish' style='margin: 0 0.5em 0 0'><option value=''>undecided</option></select>"), 
 						attendee_dish = $("<input type='text' id='attendee_dish' style='margin: 0 0.5em 0 0' />"),
 						checkbox_div = $("<div id='checkbox_div'></div>"), 
-						label_checkbox=$("<label>Do not like what you see? Click to choose your own: </label>"),
+						label_checkbox=$("<label>do not like what you see? click to choose your own: </label>"),
 						checkbox = $("<input type='checkbox' id='is_custom' />");
 				
 					item_div.append(dish_div);
@@ -210,7 +220,7 @@
 					var data = $(this).val();
 					var dish_array = dishes[data];
 					dishes_select.empty();
-					dishes_select.append("<option value=''>Undecided</option>");
+					dishes_select.append("<option value=''>undecided</option>");
 					$.each(dish_array, function(index, item){
 						dishes_select.append("<option value='"+item+"'>"+item+"</option>");
 					});
@@ -218,27 +228,27 @@
 
 				//change the value in the hidden field
 				dishes_select.change(function(){
-					var data = $(this).val(), available_index = -1, remove_index = -1, category, dish, item_to_be_removed, remove_index=-1, foundIt=false;
+					var data = $(this).val(), available_index = -1, remove_index = -1, category, dish, item_to_be_removed, remove_index=-1, foundit=false;
 					category = category_select.val();
 					if (data != "")
 					{
-						available_index = $.inArray(data, dishes[category]);
+						available_index = $.inarray(data, dishes[category]);
 						dishes[category].splice(available_index,1);
 						taken_queue.push({"category":category, "item":data});
 					}
-					/* At this point, the taken queue has one more item than what is currently displayed. Find the difference and remove it */
+					/* at this point, the taken queue has one more item than what is currently displayed. find the difference and remove it */
 					$.each(taken_queue, function(taken_index, taken_item){
-						foundIt = false;
+						foundit = false;
 						for (var i = 0; i < $(".item").length; i++){
 							var displayed_div = $(".item").eq(i);
 							if (!($(displayed_div).find("#is_custom").attr('checked'))){
 								var div_category = $(displayed_div).find("#attendee_category").val(), div_dish = $(displayed_div).find("#attendee_select_dish").val();
 								if (taken_item.item == div_dish && taken_item.category == div_category){
-									foundIt = true;
+									foundit = true;
 								}
 							}
 						}
-						if (!foundIt){
+						if (!foundit){
 							item_to_be_removed = taken_item;
 							remove_index = taken_index;
 							return false; // break out of loop
@@ -249,7 +259,7 @@
 						dishes[item_to_be_removed.category].push(item_to_be_removed.item);
 					}
 					//add selectbox updates method here
-					updateAllDishSelects();
+					updatealldishselects();
 					attendee_dish.val(data);
 				});
 
@@ -259,7 +269,7 @@
 				//add the event handler for checkbox
 				checkbox.change(function(){
 					if ($(this).is(":checked")){
-						dishes_select.val("").change(); // <- added this line for Story
+						dishes_select.val("").change(); // <- added this line for story
 						attendee_dish.show();
 						dishes_select.hide();
 					} else {
@@ -272,7 +282,7 @@
 			}
 
 			if (flash_message.text().length > 0)
-				flash_message.addClass("alert alert-info");
+				flash_message.addclass("alert alert-info");
 			$("#guestcount_div").hide();
 			$("#comment-box").hide();
 
@@ -283,13 +293,13 @@
 			});
 
 			//item is a hash object representing the rsvp item that a user previously has
-			function createRSVPItemWithRemoveButton(item){
-				var item_div, delete_button = $("<button class='btn btn-danger'>Remove</button>");
-				item_div = createItemForRSVP();
+			function creatersvpitemwithremovebutton(item){
+				var item_div, delete_button = $("<button class='btn btn-danger'>remove</button>");
+				item_div = createitemforrsvp();
 				delete_button.click(function(){
 					var category = item_div.find("#attendee_category").val(), selected_dish = item_div.find("#attendee_select_dish").val(), index = -1, removed_item;
 					dishes[category] << selected_dish; //add dish back to dish hash
-					// Now remove the item from the taken_queue
+					// now remove the item from the taken_queue
 					$.each(taken_queue, function(position, item){
 						if (item.item == selected_dish && item.category == category){
 							index = position;
@@ -300,7 +310,7 @@
 						taken_queue.splice(index,1);
 						dishes[removed_item.category].push(removed_item.item);
 					}
-					updateAllDishSelects();
+					updatealldishselects();
 					item_div.remove();
 					// update all selects
 					return false;
@@ -321,11 +331,11 @@
 				}
 			}
 
-			function createRSVPItemWithAddButton(){
-				var item_div, add_button = $("<button class='btn btn-success'>One more item</button>");
-				item_div = createItemForRSVP();
+			function creatersvpitemwithaddbutton(){
+				var item_div, add_button = $("<button class='btn btn-success'>one more item</button>");
+				item_div = createitemforrsvp();
 				add_button.click(function(){
-					createRSVPItemWithRemoveButton();
+					creatersvpitemwithremovebutton();
 					return false;
 				});
 				item_div.find("#dish_div").append(add_button);
@@ -333,13 +343,13 @@
 				return false;
 			}
 
-			createRSVPItemWithAddButton();
+			creatersvpitemwithaddbutton();
 
 			$.ajax({
 				url: $("form").attr('action'),
-				dataType: "json",
+				datatype: "json",
 				async: false,
-				type: "GET",
+				type: "get",
 				success: function(data){
 					var attendee_dishes = data.dish;
 					$.each(attendee_dishes, function(index, item){
@@ -351,11 +361,11 @@
 								$("#attendee_dish").val(item.item);
 							} else {
 								dishes[item.category].push(item.item);
-								$("<option value='"+item.item+"'>"+item.item+"</option>").appendTo("#attendee_select_dish");
+								$("<option value='"+item.item+"'>"+item.item+"</option>").appendto("#attendee_select_dish");
 								$("#attendee_select_dish").val(item.item).change();
 							}
 						} else {
-							createRSVPItemWithRemoveButton(item);
+							creatersvpitemwithremovebutton(item);
 						}
 					});
 				}
@@ -366,11 +376,11 @@
 				var attendee_guestcount = $("#attendee_num_of_guests").val();
 				var rsvp_item_array = [];
 				var items_collection = $(".item");
-				if (attendee_rsvp != "Going"){
+				if (attendee_rsvp != "going"){
 					$("#attendee_num_of_guests").val(0);
 					$("#attendee_category").val("");
 					$("#attendee_dish").val("");
-					$("#attendee_bringing_custom").removeAttr('checked');
+					$("#attendee_bringing_custom").removeattr('checked');
 				} else {
 					$.each(items_collection, function(index, item){
 						var hash_object, category = $(item).find("#attendee_category").val(), dish_item = $(item).find("#attendee_dish").val(), is_custom = $(item).find("#is_custom").is(":checked");
@@ -380,7 +390,7 @@
 						}
 					});
 				}
-				$("form").append("<input type='hidden' name='attendee[dish]' value='"+JSON.stringify(rsvp_item_array)+"' />");
+				$("form").append("<input type='hidden' name='attendee[dish]' value='"+json.stringify(rsvp_item_array)+"' />");
 			});
 		});
 

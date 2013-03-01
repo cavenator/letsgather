@@ -89,6 +89,56 @@ class Event < ActiveRecord::Base
 		return self.potluck_items.map{|i| {"category" => i.category, "dishes" => i.dishes} }
 	end
 
+	def get_items_guests_are_bringing
+		guests = self.attendees.where("rsvp = 'Going'")
+		items = []
+		self.potluck_items.each do |potluck_item|
+			items << {"category" => potluck_item.category, "taken_items" => [] }
+		end
+
+		guests.each do |guest|
+			unless guest.dish.empty?
+				guest.dish.each do |item|
+					items.each do |stored_items|
+						if item["category"].eql?(stored_items["category"])
+							stored_items["taken_items"] << item["item"]
+						end
+					end
+				end
+			end
+		end
+		return items
+	end
+
+	def self.get_events_for_rsvp_reminders
+		start_time = Time.now.midnight + 2.days
+		end_time = Time.now.midnight + 3.days
+		return Event.where(:rsvp_date => start_time..end_time)
+	end
+
+	def send_rsvp_reminders_for_all_attendees
+		unless self.attendees.blank?
+			email_list = self.attendees.map(&:email)
+	#		Thread.new { AttendeeMailer.send_rsvp_emails(email_list, self).deliver }
+			AttendeeMailer.send_rsvp_emails(email_list, self).deliver
+		end
+	end
+
+	def send_event_reminders_for_attending_guests
+		guests = self.attendees.where("rsvp = 'Going'")
+		unless guests.blank?
+#			Thread.new { AttendeeMailer.send_event_reminders(guest, self).deliver }
+			email_list = guests.map(&:email)
+			AttendeeMailer.send_event_reminders(email_list, self).deliver
+		end
+	end
+
+	def self.get_events_for_event_reminders
+		start_time = Time.now.midnight + 18.day
+		end_time = Time.now.midnight + 20.days
+		return Event.where(:start_date => start_time..end_time)
+	end
+
 	def get_potluck_list_per_category(category)
 		self.potluck_items.find_by_category(category)
 	end
