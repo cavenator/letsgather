@@ -31,5 +31,21 @@ describe PotluckItem do
 			@potluck_item.dishes.clear
 			expect(@potluck_item).to be_valid
 		end
+
+		it "should not allow duplicate dishes within the same category upon create" do
+			@potluck_item = PotluckItem.new(:event_id => @event.id, :category => "Desserts", :host_quantity => 1, :dishes => ["Brownies","Brownies","Cookies"])
+			expect(@potluck_item).to_not be_valid
+		end
+
+		it "should not allow duplicate dishes within the same category upon update" do
+			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Desserts", :host_quantity => 2, :dishes => ["Brownies","Cookies"])
+			expect(@potluck_item).to be_valid
+
+			@potluck_item.dishes << "Brownies"
+			expect(@potluck_item).to_not be_valid
+
+			@potluck_item.dishes = ["Cookies","Brownies","Cupcakes"]
+			expect(@potluck_item).to be_valid
+		end
 	end
 end

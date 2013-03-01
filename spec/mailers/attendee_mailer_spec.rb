@@ -10,7 +10,7 @@ describe AttendeeMailer do
 		end
 
 		it "should send invitations to new attendees" do
-			email = AttendeeMailer.welcome_guest(@attendee).deliver
+			AttendeeMailer.welcome_guest(@attendee).deliver
 			expect(ActionMailer::Base.deliveries).to have(1).thing
 		end
 
@@ -18,7 +18,8 @@ describe AttendeeMailer do
 			attendees = []
 			attendees << @attendee
 			attendees << FactoryGirl.create(:attendee, :event_id => @attendee.event.id, :rsvp => 'Going')
-			emails = AttendeeMailer.email_group(attendees, @attendee.event, subject, body).deliver
+			expect(attendees.count) == 2
+			AttendeeMailer.email_group(attendees, @attendee.event, subject, body).deliver
 			expect(ActionMailer::Base.deliveries).to have(2).things
 		end
 	end

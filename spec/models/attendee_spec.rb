@@ -177,41 +177,7 @@ describe Attendee do
 				expect(refreshed_list.dishes).to eql(["Stout","IPA","Pale Ale","Brown Ale"])
 				expect(refreshed_list.taken_items).to eql([])
 			end
-
-			it "should be able to remove one item if duplicate items in the potluck list exists" do
-				#duplicate item has been added to list
-				@potluck_items.dishes << "IPA"
-				@potluck_items.save
-				expect(@potluck_items.dishes).to eql(["Stout","IPA","Pale Ale","Brown Ale", "IPA"])
-
-				@rico_attendee.dish = [{"category" => "Beer", "item" => "IPA", "is_custom" => false},{"category" => "Beer", "item" => "Pliny the Younger", "is_custom" => true }]
-				@rico_attendee.save
-
-				refreshed_list = PotluckItem.find(@potluck_items.id)
-		
-				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id,"item" => "IPA"}])
-				expect(refreshed_list.dishes).to eql(["Stout", "Pale Ale","Brown Ale","IPA"])
-
-				@rico_attendee.dish = []
-				@rico_attendee.save
-
-				refreshed_list = PotluckItem.find(@potluck_items.id)
-				expect(refreshed_list.dishes).to eql(["Stout","Pale Ale","Brown Ale","IPA","IPA"])
-				expect(refreshed_list.taken_items).to eql([])
-			end
-
-			it "should allow different people to select the same item as long as it's duplicates are available" do
-				@potluck_items.dishes << "IPA"
-				@potluck_items.save
-
-				@rico_attendee.dish = [{"category" => "Beer", "item" => "IPA", "is_custom" => false},{"category" => "Beer", "item" => "12-12-12", "is_custom" => true}]
-				@rico_attendee.save
-
-				@bob_attendee.dish = [{"category" => "Beer", "item" => "IPA", "is_custom" => false}, {"category"=>"Beer", "item" =>"Brown Ale", "is_custom" => false}]
-				expect(@bob_attendee).to be_valid
-			end
 		end
-
 
 		describe "Taken items validation" do
 			it "should not be valid if you are choosing an item that has been selected" do
@@ -227,21 +193,6 @@ describe Attendee do
 				expect(@rico_attendee).to_not be_valid
 			end
 
-			it "should be valid if attendee has taken item and then takes the last available item of the same type" do
-				@potluck_items.dishes << "Brown Ale"
-				@potluck_items.save
-
-				@rico_attendee.dish = [{"category" => "Beer","item" => "Brown Ale", "is_custom" => false}]
-				expect(@rico_attendee).to be_valid
-				@rico_attendee.save
-
-				refreshed_list = PotluckItem.find(@potluck_items.id)
-				@rico_attendee.dish << {"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}
-				expect(@rico_attendee).to be_valid
-
-				@rico_attendee.dish << {"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}
-				expect(@rico_attendee).to_not be_valid
-			end
 		end
 		
 		describe "Differences in RSVP items" do

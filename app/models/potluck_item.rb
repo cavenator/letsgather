@@ -9,6 +9,7 @@ class PotluckItem < ActiveRecord::Base
 	validates :dishes, :presence => true, :on => :create
 	validates :host_quantity, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
 	validates :category, :uniqueness => { :scope => :event_id, :message => "should be unique per event" }
+	validate :verify_no_duplicates_dishes
 
 	attr_accessible :event_id, :category, :dishes, :host_quantity, :taken_items
 	serialize :dishes
@@ -24,5 +25,9 @@ class PotluckItem < ActiveRecord::Base
 		self.dishes << dish
 		self.taken_items.delete_at(taken_item_index)
 		self.save
+	end
+
+	def verify_no_duplicates_dishes
+		errors.add(:dishes, "No duplicates allowed in list") unless self.dishes.uniq.length == self.dishes.length
 	end
 end
