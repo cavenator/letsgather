@@ -23,19 +23,12 @@
 		<%= @event.location1 %><br />
 		<%= @event.location2 %>
 	<% end %>
-	<div>
-		<button id="location-href" href="#locationModal" class="btn btn-primary" data-toggle="modal" style="margin:10px 0px 0px 0px">Update Location</button>
+		<div>
+			<button id="location-href" href="#locationModal" class="btn btn-primary" data-toggle="modal" style="margin:10px 0px 0px 0px">Update Location</button>
+		</div>
 	</div>
-</div>
-	<div class="span4"> Potluck statistics: <br /><span class="label">Category</span><br /><span class="badge badge-success">quantity of dishes you requested</span><br /><span class="badge badge-info">quantity guests are bringing</span><br /><br />
-		<% if @event.potluck_items.count > 0 %>
-			<% @event.potluck_items.each do |item| %>
-				<div><span class="label"><%= item.category %></span> | <span class="badge badge-success"><%= item.host_quantity %></span> | <span class="badge badge-info"><%= @event.find_attendee_dish_count(item.category) %></span></div>
-			<% end %>
-		<% else %>
-			<div><span class="label label-info">Currently you have no potluck categories created</span></div>
-		<% end %>
-		<div>Number of guest attending: <%= @event.attending_guest_count %></div>
+	<div class="span3">
+		Fillstuff here
 	</div>
 </div>
 <div class="row">
@@ -51,10 +44,6 @@
 		<li>
 			<a id="invite_guests" href="">Invite Guests</a>
 		</li>
-	</ul>
-	</div>
-	<div class="span3">
-		<ul class="nav nav-pills nav-stacked">
 		<li id="attending_guests">
 			<a href="#" data-target="#attendingGuests" data-toggle="modal">Who's coming?</a>
 		</li>
@@ -64,10 +53,6 @@
 		<li id="undecided_guests">
 			<a href="#" data-target="#undecidedGuests" data-toggle="modal">Who's undecided?</a>
 		</li>
-		</ul>
-	</div>
-	<div class="span3">
-	<ul class="nav nav-pills nav-stacked">
 		<li>
 			<a id="potluck_list" href="">view my potluck list</a>
 		</li>
@@ -75,6 +60,16 @@
 			<a id="new_category" href="">add new category to potluck list</a>
 		</li>
 	</ul>
+	</div>
+	<div class="span6"> Potluck statistics: <br /><span class="label">Category</span><br /><span class="badge badge-success">quantity of dishes you requested</span><br /><span class="badge badge-info">quantity guests are bringing</span><br /><br />
+		<% if @event.potluck_items.count > 0 %>
+			<% @event.potluck_items.each do |item| %>
+				<div><span class="label"><%= item.category %></span> | <span class="badge badge-success"><%= item.host_quantity %></span> | <span class="badge badge-info"><%= @event.find_attendee_dish_count(item.category) %></span></div>
+			<% end %>
+		<% else %>
+			<div><span class="label label-info">Currently you have no potluck categories created</span></div>
+		<% end %>
+		<div>Number of guest attending: <%= @event.attending_guest_count %></div>
 	</div>
 </div>
 
