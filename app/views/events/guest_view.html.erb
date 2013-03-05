@@ -36,9 +36,9 @@
 		<% end %>
 	</div>
 </div>
-<div class="row-fluid" style="margin-top:1.5em;margin-bottom:1.5em">
-	<div class="span6 offset4">You are currently <span id='text-rsvp'><%= @attendee.rsvp %></span>
-	</div>
+<div class="row-fluid" style="margin: 2em 0 2em 0">
+		<div class="span3 offset1"></div>
+		<div class="span3 offset1"><button class="btn btn-primary btn-large" id="modifyRSVPButton" onclick="showRSVPSettings()">Modify RSVP</button></div>
 </div>
 <div class="row-fluid">
 	<div class="span3">
@@ -58,13 +58,11 @@
 		</ul>
 	</div>
 	<div class="span8">
-		<button class="btn btn-success btn-large" id="going-button" onclick="rsvp('Going',<%= @attendee.id %>)">Going</button>
-		<button class="btn btn-danger btn-large" id="not-going-button" onclick="rsvp('Not Going',<%= @attendee.id %>)">Not Going</button>
-		<button class="btn btn-warning btn-large" id="undecided-button" onclick="rsvp('Undecided',<%= @attendee.id %>)">Undecided</button>
-		<div id="comment-box">
+		<div id="comment-box" style="margin-top:1.5em">
 		<%= form_for(@attendee, :url=> [@event,@attendee], :method=>"PUT") do |f| %>
-
-		<%= f.hidden_field :rsvp %>
+		
+		<%= f.label :rsvp, 'Responding with' %>
+		<%= f.select :rsvp, [["Going","Going"],["Not Going","Not Going"],["Undecided","Undecided"]],{}, :onchange => "rsvp();" %>
 
 		<div>
 			<%= f.label :comment, 'Comments?' %>
@@ -84,6 +82,9 @@
     	<button id="submit" class="btn btn-primary">RSVP</button>
   	</div>
 		<% end %>
+		</div>
+		<div id="previewMode">
+			<%= render :partial=>"guest_rsvp_settings", :locals => {:attendee => @attendee } %>
 		</div>
 	</div>
 </div>
@@ -139,11 +140,19 @@
 		</div>
 	</div>
 <script type="text/javascript">
-		function rsvp(answer, id){
-			$("#attendee_rsvp").val(answer);
+		function showRSVPSettings(){
+			$("#previewMode").hide();
 			$("#comment-box").show();
+			$("#attendee_rsvp option:selected").change();
+			return false;
+		}
+
+		function rsvp(){
+			var answer = $("#attendee_rsvp").val();
 			if (answer == "Going")
 				$("#guestcount_div").show();
+			else
+				$("#guestcount_div").hide();
 		}
 
 		$(document).ready(function(){
@@ -289,6 +298,7 @@
 			$("#cancel").click(function(){
 					$("#guestcount_div").hide();
 					$("#comment-box").hide();
+					$("#previewMode").show();
 					return false;
 			});
 

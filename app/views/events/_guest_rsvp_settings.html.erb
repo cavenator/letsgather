@@ -1,0 +1,17 @@
+<p><span style='font-weight:bold;font-size:1em'>Your response: </span><%= attendee.rsvp %></p>
+<p><span style='font-weight:bold;font-size:1em'>Your most recent comment: </span><%= attendee.comment %></p>
+<% if attendee.rsvp.eql?("Going") %>
+<p><span style='font-weight:bold;font-size:1em'>Additional guests: </span><%= attendee.num_of_guests %></p>
+<p>
+		<% unless attendee.dish.empty? %>
+			<span style='font-weight:bold;font-size:1em'>You are bringing </span>
+			<div style="inline-block">
+				<% attendee.dish.each do |dish| %>
+					<%= dish["item"] %>(<%= dish["category"] %>) <br />
+				<% end %>
+			</div>
+		<% else %>
+			<%= "nothing" %>
+		<% end %>
+</p>
+<% end %>
