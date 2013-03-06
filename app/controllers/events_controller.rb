@@ -100,6 +100,11 @@ class EventsController < ApplicationController
 		render :layout => false
 	end
 
+	def description
+		@event = Event.find(params[:id])
+		render :layout => false
+	end
+
 	def group_email
 		@event = Event.find(params[:id])
 		@rsvp_group = params[:rsvp_group]

@@ -18,17 +18,24 @@
 				<%= link_to 'Edit', edit_event_path(@event), :class=>"btn btn-link" %> | <%= link_to 'Back', events_path, :class=>"btn btn-link" %></div>
 		</div>
 	</div>
+	<div id="description_div" class="span4">
+		<span style="font-weight:bold;font-size:1em">Description: </span><% unless @event.description.blank? %><%= @event.description %><% else %><%= "Update Description please" %><% end %>
+			<br /><br />
+		<span style="font-weight:bold;font-size:1em">Theme: </span><% unless @event.theme.blank? %><%= @event.theme %><% else %><%= "None" %><% end %><br />
+		<div>
+			<button id="description-href" href="#descriptionModal" class="btn btn-primary" data-toggle="modal" style="margin:10px 0px 0px 0px">Update Description and Theme</button>
+		</div>
+	</div>
 	<div id="location_div" class="span3">
-	<% if @event.location %>
-		<%= @event.location1 %><br />
-		<%= @event.location2 %>
-	<% end %>
+		<% if @event.location %>
+			<%= @event.location1 %><br />
+			<%= @event.location2 %>
+		<% else %>
+			<%= "Define location of your event here" %>
+		<% end %>
 		<div>
 			<button id="location-href" href="#locationModal" class="btn btn-primary" data-toggle="modal" style="margin:10px 0px 0px 0px">Update Location</button>
 		</div>
-	</div>
-	<div class="span3">
-		Fillstuff here
 	</div>
 </div>
 <div class="row">
@@ -98,6 +105,18 @@
 		</div>
 	</div>
 
+	<div id="descriptionModal" class="modal hide" data-remote="">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">x</button>
+			<h2>Provide Description and Theme here</h2>
+		</div>
+		<div class="modal-body">
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
+
 	<div id="attendingGuests" class="modal hide">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal">x</button>
@@ -143,6 +162,7 @@
 	$(document).ready(function() {
 		$("#guests").find("a").attr('href',document.location.pathname+"/attendees");
 		$("#locationModal").attr('data-remote',document.location.pathname+"/change_location");
+		$("#descriptionModal").attr('data-remote',document.location.pathname+"/description");
 		$("#supplementalInfoModal").attr('data-remote',document.location.pathname+"/supplemental_info");
 		$("#invite_guests").attr('href',document.location.pathname+"/attendees/add_attendees");
 		$("#potluck_list").attr('href', document.location.pathname+"/potluck_items");

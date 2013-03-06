@@ -4,12 +4,13 @@ class Event < ActiveRecord::Base
 		belongs_to :user
 
 		validates :name,:user_id, :start_date, :rsvp_date, :presence => true
+		validates :description, :length => { :maximum => 1500, :too_long => "%{count} characters is the maximum allowed" }
 		validate :start_date_must_be_in_right_format
 		validate :rsvp_date_must_be_in_right_format
 		validate :start_date_must_be_in_the_future
 		validate :rsvp_date_should_be_less_than_start_date
 
-   attr_accessible :name, :start_date, :end_date, :user_id, :rsvp_date, :supplemental_info, :address1, :address2, :city, :state, :zip_code
+   attr_accessible :name, :start_date, :end_date, :user_id, :rsvp_date, :supplemental_info, :address1, :address2, :city, :state, :zip_code, :description, :theme
 
 	def start_date_must_be_in_the_future
 			unless self.start_date.eql?(nil)

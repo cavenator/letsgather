@@ -5,6 +5,7 @@ MaximusSamurai::Application.routes.draw do
 	match 'events/:id/supplemental_info' => 'events#supplemental_info'
 	match 'events/:id/supplmenetal_info/edit' => 'events#edit_supplemental_info'
 	match 'events/:id/change_location' => 'events#edit_location'
+	get 'events/:id/description', :to => 'events#description'
 	get 'events/:id/group_email', :to => 'events#group_email'
 	get 'events/:id/send_group_email', :to => 'events#send_group_email'
 	get 'events/:id/email_host', :to => 'events#email_host'

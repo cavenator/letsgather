@@ -1,0 +1,8 @@
+<%= form_for(@event) do |f| %>
+	<span style="font-weight:bold;font-size:1em">Description: </span><%= f.text_area :description, :placeholder=> "Enter the event description here ...", :style => "width:500px;margin:0px 0px 10px;height:200px" %>
+<p>
+	<span style="font-weight:bold;font-size:1em">Theme: </span><%= f.text_field :theme, :placeholder=>"E.g. Halloween, Drinking" %>
+</p>
+<p>
+	<%= f.submit 'Update', :class=>"btn btn-primary" %></p>
+<% end %>
