@@ -112,14 +112,14 @@ class Event < ActiveRecord::Base
 	end
 
 	def self.get_events_for_rsvp_reminders
-		start_time = Time.now.midnight + 2.days
-		end_time = Time.now.midnight + 3.days
+		start_time = Time.now + 2.days
+		end_time = Time.now + 3.days
 		return Event.where(:rsvp_date => start_time..end_time)
 	end
 
 	def send_rsvp_reminders_for_all_attendees
 		unless self.attendees.blank?
-			email_list = self.attendees.map(&:email)
+			email_list = self.attendees.map(&:email).compact
 	#		Thread.new { AttendeeMailer.send_rsvp_emails(email_list, self).deliver }
 			AttendeeMailer.send_rsvp_emails(email_list, self).deliver
 		end
@@ -129,14 +129,14 @@ class Event < ActiveRecord::Base
 		guests = self.attendees.where("rsvp = 'Going'")
 		unless guests.blank?
 #			Thread.new { AttendeeMailer.send_event_reminders(guest, self).deliver }
-			email_list = guests.map(&:email)
+			email_list = guests.map(&:email).compact
 			AttendeeMailer.send_event_reminders(email_list, self).deliver
 		end
 	end
 
 	def self.get_events_for_event_reminders
-		start_time = Time.now.midnight + 18.day
-		end_time = Time.now.midnight + 20.days
+		start_time = Time.now + 1.day
+		end_time = Time.now + 2.days
 		return Event.where(:start_date => start_time..end_time)
 	end
 

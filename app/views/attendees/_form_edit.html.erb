@@ -23,11 +23,24 @@
 
 	<p>
 		<%= f.label :rsvp %>
-		<%= f.select(:rsvp, options_for_select([['Going','Going'],['Not Going','Not Going'],['Undecided','Undecided']])) %>
+		<%= f.select(:rsvp, options_for_select([['Going','Going'],['Not Going','Not Going'],['Undecided','Undecided']]), {}, :onchange => "rsvp();") %>
 	</p>
+	<div>
+		<%= f.label :comment, 'Comments?' %>
+		<%= f.text_field :comment %>
+	</div>
+	<div id="guestcount_div">
+		<%= f.label :num_of_guests, "Number of guests you are bringing (excluding yourself):" %>
+		<%= f.text_field :num_of_guests %>
+		<div id="items_box">
+			<label>I am bringing </label>
+			<div id="items">
+			</div>
+		</div>
+	</div>
 
-
-  <div class="actions">
-    <%= f.submit %>
+  <div>
+		<button id="submit" class="btn btn-primary" style="color:white">Save</button>
   </div>
+
 <% end %>

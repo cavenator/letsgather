@@ -68,7 +68,6 @@ class AttendeesController < ApplicationController
     @attendee = Attendee.new(params[:attendee])
 		@event = Event.find(params[:event_id])
 		@attendee.event_id = @event.id
-		@attendee.rsvp = 'Undecided'
     respond_to do |format|
       if @attendee.save
         format.html { redirect_to [@event,@attendee], notice: 'Attendee was successfully created.' }

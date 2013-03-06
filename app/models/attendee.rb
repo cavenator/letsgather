@@ -8,10 +8,11 @@ class Attendee < ActiveRecord::Base
 			attendee.dish = JSON.parse(attendee.dish) unless attendee.dish.blank? || attendee.dish.is_a?(Array)
 		end
 
-		validates :event_id, :email, :rsvp, :presence => true
-		validates :email, :uniqueness => { :scope => :event_id, :message => "should be unique per event" }
+		validates :event_id, :rsvp, :presence => true
+#		validates :email, :uniqueness => { :scope => :event_id, :message => "should be unique per event" }, :allow_blank => true
 		validates :rsvp, :inclusion => { :in => ["Going", "Not Going", "Undecided"] , :message => "needs to be submitted with 'Going', 'Not Going', 'Undecided'" }
 		validates :num_of_guests, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :message => "need to be specified with a number" }
+		validate  :verify_uniqueness_of_email
 		validate  :verify_correctness_of_dishes, :unless => :is_dish_empty?
 		validate  :verify_items_are_available, :unless => Proc.new { |a| a.is_dish_empty? || a.id.blank? }
 
@@ -98,6 +99,13 @@ class Attendee < ActiveRecord::Base
 
 		def is_dish_empty?
 			return self.dish.blank?
+		end
+
+		def verify_uniqueness_of_email
+			unless self.event.blank?
+				attendees_for_event = self.event.attendees.map{|i| i.email unless i.email.blank? }.compact
+				errors.add(:email, "should have a unique email") unless attendees_for_event.empty? || attendees_for_event.index{|x| x == self.email}.nil?
+			end
 		end
 
 		def verify_correctness_of_dishes

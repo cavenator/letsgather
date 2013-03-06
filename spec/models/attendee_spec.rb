@@ -9,7 +9,7 @@ describe Attendee do
 			Attendee.destroy_all
 		end
 
-		after(:all) do
+		after(:each) do
 			User.destroy_all
 			Event.destroy_all
 			Attendee.destroy_all
@@ -33,6 +33,29 @@ describe Attendee do
 			expect(Attendee.all.count) == 1
 			attendee2 = FactoryGirl.build(:attendee, :event_id => attendee.event_id, :email => attendee.email )
 			expect(attendee2).to_not be_valid
+		end
+
+		it "should be allowed to have a blank email and be valid" do
+			attendee = FactoryGirl.build(:attendee, :email=> nil)
+			expect(attendee).to be_valid
+		end
+
+		it "should be allowed to have more than one person who has a blank email" do
+			attendee = FactoryGirl.create(:attendee, :email=>nil)
+			attendee2 = FactoryGirl.build(:attendee, :event_id => attendee.event_id ,:full_name=>"Jane Doe", :email=>nil)
+			expect(attendee2).to be_valid
+		end
+
+		it "should be allowed to have a mixture of emails" do
+			attendee = FactoryGirl.create(:attendee)
+			attendee2 = FactoryGirl.create(:attendee, :event_id => attendee.event_id, :full_name=>"Jane Doe", :email => nil)
+			attendee3 = FactoryGirl.build(:attendee, :event_id => attendee.event_id, :full_name=> "John Doe", :email => nil)
+			expect(attendee3).to be_valid
+			attendee3.save
+			attendee4 = FactoryGirl.build(:attendee, :event_id=>attendee.event_id, :full_name=>"Somebody", :email => attendee.email)
+			expect(attendee4).to_not be_valid
+			attendee5 = FactoryGirl.build(:attendee, :event_id => attendee.event_id, :full_name => "Osmebody", :email => "somebody@gmail.com")
+			expect(attendee5).to be_valid
 		end
 	end
 
