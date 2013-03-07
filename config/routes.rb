@@ -10,6 +10,10 @@ MaximusSamurai::Application.routes.draw do
 	get 'events/:id/send_group_email', :to => 'events#send_group_email'
 	get 'events/:id/email_host', :to => 'events#email_host'
 	get 'events/:id/send_host_email', :to => 'events#send_host_email'
+	get 'events/:id/attending_guests', :to => 'events#attending_guests'
+	get 'events/:id/unattending_guests', :to => 'events#unattending_guests'
+	get 'events/:id/undecided_guests', :to => 'events#undecided_guests'
+	get 'events/:id/potluck_statistics', :to => 'events#potluck_statistics'
   
 	resources :events do
 		get 'attendees/add_attendees', :to => 'attendees#add_attendees'

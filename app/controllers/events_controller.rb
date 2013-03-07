@@ -151,6 +151,26 @@ class EventsController < ApplicationController
 		render :layout => false
 	end
 
+	def attending_guests
+		@event = Event.find(params[:id])
+		render :layout => false
+	end
+
+	def unattending_guests
+		@event = Event.find(params[:id])
+		render :layout => false
+	end
+
+	def undecided_guests
+		@event = Event.find(params[:id])
+		render :layout => false
+	end
+
+	def potluck_statistics
+		@event = Event.find(params[:id])
+		render :layout => false
+	end
+
 	def edit_location
 		@event = Event.find(params[:id])
 		render :layout => false

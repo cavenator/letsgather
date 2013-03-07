@@ -42,43 +42,34 @@
 	<hr/>
 	<div class="span3">
 	<ul class="nav nav-pills nav-stacked">
-		<li id="guests">
-		<a>Review the guest list</a>
-		</li>
-		<li id="supplemental_info">
-			<a href="#" data-target="#supplementalInfoModal" data-toggle="modal">Add info for guests</a>
+		<li>
+		<a id="guests">Review the guest list</a>
 		</li>
 		<li>
-			<a id="invite_guests" href="">Invite Guests</a>
-		</li>
-		<li id="attending_guests">
-			<a href="#" data-target="#attendingGuests" data-toggle="modal">Who's coming?</a>
-		</li>
-		<li id="unattending_guests">
-			<a href="#" data-target="#notAttendingGuests" data-toggle="modal">Who's not coming?</a>
-		</li>
-		<li id="undecided_guests">
-			<a href="#" data-target="#undecidedGuests" data-toggle="modal">Who's undecided?</a>
+			<a id="supplemental_info">Additional info for guests</a>
 		</li>
 		<li>
-			<a id="potluck_list" href="">view my potluck list</a>
+			<a id="invite_guests">Invite Guests</a>
 		</li>
 		<li>
-			<a id="new_category" href="">add new category to potluck list</a>
+			<a id="attending_guests">Who's coming?</a>
+		</li>
+		<li>
+			<a id="unattending_guests">Who's not coming?</a>
+		</li>
+		<li>
+			<a id="undecided_guests">Who's undecided?</a>
+		</li>
+		<li>
+			<a id="potluck_list">view my potluck list</a>
+		</li>
+		<li>
+			<a id="potluck_statistics">Potluck statistics</a>
 		</li>
 	</ul>
 	</div>
-	<div class="span6"> Potluck statistics: <br /><span class="label">Category</span><br /><span class="badge badge-success">quantity of dishes you requested</span><br /><span class="badge badge-info">quantity guests are bringing</span><br /><br />
-		<% if @event.potluck_items.count > 0 %>
-			<% @event.potluck_items.each do |item| %>
-				<div><span class="label"><%= item.category %></span> | <span class="badge badge-success"><%= item.host_quantity %></span> | <span class="badge badge-info"><%= @event.find_attendee_dish_count(item.category) %></span></div>
-			<% end %>
-		<% else %>
-			<div><span class="label label-info">Currently you have no potluck categories created</span></div>
-		<% end %>
-		<div>Number of guest attending: <%= @event.attending_guest_count %></div>
+	<div id="contentContainer" class="span6"> 
 	</div>
-</div>
 
 	<div id="locationModal" class="modal hide" data-remote="">
 		<div class="modal-header">
@@ -117,74 +108,40 @@
 		</div>
 	</div>
 
-	<div id="attendingGuests" class="modal hide">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">x</button>
-			<h2>Attending</h2>
-		</div>
-		<div class="modal-body">
-		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Going"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link"} %>
-		<%= render :partial => "attending_attendee", :collection => @event.attendees.where("rsvp = 'Going'") %>
-		</div>
-		<div class="modal-footer">
-			<a href="#" class="btn" data-dismiss="modal">Close</a>
-		</div>
-	</div>
-
-	<div id="notAttendingGuests" class="modal hide">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">x</button>
-			<h2>Not Coming</h2>
-		</div>
-		<div class="modal-body">
-		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Not Going"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link"} %>
-			<%= render :partial => "unattending_attendee", :collection => @event.attendees.where("rsvp = 'Not Going'") %>
-		</div>
-		<div class="modal-footer">
-			<a href="#" class="btn" data-dismiss="modal">Close</a>
-		</div>
-	</div>
-	<div id="undecidedGuests" class="modal hide">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">x</button>
-			<h2>Undecided</h2>
-		</div>
-		<div class="modal-body">
-		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Undecided"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link"} %>
-			<%= render :partial => "undecided_attendee", :collection => @event.attendees.where("rsvp = 'Undecided'") %>
-		</div>
-		<div class="modal-footer">
-			<a href="#" class="btn" data-dismiss="modal">Close</a>
-		</div>
-	</div>
-
 <script>
 	$(document).ready(function() {
-		$("#guests").find("a").attr('href',document.location.pathname+"/attendees");
 		$("#locationModal").attr('data-remote',document.location.pathname+"/change_location");
 		$("#descriptionModal").attr('data-remote',document.location.pathname+"/description");
-		$("#supplementalInfoModal").attr('data-remote',document.location.pathname+"/supplemental_info");
-		$("#invite_guests").attr('href',document.location.pathname+"/attendees/add_attendees");
-		$("#potluck_list").attr('href', document.location.pathname+"/potluck_items");
-		$("#new_category").attr('href', document.location.pathname+"/potluck_items/new");
 	
 		$("#location-href").click(function(){
 			$(this).show();
 		});
 
 		function removeActiveClass(){
-			$("#supplemental_info").removeClass("active");
-			$("#attending_guests").removeClass("active");
-			$("#unattending_guests").removeClass("active");
-			$("#undecided_guests").removeClass("active");
+			$("li").removeClass("active");
 		}
 
 		$("li").each(function (index, data){
 			$(this).click(function(){
 				removeActiveClass();
 				$(this).addClass("active");
+				displayContent($(this).find("a").attr('id'));
 			});
 		});
+
+		function displayContent(id){
+			var idMap = {"guests": "/attendees", "supplemental_info": "/supplemental_info","invite_guests": "/attendees/add_attendees","potluck_list":"/potluck_items", "attending_guests":"/attending_guests","unattending_guests":"/unattending_guests","undecided_guests": "/undecided_guests", "potluck_statistics": "/potluck_statistics" };
+			$.ajax({
+				url: document.location.pathname+idMap[id],
+				dataType: "html",
+				success: function(data){
+					$("#contentContainer").empty();
+					$("#contentContainer").html(data);
+				}
+			});
+		}
+
+		$("#potluck_statistics").click();
 	});
 
 </script>

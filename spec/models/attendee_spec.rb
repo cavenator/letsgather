@@ -284,19 +284,67 @@ describe Attendee do
 		end
 	end
 
-	describe "Removing Guests" do
+	describe "Adding Manual RSVP with items" do
 		before(:all) do
 			User.destroy_all
 			Event.destroy_all
 			@event = FactoryGirl.create(:event)
-			@bob = FactoryGirl.create(:bob)
-			@attendee = Attendee.create(:event_id => @event.id, :user_id => @bob.id, :rsvp => "Going", :email => @bob.email)
-			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => "guest")
+			@potluck_items1 = FactoryGirl.create(:potluck_item, :event_id => @event.id, :host_quantity => 2, :category => "Beer", :dishes => ["IPA","Pale Ale","Belgium Ale","Stout"])
+			@potluck_items2 = FactoryGirl.create(:potluck_item, :event_id => @event.id, :host_quantity => 2, :category => "Snacks", :dishes => ["Doritos Nacho Cheese","Pretzels"])
+		end
+
+		it "should be able to create a new attendee with rsvp items" do
+			attendee = FactoryGirl.create(:attendee, :event_id => @event.id, :email => nil, :rsvp => "Going", :dish => [{"category" => "Beer", "item" => "Belgium Ale", "is_custom" => false},{"category" => "Snacks", "item" => "Cheese tray", "is_custom" => true}])
+			revised_list1 = PotluckItem.find(@potluck_items1.id)
+			revised_list2 = PotluckItem.find(@potluck_items2.id)
+			expect(revised_list1.dishes).to eql(["IPA","Pale Ale","Stout"])
+			expect(revised_list1.taken_items).to eql([{"id" => attendee.id, "item" => "Belgium Ale"}])
+			expect(revised_list2.dishes).to eql(["Doritos Nacho Cheese","Pretzels"])
+		end
+	end
+
+	describe "Removing Guests" do
+		before(:each) do
+			User.destroy_all
+			Event.destroy_all
 		end
 
 		it "should remove the role(s) from the event" do
+			@event = FactoryGirl.create(:event)
+			@bob = FactoryGirl.create(:bob)
+			@attendee = Attendee.create(:event_id => @event.id, :user_id => @bob.id, :rsvp => "Going", :email => @bob.email)
+			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => "guest")
+
 			Attendee.destroy(@attendee)
 			expect(Role.where("user_id = ? and event_id = ?",@bob.id,@event.id).count).to eql(0)
+		end
+
+		it "should reclaim the rsvped items upon delete" do
+			@attendee = FactoryGirl.create(:attendee, :rsvp=>"Going")
+			event = @attendee.event
+			@potluck_list1 = FactoryGirl.create(:potluck_item, :event_id => event.id, :host_quantity => 3, :category => "Beer", :dishes => ["IPA","Pale Ale","Stout","Trippels"])
+			@potluck_list2 = FactoryGirl.create(:potluck_item, :event_id => event.id, :host_quantity => 2, :category => "Snacks", :dishes => ["Doritos","Pretzel"])
+
+			@attendee.dish = [{"category" => "Beer","item"=>"IPA","is_custom" => false},{"category"=>"Snacks","item"=>"Pretzel", "is_custom" => false}]
+			@attendee.save
+
+			refreshed_list1 = PotluckItem.find(@potluck_list1)
+			refreshed_list2 = PotluckItem.find(@potluck_list2)
+
+			expect(refreshed_list1.dishes).to eql(["Pale Ale","Stout","Trippels"])
+			expect(refreshed_list1.taken_items).to eql([{"id" => @attendee.id, "item" => "IPA"}])
+			expect(refreshed_list2.dishes).to eql(["Doritos"])
+			expect(refreshed_list2.taken_items).to eql([{"id" => @attendee.id, "item" => "Pretzel"}])
+
+			@attendee.destroy
+
+			refreshed_list1 = PotluckItem.find(@potluck_list1)
+			refreshed_list2 = PotluckItem.find(@potluck_list2)
+
+			expect(refreshed_list1.dishes).to eql(["Pale Ale","Stout","Trippels","IPA"])
+			expect(refreshed_list1.taken_items).to eql([])
+			expect(refreshed_list2.dishes).to eql(["Doritos","Pretzel"])
+			expect(refreshed_list2.taken_items).to eql([])
 		end
 	end
 end

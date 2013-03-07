@@ -1,0 +1,2 @@
+		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Going"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link"} %>
+		<%= render :partial => "attending_attendee", :collection => @event.attendees.where("rsvp = 'Going'") %>

@@ -10,7 +10,7 @@ class PotluckItemsController < ApplicationController
     @potluck_items = @event.potluck_items
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { render :layout => false }# index.html.erb
       format.json { render json: @event.get_potluck_items_for_guests.to_json }
     end
   end

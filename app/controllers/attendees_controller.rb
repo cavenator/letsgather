@@ -3,17 +3,14 @@ class AttendeesController < ApplicationController
 	before_filter :verify_access
 	before_filter :verify_host_privileges, :only => [:new, :create, :add_attendees, :invite_guests, :destroy ]
 	before_filter :verify_correct_attendee, :only => [:rsvp, :show, :edit, :update ]
-	#Also, be sure to include a verification filter in which attendees can only update their settings (will have to check for attendee.user_id == current_user.id)
-	#The reason why I did this was because I was getting a "WARNING: Can't verify CSRF token authenticity" and would sign the user out.
 
-	protect_from_forgery :except => :invite_guests 
   # GET /attendees
   # GET /attendees.json
   def index
 		@event = Event.find(params[:event_id])
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { render :layout => false }# index.html.erb 
       format.json { render json: @attendees }
     end
   end
@@ -103,6 +100,7 @@ class AttendeesController < ApplicationController
 
 	def add_attendees
 		@event = Event.find(params[:event_id])
+		render :layout => false
 	end
 
 	def email_guest
