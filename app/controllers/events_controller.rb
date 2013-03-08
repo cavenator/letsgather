@@ -72,9 +72,17 @@ class EventsController < ApplicationController
   def update
     @event = Event.find(params[:id])
 
+		if !params[:event][:description].nil? || !params[:event][:theme].nil?
+			render_command = { :partial=>"description", :locals => {:event => @event } }
+		elsif !params[:event][:address1].nil? || !params[:event][:address2].nil? || !params[:event][:city].nil? || !params[:event][:state].nil? || !params[:event][:zip_code].nil?
+			render_command = { :partial => "location", :locals => {:event => @event } }
+		else
+			render_command = { :action => :show, :notice => 'Event has been updated' }
+		end
+
     respond_to do |format|
       if @event.update_attributes(params[:event])
-        format.html { redirect_to @event, notice: 'Event was successfully updated.' }
+        format.html { render render_command }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

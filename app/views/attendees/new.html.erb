@@ -1,8 +1,5 @@
-<h1>New attendee</h1>
-
 <%= render 'form_new' %>
 
-<%= link_to 'Back', event_attendees_path(@event,@attendee) %>
 <script type="text/javascript">
 
 		function rsvp(){
@@ -214,7 +211,7 @@
 
 			createRSVPItemWithAddButton();
 
-		$("#submit").click(function(){
+		$("#new_attendee_submit").click(function(){
 				var attendee_rsvp = $("#attendee_rsvp").val();
 				var attendee_guestcount = $("#attendee_num_of_guests").val();
 				var rsvp_item_array = [];

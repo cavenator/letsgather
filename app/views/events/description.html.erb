@@ -1,8 +1,36 @@
-<%= form_for(@event) do |f| %>
+<%= form_for(@event, :html => {:id=>"description_form"}) do |f| %>
 	<span style="font-weight:bold;font-size:1em">Description: </span><%= f.text_area :description, :placeholder=> "Enter the event description here ...", :style => "width:500px;margin:0px 0px 10px;height:200px" %>
 <p>
 	<span style="font-weight:bold;font-size:1em">Theme: </span><%= f.text_field :theme, :placeholder=>"E.g. Halloween, Drinking" %>
 </p>
 <p>
-	<%= f.submit 'Update', :class=>"btn btn-primary" %></p>
+
+	<button id="description_submit" class="btn btn-primary">Update</button>
+</p>
 <% end %>
+<script>
+
+		$("#description_submit").click(function(){
+			var serialized_form = $('#description_form').serialize(), url = $('#description_form').attr('action');
+			$.ajax({
+				type: "PUT",
+				url: url,
+				data: serialized_form,
+				async: false,
+				dataType: "html",
+				success: function(data, stringText){
+					console.log(data);
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("You have updated Description");
+					$("#description_block_div").html(data);
+					$("#descriptionModal").modal("hide");
+				},
+				error: function(){
+					var description_error_div = $("<div class='alert alert-error' id='description_error_notice'></div>");
+					description_error_div.prepend($("#description_form"));
+					$(description_error_div).html("An error occurred while attempting to save event description");
+				}
+			});
+			return false;
+		});
+</script>

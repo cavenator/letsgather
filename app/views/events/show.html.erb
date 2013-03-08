@@ -1,5 +1,7 @@
-<% if flash[:notice] %>
-<div class="alert alert-success" id="notice"><%= notice %></div>
+<% unless flash[:notice].blank? %>
+	<div id="alert alert-success"><%= flash[:notice] %></div>
+<% else %>
+	<div id="notice"></div>
 <% end %>
 <div class="row">
 	<div class="span3">
@@ -19,20 +21,17 @@
 		</div>
 	</div>
 	<div id="description_div" class="span4">
-		<span style="font-weight:bold;font-size:1em">Description: </span><% unless @event.description.blank? %><%= @event.description %><% else %><%= "Update Description please" %><% end %>
-			<br /><br />
-		<span style="font-weight:bold;font-size:1em">Theme: </span><% unless @event.theme.blank? %><%= @event.theme %><% else %><%= "None" %><% end %><br />
+		<div id="description_block_div">
+			<%= render :partial =>"description", :locals => {:event => @event} %>
+		</div>
 		<div>
 			<button id="description-href" href="#descriptionModal" class="btn btn-primary" data-toggle="modal" style="margin:10px 0px 0px 0px">Update Description and Theme</button>
 		</div>
 	</div>
 	<div id="location_div" class="span3">
-		<% if @event.location %>
-			<%= @event.location1 %><br />
-			<%= @event.location2 %>
-		<% else %>
-			<%= "Define location of your event here" %>
-		<% end %>
+		<div id="location_block_div">
+			<%= render :partial =>"location", :locals => {:event => @event } %>
+		</div>
 		<div>
 			<button id="location-href" href="#locationModal" class="btn btn-primary" data-toggle="modal" style="margin:10px 0px 0px 0px">Update Location</button>
 		</div>
@@ -42,6 +41,9 @@
 	<hr/>
 	<div class="span3">
 	<ul class="nav nav-pills nav-stacked">
+		<li>
+			<a id="potluck_statistics">Potluck statistics</a>
+		</li>
 		<li>
 		<a id="guests">Review the guest list</a>
 		</li>
@@ -62,9 +64,6 @@
 		</li>
 		<li>
 			<a id="potluck_list">view my potluck list</a>
-		</li>
-		<li>
-			<a id="potluck_statistics">Potluck statistics</a>
 		</li>
 	</ul>
 	</div>
@@ -108,11 +107,61 @@
 		</div>
 	</div>
 
+	<div id="newAttendeeModal" class="modal hide" data-remote="">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h2>New Guest</h2>
+		</div>
+		<div class="modal-body">
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
+
+	<div id="editAttendeeModal" class="modal hide" data-remote="">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h2>Edit Guest</h2>
+		</div>
+		<div class="modal-body">
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
+
+	<div id="newPotluckItemModal" class="modal hide" data-remote="">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h2>New Items</h2>
+		</div>
+		<div class="modal-body">
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
+
+	<div id="editPotluckItemModal" class="modal hide" data-remote="">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h2>Edit Items</h2>
+		</div>
+		<div class="modal-body">
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
+
 <script>
 	$(document).ready(function() {
 		$("#locationModal").attr('data-remote',document.location.pathname+"/change_location");
 		$("#descriptionModal").attr('data-remote',document.location.pathname+"/description");
-	
+		$("#newAttendeeModal").attr('data-remote',document.location.pathname+"/attendees/new");
+		$("#newPotluckItemModal").attr('data-remote',document.location.pathname+"/potluck_items/new");
+
 		$("#location-href").click(function(){
 			$(this).show();
 		});
@@ -131,6 +180,9 @@
 
 		function displayContent(id){
 			var idMap = {"guests": "/attendees", "supplemental_info": "/supplemental_info","invite_guests": "/attendees/add_attendees","potluck_list":"/potluck_items", "attending_guests":"/attending_guests","unattending_guests":"/unattending_guests","undecided_guests": "/undecided_guests", "potluck_statistics": "/potluck_statistics" };
+			if (id == "guests"){
+				$("#editAttendeeModal").find(".modal-body").empty();
+			}
 			$.ajax({
 				url: document.location.pathname+idMap[id],
 				dataType: "html",

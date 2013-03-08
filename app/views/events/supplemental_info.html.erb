@@ -1,5 +1,27 @@
-<%= form_for(@event) do |f| %>
+<%= form_for(@event, :html => {:id=>"supplementalInfoForm"}) do |f| %>
 	<%= f.text_area :supplemental_info, :placeholder=> "Enter info like 'We are passed the pool on the left-side when you turn left at the first stop sign' or 'Gate code is 9832. Enter through the visitors side' and so on  ...", :style => "width:500px;margin:0px 0px 10px;height:200px" %>
 <p>
-	<%= f.submit 'Update', :class=>"btn btn-primary" %></p>
+	<button id="supplemental_info_submit" class="btn btn-primary">Update</button>
+</p>
 <% end %>
+<script>
+		$("#supplemental_info_submit").click(function(){
+			var serialized_form = $('#supplementalInfoForm').serialize(), url = $('#supplementalInfoForm').attr('action');
+			$.ajax({
+				type: "PUT",
+				url: url,
+				data: serialized_form,
+				async: false,
+				dataType: "html",
+				success: function(){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("You have updated the additional information for this event");
+				},
+				error: function(){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
+					$("#notice").html("An error has occurred and the additional info couldn't be saved");
+				}
+			});
+			return false;
+		});
+</script>

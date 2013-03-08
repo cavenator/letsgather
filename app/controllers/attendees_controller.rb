@@ -48,7 +48,7 @@ class AttendeesController < ApplicationController
 		@event = Event.find(params[:event_id])
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html { render :layout => false } # new.html.erb
       format.json { render json: @attendee }
     end
   end
@@ -57,6 +57,7 @@ class AttendeesController < ApplicationController
   def edit
     @attendee = Attendee.find(params[:id])
 		@event = Event.find(params[:event_id])
+		render :layout => false
   end
 
   # POST /attendees

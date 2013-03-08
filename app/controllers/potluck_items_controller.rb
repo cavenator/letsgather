@@ -32,7 +32,7 @@ class PotluckItemsController < ApplicationController
     @potluck_item = PotluckItem.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html { render :layout => false }# new.html.erb
       format.json { render json: @potluck_item }
     end
   end
@@ -40,6 +40,7 @@ class PotluckItemsController < ApplicationController
   # GET /potluck_items/1/edit
   def edit
     @potluck_item = PotluckItem.find(params[:id])
+		render :layout => false
   end
 
   # POST /potluck_items
