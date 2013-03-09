@@ -232,7 +232,11 @@
 				//put the change on category select tag on the select_dish
 				category_select.change(function(){
 					var data = $(this).val();
-					var dish_array = dishes[data];
+					var dish_array;
+					if (data != "")
+						dish_array = dishes[data];
+					else
+						dish_array = [];
 					dishes_select.empty();
 					dishes_select.append("<option value=''>Undecided</option>");
 					$.each(dish_array, function(index, item){
@@ -308,23 +312,26 @@
 				item_div = createItemForRSVP();
 				delete_button.click(function(){
 					var category = item_div.find("#attendee_category").val(), selected_dish = item_div.find("#attendee_select_dish").val(), index = -1, removed_item;
-					dishes[category] << selected_dish; //add dish back to dish hash
+					if (category != "" && selected_dish != ""){
+						dishes[category] << selected_dish; //add dish back to dish hash
 					// now remove the item from the taken_queue
-					$.each(taken_queue, function(position, item){
-						if (item.item == selected_dish && item.category == category){
-							index = position;
-							removed_item = item;
+						$.each(taken_queue, function(position, item){
+							if (item.item == selected_dish && item.category == category){
+								index = position;
+								removed_item = item;
+							}
+						});
+						if (index != -1){
+							taken_queue.splice(index,1);
+							dishes[removed_item.category].push(removed_item.item);
 						}
-					});
-					if (index != -1){
-						taken_queue.splice(index,1);
-						dishes[removed_item.category].push(removed_item.item);
+						updateAllDishSelects();
 					}
-					updateAllDishSelects();
 					item_div.remove();
 					// update all selects
 					return false;
 				});
+
 				item_div.find("#dish_div").append(delete_button);
 				$("#items").append(item_div);
 				if (item){

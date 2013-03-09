@@ -169,7 +169,6 @@
 				delete_button.click(function(){
 					var category = item_div.find("#attendee_category").val(), selected_dish = item_div.find("#attendee_select_dish").val(), index = -1, removed_item;
 					//if custom or blank, just remove
-					alert("I have been pushed");
 					if (category != "" && selected_dish != ""){
 						dishes[category] << selected_dish; //add dish back to dish hash
 					// now remove the item from the taken_queue
