@@ -10,7 +10,7 @@
 	</div>
 	<div class="span9 offset1">
 			<button id="add-more" class="btn btn-success">Add more ...</button>
-			<button id="submit" class="btn btn-primary">Send</button>
+			<button id="send-invitations" class="btn btn-primary">Send</button>
 	</div>
 </div>
 <form accept-charset="UTF-8" action="" class="form-horizontal" method="post">
@@ -35,7 +35,8 @@
 			emailText.appendTo(additionalDiv);
 			removeButton.appendTo(additionalDiv);
 		});
-		$("#submit").click(function(){
+
+		$("#send-invitations").click(function(){
 			var outputJSON = {};
 			var emailArray = [];
 			$(".input-large").each(function(index, data){
@@ -54,24 +55,28 @@
 			else {
 				outputJSON["email"] = emailArray;
 				$("#email_invites").val(JSON.stringify(outputJSON));
-				$(".form-horizontal").submit();
-/*				var invite_guest_link = document.location.pathname.replace("add_attendees","invite_guests");
+				var invite_guest_link = document.location.pathname+"/attendees/invite_guests", serialized_form = $(".form-horizontal").serialize();
 				$.ajax({
 					url: invite_guest_link,
 					type: 'POST',
-					data: 'email_invites='+JSON.stringify(outputJSON),
+					data: serialized_form,
 					dataType: 'html',
-					beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-					success: function(data){ alert("success"); alert(data);},
-					error: function() { alert("error"); }
-				});*/
-//Be sure to post this and do some work.
+					async: false,
+					success: function(data){
+						$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+						$("#notice").html("Invitations have been sent. Take a look at your guest list to see who has been added");
+						displayContent("guests");
+					},
+					error: function() {
+						$(".form-horizontal").prepend("<div class='alert alert-error'>Invitations could not be sent out! Please contact your administrator and describe how to reproduce this issue</div>");
+					}
+				});
+				return false;
 			}
 		});
 
 		//Need this for the first entry since the others are dynamically added.
 		$(".input-large").click(function(){ $(this).removeAttr('style'); });
-		$(".form-horizontal").attr("action",document.location.pathname.replace("add_attendees","invite_guests"));
 	});
 </script>
 

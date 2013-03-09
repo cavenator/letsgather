@@ -71,7 +71,7 @@ class AttendeesController < ApplicationController
         format.html { redirect_to [@event,@attendee], notice: 'Attendee was successfully created.' }
         format.json { render json: @attendee, status: :created, location: @attendee }
       else
-        format.html { render action: "new" }
+        format.html { render action: "new", status: :unprocessable_entity }
         format.json { render json: @attendee.errors, status: :unprocessable_entity }
       end
     end
@@ -87,7 +87,11 @@ class AttendeesController < ApplicationController
 
     respond_to do |format|
       if @attendee.update_attributes(params[:attendee])
-        format.html { redirect_to event_url(@event), notice: 'RSVP was successfully updated.' }
+				if current_user.is_host_for?(@event)
+					format.html { render :action => :show }
+				else
+					format.html { redirect_to event_url(@event), notice: 'RSVP was successfully updated.' }
+				end
         format.json { head :no_content }
       else
 				@attendee.errors.full_messages.each do |message|
@@ -107,6 +111,7 @@ class AttendeesController < ApplicationController
 	def email_guest
 		@event = Event.find(params[:event_id])
 		@attendee = Attendee.find(params[:id])
+		render :layout => false
 	end
 
   def send_guest_email
@@ -116,11 +121,11 @@ class AttendeesController < ApplicationController
 		@attendee = Attendee.find(params[:id])
 		if @subject.blank? || @body.blank?
 			flash[:notice] = "You must include both a subject and body"
-			redirect_to(:action => :email_guest) and return
+			render :action => :email_guest
 		else
 			Thread.new { AttendeeMailer.email_guest(@attendee, @subject, @body, current_user).deliver }
 			flash[:notice] = "Message to guest has been sent"
-			redirect_to(@event) and return
+			render :action => :email_guest
 		end
 
 	end

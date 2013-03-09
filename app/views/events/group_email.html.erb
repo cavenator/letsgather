@@ -3,7 +3,7 @@
 		<div class="alert alert-error"><%= flash[:notice] %></div>
 <% end %>
 
-<%= form_tag "/events/#{@event.id}/send_group_email", :method=>:get do %>
+<%= form_tag "/events/#{@event.id}/send_group_email", :method=>:get, :id=>"groupEmailForm" do %>
 
 	<%= hidden_field_tag :rsvp_group, @rsvp_group %>
 
@@ -15,8 +15,29 @@
 	</p>
 
 	<div>
-		<span class="btn"><%= link_to('Cancel',@event) %></span>
-		<%= submit_tag "Send", :class=>"btn btn-primary" %>
+		<button class="btn btn-primary" id="groupEmailSubmitter">Send</button>
 	</div>
 
 <% end %>
+<script>
+		$("#groupEmailSubmitter").click(function(){
+			var serialized_form = $("#groupEmailForm").serialize(), url = $("#groupEmailForm").attr('action');
+			$.ajax({
+				url: url,
+				data: serialized_form,
+				type: "GET",
+				dataType: "html",
+				async: false,
+				success: function(data, stringText){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("Group Email sent!");
+					$("#emailModal").modal("hide");
+				},
+				error: function(){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
+					$("#email-alert").html("An error occurred while attempting to send the email");
+				}
+			});
+			return false;
+		});
+</script>

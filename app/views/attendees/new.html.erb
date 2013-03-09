@@ -216,6 +216,8 @@
 				var attendee_guestcount = $("#attendee_num_of_guests").val();
 				var rsvp_item_array = [];
 				var items_collection = $(".item");
+				var url = $("#newAttendeeForm").attr('action');
+				var serialized_form;
 				if (attendee_rsvp != "Going"){
 					$("#attendee_num_of_guests").val(0);
 					$("#attendee_category").val("");
@@ -230,7 +232,26 @@
 						}
 					});
 				}
-				$("form").append("<input type='hidden' name='attendee[dish]' value='"+JSON.stringify(rsvp_item_array)+"' />");
+				$("#newAttendeeForm").append("<input type='hidden' name='attendee[dish]' value='"+JSON.stringify(rsvp_item_array)+"' />");
+				serialized_form = $("#newAttendeeForm").serialize();
+				$.ajax({
+					url: url,
+					dataType: "html",
+					type: "POST",
+					data: serialized_form,
+					async: false,
+					success: function(data, successText){
+						$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+						$("#notice").html("Guest has been created successfully");
+						$("#newAttendeeModal").modal("hide");
+					},
+					error: function(xhr, errorText, errorObject){
+						console.log(xhr);
+						console.log(errorObject);
+						$("#newAttendeeForm").prepend("<div class='alert alert-error'>"+errorText+": Problem creating new guests. Please check your emails to make sure there wasn't any duplicates and if you did RSVP with items, make sure they have both a category and an item</div>");
+					}
+				});
+				return false;
 			});
 		});
 

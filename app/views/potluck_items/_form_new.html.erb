@@ -1,4 +1,4 @@
-<%= form_for([@event, @potluck_item]) do |f| %>
+<%= form_for([@event, @potluck_item], :html=>{:id=>"potluckItemsForm"}) do |f| %>
   <% if @potluck_item.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@potluck_item.errors.count, "error") %> prohibited this potluck_item from being saved:</h2>
@@ -31,6 +31,7 @@
 		<div id="list_items">
 			<label>Items: </label>
 			<input type="text" class="input-large" id="first_item" placeholder="List item here ...">
+			<input type="button" id="add_more_items" class="btn btn-success" value="Add more items" />
 	</div>
   <% else %>
 			<div id="list_items">
@@ -38,14 +39,17 @@
 		<% @potluck_item.dishes.each_with_index do |dish, index| %>
 				<div id="dish_<%= index %>">
 					<input type='text' class='input-large' value="<%= dish %>">
-					<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em' onclick="$('#dish_<%= index %>').remove();">Remove</button>"
+					<% if index == 0 %>
+						<input type="button" id="add_more_items" class="btn btn-success" value="Add more items" />
+					<% else %>
+						<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em' onclick="$('#dish_<%= index %>').remove();">Remove</button>"
+					<% end %>
 				</div>
 		<% end %>
 		</div>
 	<% end %>
 
   <div>
-		<input type="button" id="add_more_items" class="btn btn-success" value="Add more items" />
-    <%= f.submit "Create", :class => "btn btn-primary", :id => "submit_button" %>
+		<button id="submit_button" class="btn btn-primary">Save</button>
   </div>
 <% end %>

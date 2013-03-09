@@ -1,2 +1,31 @@
-<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Undecided"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link"} %>
+<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Undecided"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
 <%= render :partial => "undecided_attendee", :collection => @event.attendees.where("rsvp = 'Undecided'") %>
+<script>
+
+	function loadEmailTemplate(emailObject){
+		var url = $(emailObject).attr('href'), emailModal = $("#emailModal");
+
+		emailModal.attr('data-remote',url);
+		$.ajax({
+			url: url,
+			dataType: "html",
+			success: function(data){
+				emailModal.find(".modal-body").html(data);
+				emailModal.modal("show");
+			},
+			error: function(xhr, errorText, errorObject){
+				emailModal.find(".modal-body").html("<div class='alert alert-error'>"+errorText+": Cannot retrieve template for emailing guest. Please contact the administrator about this</div>");
+			}
+		});
+	}
+
+	$(".email_group").click(function(){
+			loadEmailTemplate($(this));
+			return false;
+		});
+
+	$(".email_individual").click(function(){
+			loadEmailTemplate($(this));
+			return false;
+	});
+</script>

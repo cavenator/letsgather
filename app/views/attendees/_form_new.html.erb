@@ -1,4 +1,4 @@
-<%= form_for([@event, @attendee], :method=>"POST") do |f| %>
+<%= form_for([@event, @attendee], :method=>"POST", :html=>{:id=>"newAttendeeForm"}) do |f| %>
   <% if @attendee.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@attendee.errors.count, "error") %> prohibited this attendee from being saved:</h2>

@@ -10,7 +10,7 @@
 
 	<tbody>
 <% @event.attendees.each do |attendee| %>
-  <tr>
+  <tr id="guest_<%= attendee.id %>">
 		<td><%= attendee.full_name %></td>
 		<td><%= attendee.email %></td>
 		<td style="text-align:center"><%= attendee.rsvp %></td>
@@ -21,13 +21,66 @@
 </table>
 
 <br />
-<button href="#newAttendeeModal" class="btn btn-primary" data-toggle="modal">New Guest</button>
+<button href="#newAttendeeModal" id="newAttendeeButton" class="btn btn-primary" data-toggle="modal">New Guest</button>
 <script>
 	$(document).ready(function(){
+
+		$("#newAttendeeButton").click(function(){
+			var url = document.location.pathname+"/attendees/new", newAttendeeModal = $("#newAttendeeModal");
+			$.ajax({
+				url: url,
+				dataType: "html",
+				success: function(data){
+					newAttendeeModal.find(".modal-body").html(data);
+					newAttendeeModal.modal("show");
+				},
+				error: function(xhr, errorText, errorObject){
+					newAttendeeModal.find(".modal-body").html("<div class='alert alert-error'>"+errorText+": Cannot retrieve form for new guest. Please contact the administrator about this</div>");
+				}
+			});
+		});
+
+		$(".removeAttendee").click(function(){
+			var url = $(this).attr('href');
+			var id = url.substr(url.lastIndexOf("/")+1);
+			var table_row_id = "guest_"+id;
+			$.ajax({
+				url: url,
+				dataType: "html",
+				data: id,
+				type: "DELETE",
+				async: false,
+				success: function(){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("Guest has been removed from your event");
+					$("#"+table_row_id).remove();
+				},
+				error: function(){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("Guest has been removed from your event");
+					$("#"+table_row_id).remove();
+				}
+			});
+			return false;
+		});
+
 		$(".editAttendee").click(function(){
-			var editAttendeePath = $(this).attr("href");
-			$("#editAttendeeModal").attr("data-remote", editAttendeePath.match(/\/events.+/));
-			$("#editAttendeeModal").modal("show");
+			var editAttendeePath = $(this).attr("href"), editAttendeeModal = $("#editAttendeeModal"), url;
+
+			//initialize the modal
+			url = editAttendeePath.match(/\/events.+/);
+			$("#editAttendeeModal").attr("data-remote", url);
+			$.ajax({
+				url: url,
+				dataType: "html",
+				success: function(data){
+					editAttendeeModal.find(".modal-body").html(data);
+					editAttendeeModal.modal("show");
+				},
+				error: function(xhr, errorText, errorObject){
+					editAttendeeModal.find(".modal-body").html("<div class='alert alert-error'>"+errorText+": Cannot retrieve information for guest. Please contact the administrator about this</div>");
+				}
+			});
 			return false;
 		});
 	});

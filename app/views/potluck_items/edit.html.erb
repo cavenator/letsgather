@@ -20,6 +20,10 @@
 
 		$("#submit_button").click(function(){
 			var dish_array = [];
+			var url = $("#potluckItemsForm").attr('action');
+			var serialized_form;
+
+			$("#potluckItemsForm").find(".alert").remove();
 			$(".input-large").each(function(index, input){
 				if ($.trim($(input).val()) == ""){
 					$(input).css('background-color','red');
@@ -39,6 +43,24 @@
 				$("#flash_notice").text("You must specify at least one item for the specified category");
 				return false;
 			}
+
+			serialized_form = $("#potluckItemsForm").serialize();
+			$.ajax({
+				url: url,
+				dataType: "html",
+				type: "PUT",
+				data: serialized_form,
+				async: false,
+				success: function(data, successText){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("Items have been updated for this event");
+					$("#editPotluckItemModal").modal("hide");
+				},
+				error: function(){
+					$("#potluckItemsForm").prepend("<div class='alert alert-error'>We couldn't update this potluck category due to the following possible reasons<ul><li>Categories, host quantity and items need to be present</li><li>Categories need to be unique and items need to be unique per category</li><li>Host quantity needs to be a number</li></ul></div>");
+				}
+			});
+			return false;
 		});
 
 	});

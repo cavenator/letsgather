@@ -9,7 +9,7 @@
 	</thead>
 	<tbody>
 <% @potluck_items.each do |potluck_item| %>
-  <tr style="text-align:center">
+  <tr style="text-align:center" id="items_<%= potluck_item.id %>">
 	<td>
 		<%= potluck_item.category %>
 	</td>
@@ -29,13 +29,66 @@
 </table>
 
 <br />
-<button href="#newPotluckItemModal" class="btn btn-primary" data-toggle="modal">New Items</button>
+<button href="#newPotluckItemModal" id="newPotluckItems" class="btn btn-primary" data-toggle="modal">New Items</button>
 <script>
 	$(document).ready(function(){
+
+		$("#newPotluckItems").click(function(){
+			var url = document.location.pathname+"/potluck_items/new";
+
+			$.ajax({
+				url: url,
+				dataType: "html",
+				success: function(data){
+					console.log(data);
+					$("#newPotluckItemModal").find(".modal-body").html(data);
+					$("#newPotluckItemModal").modal("show");
+				},
+				error: function(xhr, errorText, errorObject){
+					newPotluckItemModal.find(".modal-body").html("<div class='alert alert-error'>"+errorText+": Cannot retrieve form for new guest. Please contact the administrator about this</div>");
+				}
+			});
+		});
+
+		$(".removePotluckItems").click(function(){
+			var url = $(this).attr('href');
+			var id = url.substr(url.lastIndexOf("/")+1);
+			var table_row_id = "items_"+id;
+			$.ajax({
+				url: url,
+				dataType: "html",
+				data: id,
+				type: "DELETE",
+				async: false,
+				success: function(){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("Items have been removed from your list");
+					$("#"+table_row_id).remove();
+				},
+				error: function(){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("Items have been removed from your list");
+					$("#"+table_row_id).remove();
+				}
+			});
+			return false;
+		});
+
 		$(".editPotluckItems").click(function(){
-			var editPotluckItemPath = $(this).attr("href");
-			$("#editPotluckItemModal").attr("data-remote", editPotluckItemPath.match(/\/events.+/));
-			$("#editPotluckItemModal").modal("show");
+			var editPotluckItemPath = $(this).attr("href"), editPotluckItemModal = $("#editPotluckItemModal"), url;
+			url = editPotluckItemPath.match(/\/events.+/);
+			$("#editPotluckItemModal").attr("data-remote", url);
+			$.ajax({
+				url: url,
+				dataType: "html",
+				success: function(data){
+					editPotluckItemModal.find(".modal-body").html(data);
+					editPotluckItemModal.modal("show");
+				},
+				error: function(xhr, errorText, errorObject){
+					editPotluckItemModal.find(".modal-body").html("<div class='alert alert-error'>"+errorText+": Cannot retrieve information for guest. Please contact the administrator about this</div>");
+				}
+			});
 			return false;
 		});
 	});

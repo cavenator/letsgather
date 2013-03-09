@@ -116,11 +116,13 @@ class EventsController < ApplicationController
 	def group_email
 		@event = Event.find(params[:id])
 		@rsvp_group = params[:rsvp_group]
+		render :layout => false
 	end
 
 	def email_host
 		@event = Event.find(params[:id])
 		@host = @event.user
+		render :layout => false
 	end
 
 	def send_host_email
@@ -134,7 +136,7 @@ class EventsController < ApplicationController
 		else
 			flash[:notice] = "Message to host has been sent"
 			Thread.new { AttendeeMailer.email_host(@host, @event, @subject, @body, current_user).deliver }
-			redirect_to(:action => :show) and return
+			render :action => :description
 		end
 	end
 
