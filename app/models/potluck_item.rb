@@ -29,5 +29,7 @@ class PotluckItem < ActiveRecord::Base
 
 	def verify_no_duplicates_dishes
 		errors.add(:dishes, "No duplicates allowed in list") unless self.dishes.uniq.length == self.dishes.length
+		taken_items = self.taken_items.map{|i| i["item"] }
+		errors.add(:dishes, "Item cannot be added since it's already taken by guest") unless taken_items.blank? || (taken_items & self.dishes).count == 0
 	end
 end

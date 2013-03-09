@@ -47,5 +47,22 @@ describe PotluckItem do
 			@potluck_item.dishes = ["Cookies","Brownies","Cupcakes"]
 			expect(@potluck_item).to be_valid
 		end
+
+		it "should not allow duplicate dishes within the same category upon update if duplicated item is within taken item" do
+			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Desserts", :host_quantity => 2, :dishes => ["Brownies","Cookies"])
+			expect(@potluck_item).to be_valid
+
+			attendee = FactoryGirl.create(:attendee, :event_id => @event.id, :rsvp => "Going")
+			@potluck_item.taken_items << {"id" => attendee.id, "item" => "Brownies" }
+			@potluck_item.dishes.delete("Brownies")
+			puts "#{@potluck_item.dishes.to_s} and #{@potluck_item.taken_items.map{|i| i['item']}}"
+			@potluck_item.save
+
+			@potluck_item = PotluckItem.find(@potluck_item.id)
+
+			@potluck_item.dishes = ["Cookies","Brownies"]
+			puts "#{@potluck_item.dishes.to_s} and #{@potluck_item.taken_items.map{|i| i['item']}}"
+			expect(@potluck_item).to_not be_valid
+		end
 	end
 end

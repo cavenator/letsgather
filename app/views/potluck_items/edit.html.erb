@@ -1,7 +1,5 @@
+<div id="flash_notice"><%= flash[:notice] %></div>
 <%= render 'form_new' %>
-
-<%= link_to 'Show', event_potluck_item_path(@event, @potluck_item) %> |
-<%= link_to 'Back', event_potluck_items_path %>
 <script>
 
 	$(document).ready(function(){
@@ -23,7 +21,8 @@
 			var url = $("#potluckItemsForm").attr('action');
 			var serialized_form;
 
-			$("#potluckItemsForm").find(".alert").remove();
+			$("#flash_notice").removeClass("alert alert-error");
+			$("#flash_notice").html("");
 			$(".input-large").each(function(index, input){
 				if ($.trim($(input).val()) == ""){
 					$(input).css('background-color','red');
@@ -57,7 +56,9 @@
 					$("#editPotluckItemModal").modal("hide");
 				},
 				error: function(){
-					$("#potluckItemsForm").prepend("<div class='alert alert-error'>We couldn't update this potluck category due to the following possible reasons<ul><li>Categories, host quantity and items need to be present</li><li>Categories need to be unique and items need to be unique per category</li><li>Host quantity needs to be a number</li></ul></div>");
+					console.log("Within error block");
+					$("#flash_notice").addClass("alert alert-error");
+					$("#flash_notice").html("We couldn't add this potluck category due to the following possible reasons<ul><li>Categories, host quantity and items need to be present</li><li>Categories need to be unique and items need to be unique per category</li><li>Host quantity needs to be a number</li></ul>");
 				}
 			});
 			return false;

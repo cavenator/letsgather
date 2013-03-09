@@ -8,12 +8,19 @@
 </head>
 <body style="padding:1em 5em 5em 5em;">
 <div class="container-fluid">
-<div class="navbar"><div class="navbar-inner">
-<div class="nav" style="float:right">
-<a id="accountLink" class="brand" data-toggle="modal" data-target="#userModal" onclick="$(this).show();">Edit Profile</a>
-<%= link_to 'Sign out', {:controller => "devise/sessions", :action => "destroy" }, {:method => :delete, :class=>"brand"} %>
+<div class="navbar">
+	<div class="navbar-inner">
+		<div class="nav" style="float:right">
+			<div class="btn-group">
+				<button class="btn dropdown-toggle" data-toggle="dropdown">Settings<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a id="accountLink" data-toggle="modal" href="#userModal" onclick="$(this).show();">Edit Profile</a></li>
+					<li><%= link_to 'Sign out', {:controller => "devise/sessions", :action => "destroy" }, {:method => :delete} %></li>
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>
-</div></div>
 <%= yield %>
 </div>
 <div class="modal hide" id="userModal" data-remote="/users/edit">

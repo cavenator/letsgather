@@ -53,7 +53,7 @@ class PotluckItemsController < ApplicationController
         format.html { redirect_to [@event, @potluck_item], notice: 'Potluck item was successfully created.' }
         format.json { render json: @potluck_item, status: :created, location: @potluck_item }
       else
-        format.html { render action: "new" }
+        format.html { render action: "new", status: :unprocessable_entity }
         format.json { render json: @potluck_item.errors, status: :unprocessable_entity }
       end
     end
