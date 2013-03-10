@@ -7,7 +7,7 @@
 			<span style="font-size:1em"><%= @event.user.full_name %></span>
 		</div>
 		<div>
-			<%= link_to 'Email host', @event.id.to_s+'/email_host', {:style=>"color:blue"} %>
+			<%= link_to 'Email host', @event.id.to_s+'/email_host', { :id => "emailHostLink", :style=>"color:blue" } %>
 		</div>
 		<div>
 			<span style="font-weight:bold;font-size:1em">Start Date: </span>
@@ -44,6 +44,9 @@
 		<li id="taken_items">
 			<a href="#" data-target="#takenItems" data-toggle="modal">Taken potluck items</a>
 		</li>
+		<li>
+			<%= link_to 'Back to Events', events_path, :style=>"color:black" %>
+		</li>
 		</ul>
 	</div>
 	<div class="span8">
@@ -76,9 +79,6 @@
 			<%= render :partial=>"guest_rsvp_settings", :locals => {:attendee => @attendee } %>
 		</div>
 	</div>
-</div>
-<div style="margin-top:1em">
-	<%= link_to 'Back', events_path, :class=>"btn btn-link" %>
 </div>
 	<div id="attendingGuests" class="modal hide">
 		<div class="modal-header">
@@ -113,6 +113,17 @@
 		</div>
 		<div class="modal-body">
 			<%= render :partial => "undecided_attendee", :collection => @event.attendees.where("rsvp = 'Undecided' and id <> ?", @attendee.id) %>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
+
+	<div id="emailModal" class="modal hide" data-remote="">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+		</div>
+		<div class="modal-body">
 		</div>
 		<div class="modal-footer">
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
@@ -163,6 +174,11 @@
 						dishes[item.category] = item.dishes;
 					});
 				}
+			});
+
+			$("#emailModal").on('hidden',function(){
+				$(this).attr('data-remote',"");
+				$(this).find(".modal-body").html("");
 			});
 
 			function updateAllDishSelects(){
@@ -398,6 +414,28 @@
 				}
 				$("form").append("<input type='hidden' name='attendee[dish]' value='"+JSON.stringify(rsvp_item_array)+"' />");
 			});
+
+		function loadEmailTemplate(emailObject){
+			var url = $(emailObject).attr('href'), emailModal = $("#emailModal");
+			emailModal.attr('data-remote',url);
+			$.ajax({
+				url: url,
+				dataType: "html",
+				success: function(data){
+					emailModal.find(".modal-body").html(data);
+					emailModal.modal("show");
+				},
+				error: function(xhr, errorText, errorObject){
+					emailModal.find(".modal-body").html("<div class='alert alert-error'>"+errorText+": Cannot retrieve template for emailing host. Please contact the administrator about this</div>");
+				}
+			});
+		}
+
+		$("#emailHostLink").click(function(){
+			loadEmailTemplate($(this));
+			return false;
+		});
+
 		});
 
 </script>

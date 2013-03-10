@@ -131,10 +131,8 @@ class EventsController < ApplicationController
 		@subject = params[:subject]
 		@body = params[:body]
 		if @subject.blank? || @body.blank?
-			flash[:notice] = "You must include both a subject and body"
-			redirect_to(:action => :email_host) and return
+			render :action => :email_host, :status => :not_acceptable
 		else
-			flash[:notice] = "Message to host has been sent"
 			Thread.new { AttendeeMailer.email_host(@host, @event, @subject, @body, current_user).deliver }
 			render :action => :description
 		end

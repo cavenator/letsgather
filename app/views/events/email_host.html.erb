@@ -1,9 +1,11 @@
 <h1>Email host <%= @host.full_name %></h1>
 <% if flash[:notice] %>
 		<div class="alert alert-error"><%= flash[:notice] %></div>
+<% else %>
+		<div id="email-alert"></div>
 <% end %>
 
-<%= form_tag "/events/#{@event.id}/send_host_email", :method=>:get do %>
+<%= form_tag "/events/#{@event.id}/send_host_email", :method=>:get, :id=>"emailHostForm" do %>
 
 	<p>
 	<%= text_field_tag :subject, @subject || String.new, :placeholder => "Enter email subject here" %>
@@ -13,8 +15,29 @@
 	</p>
 
 	<div>
-		<span class="btn"><%= link_to('Cancel',@event) %></span>
-		<%= submit_tag "Send", :class=>"btn btn-primary" %>
+		<button class="btn btn-primary" id="emailHostSubmitter">Send</button>
 	</div>
 
 <% end %>
+<script>
+		$("#emailHostSubmitter").click(function(){
+			var serialized_form = $("#emailHostForm").serialize(), url = $("#emailHostForm").attr('action');
+			$.ajax({
+				url: url,
+				data: serialized_form,
+				type: "GET",
+				dataType: "html",
+				async: false,
+				success: function(data, stringText){
+					$("#flash-message").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#flash-message").html("Message to host sent!");
+					$("#emailModal").modal("hide");
+				},
+				error: function(){
+					$("#email-alert").removeClass("alert alert-error alert-success").addClass("alert alert-error");
+					$("#email-alert").html("An error occurred while attempting to send the email. Please be sure you have both a subject and body");
+				}
+			});
+			return false;
+		});
+</script>
