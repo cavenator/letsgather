@@ -5,6 +5,10 @@ class PotluckItem < ActiveRecord::Base
 		potluck_item.dishes = JSON.parse(potluck_item.dishes) unless potluck_item.dishes.is_a?(Array)
 	end
 
+	before_destroy do |potluck_item|
+		return false unless potluck_item.taken_items.empty?
+	end
+
 	validates :event_id, :category, :host_quantity, :presence => true
 	validates :dishes, :presence => true, :on => :create
 	validates :host_quantity, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }

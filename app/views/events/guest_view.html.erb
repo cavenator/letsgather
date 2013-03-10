@@ -16,26 +16,15 @@
 		<div>
 			<span style="font-weight:bold;font-size:1em">RSVP Date: </span>
 			<span style="font-size:1em"><%= @event.display_rsvp_time %></span>
-		<div style="font-size:1em;margin-top:1em;"><%= @event.rsvp_countdown %></div>
-		<div style="margin-top:1em"><span style="font-size:1em;font-weight:bold;">Number of guest attending: </span><%= @event.attending_guest_count %></div>
+			<div style="font-size:1em;margin-top:1em;"><%= @event.rsvp_countdown %></div>
+			<div style="margin-top:1em"><span style="font-size:1em;font-weight:bold;">Number of guest attending: </span><%= @event.attending_guest_count %></div>
+		</div>
+	</div>
+	<div class="span8">
+		<%= render :partial=>"guest_event_description", :locals => { :event => @event } %>
 	</div>
 </div>
-	<div class="span3">
-	<span style="font-weight:bold;font-size:1em">Event Location: </span>
-	<% if @event.location %>
-		<%= @event.location1 %><br />
-		<%= @event.location2 %>
-	<% end %>
-</div>
-	<div class="span4">
-		<span style="font-weight:bold;font-size:1em;">Need to know info from the host:</span>
-		<% if @event.supplemental_info %>
-			<%= @event.supplemental_info %>
-		<% else %>
-			<%= "TBD" %>
-		<% end %>
-	</div>
-</div>
+<hr />
 <div class="row-fluid" style="margin: 2em 0 2em 0">
 		<div class="span3 offset1"></div>
 		<div class="span3 offset1"><button class="btn btn-primary btn-large" id="modifyRSVPButton" onclick="showRSVPSettings()">Modify RSVP</button></div>

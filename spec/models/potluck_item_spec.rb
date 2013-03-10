@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PotluckItem do
   describe "retrieving data for the guest" do
-		before(:all) do
+		before(:each) do
 
 			User.destroy_all
 			Event.destroy_all
@@ -55,14 +55,27 @@ describe PotluckItem do
 			attendee = FactoryGirl.create(:attendee, :event_id => @event.id, :rsvp => "Going")
 			@potluck_item.taken_items << {"id" => attendee.id, "item" => "Brownies" }
 			@potluck_item.dishes.delete("Brownies")
-			puts "#{@potluck_item.dishes.to_s} and #{@potluck_item.taken_items.map{|i| i['item']}}"
 			@potluck_item.save
 
 			@potluck_item = PotluckItem.find(@potluck_item.id)
 
 			@potluck_item.dishes = ["Cookies","Brownies"]
-			puts "#{@potluck_item.dishes.to_s} and #{@potluck_item.taken_items.map{|i| i['item']}}"
 			expect(@potluck_item).to_not be_valid
+		end
+
+		it "should not be allowed to delete potluck items if any of the items is taken" do
+			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Desserts", :host_quantity => 2, :dishes => ["Brownies","Cookies"])
+			expect(@potluck_item).to be_valid
+
+			attendee = FactoryGirl.create(:attendee, :event_id => @event.id, :rsvp => "Going")
+			@potluck_item.taken_items << {"id" => attendee.id, "item" => "Brownies" }
+			@potluck_item.dishes.delete("Brownies")
+			@potluck_item.save
+
+			@potluck_item = PotluckItem.find(@potluck_item.id)
+			@potluck_item.destroy
+
+			expect(PotluckItem.where("event_id = ?",@event.id).count).to eql(3)
 		end
 	end
 end

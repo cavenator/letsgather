@@ -1,0 +1,37 @@
+<table class="table">
+	<thead>
+		<tr style="border-top:none">
+			<td style="border-top:none"></td>
+			<td style="border-top:none"></td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr style="border-top:none">
+			<td style="border-top:none"><span style="font-weight:bold;font-size:1em">Description</span></td>
+			<td style="border-top:none"><% if event.description.nil? || event.description.blank? %><%= "TBD" %><% else %><%= event.description %><% end %></td>
+		</tr>
+		<tr style="border-top:none">
+			<td style="border-top:none"><span style="font-weight:bold;font-size:1em">Theme</span></td>
+			<td style="border-top:none"><% if event.theme.nil? || event.theme.blank? %><%= "TBD" %><% else %><%= event.theme %><% end %></td>
+		</tr>
+		<tr style="border-top:none">
+			<td style="border-top:none"><span style="font-weight:bold;font-size:1em">Location</span></td>
+			<td style="border-top:none">
+				<% if event.location %>
+					<%= event.location1 %><br />
+					<%= event.location2 %>
+				<% end %>
+			</td>
+		</tr>
+		<tr style="border-top:none">
+			<td style="border-top:none"><span style="font-weight:bold;font-size:1em">Additional info from host</span></td>
+			<td style="border-top:none">
+				<% if event.supplemental_info && !event.supplemental_info.blank? %>
+					<%= event.supplemental_info %>
+				<% else %>
+					<%= "TBD" %>
+				<% end %>
+			</td>
+		</tr>
+	</tbody>
+</table>

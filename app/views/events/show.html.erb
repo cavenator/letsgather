@@ -17,7 +17,7 @@
 			<span style="font-weight:bold;font-size:1em">RSVP Date: </span>
 			<span style="font-size:1em"><%= @event.display_rsvp_time %></span></div>
 			<div style="margin-top:1em">
-				<%= link_to 'Edit', edit_event_path(@event), :class=>"btn btn-link" %> | <%= link_to 'Back', events_path, :class=>"btn btn-link" %></div>
+				<%= link_to 'Edit', edit_event_path(@event), :class=>"btn btn-primary", :style=>"color:white" %> </div>
 		</div>
 	</div>
 	<div id="description_div" class="span4">
@@ -64,6 +64,9 @@
 		</li>
 		<li>
 			<a id="potluck_list">view my potluck list</a>
+		</li>
+		<li>
+			<%= link_to 'Back to Events page', events_path, :style=>"color:black" %>
 		</li>
 	</ul>
 	</div>
