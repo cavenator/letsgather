@@ -56,9 +56,8 @@
 					$("#"+table_row_id).remove();
 				},
 				error: function(){
-					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
-					$("#notice").html("Guest has been removed from your event");
-					$("#"+table_row_id).remove();
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
+					$("#notice").html("Guest cannot be removed from the event");
 				}
 			});
 			return false;

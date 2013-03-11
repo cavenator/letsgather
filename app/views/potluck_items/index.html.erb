@@ -66,9 +66,8 @@
 					$("#"+table_row_id).remove();
 				},
 				error: function(){
-					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
-					$("#notice").html("Items have been removed from your list");
-					$("#"+table_row_id).remove();
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
+					$("#notice").html("List category cannot be removed since there are some items that have been rsvped by guests");
 				}
 			});
 			return false;

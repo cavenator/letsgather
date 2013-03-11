@@ -148,7 +148,7 @@ class AttendeesController < ApplicationController
     @attendee.destroy
 
     respond_to do |format|
-      format.html { redirect_to event_attendees_path }
+      format.html { render :action => :index }
       format.json { head :no_content }
     end
   end

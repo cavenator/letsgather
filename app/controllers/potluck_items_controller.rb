@@ -79,11 +79,15 @@ class PotluckItemsController < ApplicationController
   # DELETE /potluck_items/1.json
   def destroy
     @potluck_item = PotluckItem.find(params[:id])
-    @potluck_item.destroy
 
     respond_to do |format|
-      format.html { redirect_to event_potluck_items_url }
-      format.json { head :no_content }
+    	if @potluck_item.destroy
+				format.html { render :nothing => true, :status => 204 }
+				format.json { head :no_content }
+			else
+      	format.html { redirect_to event_potluck_items_url }
+      	format.json { head :not_acceptable }
+			end
     end
   end
 
