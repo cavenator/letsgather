@@ -56,6 +56,12 @@ describe Attendee do
 			expect(attendee4).to_not be_valid
 			attendee5 = FactoryGirl.build(:attendee, :event_id => attendee.event_id, :full_name => "Osmebody", :email => "somebody@gmail.com")
 			expect(attendee5).to be_valid
+			attendee6 = FactoryGirl.build(:attendee, :event_id => attendee.event_id, :full_name => "Ozzy Osbourne", :email => "ozzy")
+			expect(attendee6).to_not be_valid
+			attendee6.email = "ozzy.osbourne"
+			expect(attendee6).to_not be_valid
+			attendee6.email = "ozzy.osbourne@gmail"
+			expect(attendee6).to_not be_valid
 		end
 	end
 

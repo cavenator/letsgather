@@ -134,7 +134,7 @@ class EventsController < ApplicationController
 			render :action => :email_host, :status => :not_acceptable
 		else
 			Thread.new { AttendeeMailer.email_host(@host, @event, @subject, @body, current_user).deliver }
-			render :action => :description
+			render :nothing=>true, :status => 200
 		end
 	end
 
@@ -150,7 +150,7 @@ class EventsController < ApplicationController
 			attendees = @event.attendees.where('rsvp = ?',@rsvp_group)
 			Thread.new { AttendeeMailer.email_group(attendees, @event, @subject, @body).deliver }
 			flash[:notice] = "Message to guests have been sent"
-			redirect_to(:action => :show) and return
+			render :nothing=>true, :status => 200
 		end
 	end
 

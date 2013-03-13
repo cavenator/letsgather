@@ -1,5 +1,5 @@
 <% unless flash[:notice].blank? %>
-	<div id="alert alert-success"><%= flash[:notice] %></div>
+	<div id="notice" class="alert alert-success"><%= flash[:notice] %></div>
 <% else %>
 	<div id="notice"></div>
 <% end %>

@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-		has_many :attendees, :dependent => :destroy
+		has_many :attendees #, :dependent => :destroy
 		has_many :potluck_items, :dependent => :destroy
 		belongs_to :user
 
@@ -11,6 +11,12 @@ class Event < ActiveRecord::Base
 		validate :rsvp_date_should_be_less_than_start_date
 
    attr_accessible :name, :start_date, :end_date, :user_id, :rsvp_date, :supplemental_info, :address1, :address2, :city, :state, :zip_code, :description, :theme
+
+	before_destroy do |event|
+		email_list = event.attendees.map(&:email).compact
+		Thread.new {  AttendeeMailer.send_event_cancellation(email_list, event).deliver }
+		event.attendees.destroy_all
+	end
 
 	def start_date_must_be_in_the_future
 			unless self.start_date.eql?(nil)

@@ -10,9 +10,9 @@ class Attendee < ActiveRecord::Base
 
 		validates :event_id, :rsvp, :presence => true
 		validates :email, :uniqueness => { :scope => :event_id, :message => "should be unique per event", :allow_blank => true }
+		validates :email, :format => { :with => /^([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})$/i, :message => "needs to be a valid email format", :allow_blank => true }
 		validates :rsvp, :inclusion => { :in => ["Going", "Not Going", "Undecided"] , :message => "needs to be submitted with 'Going', 'Not Going', 'Undecided'" }
 		validates :num_of_guests, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :message => "need to be specified with a number" }
-#		validate  :verify_uniqueness_of_email, :on => :create
 		validate  :verify_correctness_of_dishes, :unless => :is_dish_empty?
 		validate  :verify_items_are_available, :unless => Proc.new { |a| a.is_dish_empty? || a.id.blank? }
 
@@ -121,13 +121,6 @@ class Attendee < ActiveRecord::Base
 			return self.dish.blank?
 		end
 
-		def verify_uniqueness_of_email
-			unless self.event.blank?
-				attendees_for_event = self.event.attendees.map{|i| i.email unless i.email.blank? }.compact
-				errors.add(:email, "should have a unique email") unless attendees_for_event.empty? || attendees_for_event.index{|x| x == self.email}.nil?
-			end
-		end
-
 		def verify_correctness_of_dishes
 			self.dish.each do |item|
 				if item["category"].blank? || item["item"].blank?
@@ -144,11 +137,7 @@ class Attendee < ActiveRecord::Base
 					potluck_item = self.event.get_potluck_list_per_category(uniq_item["category"])
 					items_available = potluck_item.dishes.find_all{|i| i == uniq_item["item"] }.count
 					attendee_item_count = complete_list.find_all{|i| i.eql?(uniq_item)}.count
-#					unless potluck_item.taken_items.blank?
-						taken_item_count = potluck_item.taken_items.find_all {|i| i.eql?({"id" => self.id, "item" => uniq_item["item"]})}.count
-#					else
-#						taken_item_count = 0
-#					end
+					taken_item_count = potluck_item.taken_items.find_all {|i| i.eql?({"id" => self.id, "item" => uniq_item["item"]})}.count
 					unless (items_available + taken_item_count) >= attendee_item_count
 							errors.add(:dish, 'Attempted to use one too many of the same item to rsvp with')
 					end

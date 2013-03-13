@@ -124,7 +124,6 @@ class AttendeesController < ApplicationController
 			render :action => :email_guest
 		else
 			Thread.new { AttendeeMailer.email_guest(@attendee, @subject, @body, current_user).deliver }
-			flash[:notice] = "Message to guest has been sent"
 			render :action => :email_guest
 		end
 

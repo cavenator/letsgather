@@ -47,4 +47,10 @@ class AttendeeMailer < ActionMailer::Base
 		subject = "Reminder for the upcoming event: #{event.name}"
 		mail(to: email_list, subject: subject, from: @event.user.email)
 	end
+
+	def send_event_cancellation(email_list, event)
+		@event= event
+		subject = "Cancelled: #{event.name} hosted by #{event.user.full_name}"
+		mail(to: email_list, subject: subject, from: @event.user.email )
+	end
 end
