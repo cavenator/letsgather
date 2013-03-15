@@ -2,6 +2,11 @@ class User < ActiveRecord::Base
 	has_many :events, :dependent => :destroy
 	has_many :roles, :dependent => :destroy
 
+	before_destroy do |user|
+		attendee_reference = Attendee.where("user_id = ? or email = ?", user.id, user.email)
+		attendee_reference.destroy_all
+	end
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable

@@ -124,17 +124,19 @@ class Event < ActiveRecord::Base
 	end
 
 	def send_rsvp_reminders_for_all_attendees
-		unless self.attendees.blank?
+		unless self.get_unique_guest_email_list.blank?
 			email_list = self.attendees.map(&:email).compact
-	#		Thread.new { AttendeeMailer.send_rsvp_emails(email_list, self).deliver }
 			AttendeeMailer.send_rsvp_emails(email_list, self).deliver
 		end
+	end
+
+	def get_unique_guest_email_list
+		self.attendee.map(&:email).compact
 	end
 
 	def send_event_reminders_for_attending_guests
 		guests = self.attendees.where("rsvp = 'Going'")
 		unless guests.blank?
-#			Thread.new { AttendeeMailer.send_event_reminders(guest, self).deliver }
 			email_list = guests.map(&:email).compact
 			AttendeeMailer.send_event_reminders(email_list, self).deliver
 		end

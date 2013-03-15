@@ -88,7 +88,7 @@ class AttendeesController < ApplicationController
     respond_to do |format|
       if @attendee.update_attributes(params[:attendee])
 				if current_user.is_host_for?(@event)
-					format.html { render :action => :show }
+					format.html { render :nothing => true, :status => 204 }
 				else
 					format.html { redirect_to event_url(@event), notice: 'RSVP was successfully updated.' }
 				end
@@ -97,8 +97,13 @@ class AttendeesController < ApplicationController
 				@attendee.errors.full_messages.each do |message|
 					error_message += " #{message}\n,"
 				end
-        format.html { redirect_to event_url(@event), notice: "RSVP couldn't be updated since it did not receive any of the following responses:#{error_message.chop}" }
-        format.json { render json: @attendee.errors, status: :unprocessable_entity }
+				if current_user.is_host_for?(@event)
+					format.html { render :nothing => true, status: :unprocessable_entity }
+					format.json { render json: @attendee.errors, status: :unprocessable_entity }
+				else
+					format.html { redirect_to event_url(@event), notice: "RSVP couldn't be updated since it did not receive any of the following responses:#{error_message.chop}" }
+					format.json { render json: @attendee.errors, status: :unprocessable_entity }
+				end
       end
     end
   end

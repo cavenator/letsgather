@@ -3,6 +3,10 @@ require 'spec_helper'
 describe User do
 	describe "basic user profile" do
 
+		before(:all) do
+			User.destroy_all
+		end
+
 		after(:all) do
 			User.destroy_all
 		end
@@ -73,5 +77,28 @@ describe User do
 			Event.destroy_all
 		end
 
+	end
+
+	describe "User account deletion" do
+		before(:all) do
+			User.destroy_all
+			Event.destroy_all
+		end
+
+		it "should remove that person from events they are invited to" do
+			@event = FactoryGirl.create(:event)
+			@bob = FactoryGirl.create(:bob)
+			@rico = FactoryGirl.create(:rico)
+
+			Attendee.create(:event_id => @event.id, :user_id => @bob.id, :rsvp => "Going", :email => @bob.email)
+			Attendee.create(:event_id => @event.id, :user_id => @rico.id, :rsvp => "Not Going", :email => @rico.email)
+
+			expect(Attendee.all.count) == 2
+
+			@bob.destroy
+
+			expect(User.all.count) == 2
+			expect(Attendee.where("event_id = ?", @event.id).count) == 1
+		end
 	end
 end

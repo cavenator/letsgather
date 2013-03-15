@@ -1,4 +1,6 @@
-<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Not Going"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
+<% unless @event.attendees.where("rsvp = 'Not Going'").map(&:email).compact.blank? %>
+	<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Not Going"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
+<% end %>
 <%= render :partial => "unattending_attendee", :collection => @event.attendees.where("rsvp = 'Not Going'") %>
 <script>
 
