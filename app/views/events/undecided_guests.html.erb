@@ -1,4 +1,4 @@
-<% unless @event.attendees.where("rsvp = 'Undecided'").map(&:email).compact.blank? %>
+<% unless @event.attendees.where("rsvp = 'Undecided'").map(&:email).compact.reject{|c| c.empty?}.blank? %>
 	<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Undecided"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
 <% end %>
 <%= render :partial => "undecided_attendee", :collection => @event.attendees.where("rsvp = 'Undecided'") %>

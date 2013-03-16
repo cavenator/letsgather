@@ -25,7 +25,7 @@
 			<%= render :partial =>"description", :locals => {:event => @event} %>
 		</div>
 		<div>
-			<button id="description-href" href="#descriptionModal" class="btn btn-primary" data-toggle="modal" style="margin:10px 0px 0px 0px">Update Description and Theme</button>
+			<button id="description-href" class="btn btn-primary" style="margin: 1em 0 0 0">Update Description and Theme</button>
 		</div>
 	</div>
 	<div id="location_div" class="span3">
@@ -33,7 +33,7 @@
 			<%= render :partial =>"location", :locals => {:event => @event } %>
 		</div>
 		<div>
-			<button id="location-href" href="#locationModal" class="btn btn-primary" data-toggle="modal" style="margin:10px 0px 0px 0px">Update Location</button>
+			<button id="location-href" class="btn btn-primary" style="margin: 1em 0 0 0">Update Location</button>
 		</div>
 	</div>
 </div>
@@ -191,6 +191,44 @@
 				$(this).addClass("active");
 				displayContent($(this).find("a").attr('id'));
 			});
+		});
+
+		$("#location-href").click(function(){
+			var url = $("#locationModal").attr('data-remote');
+			$.ajax({
+				url: url,
+				dataType: "html",
+				success:  function(data, successText){
+					$("#locationModal").find(".modal-body").html(data);
+					$("#locationModal").modal("show");
+				},
+				error: function(){
+					$("#locationModal").find(".modal-body").html("<div class='alert alert-error'>Error: Cannot retrieve form for updating location. Please contact the administrator about this</div>");
+				}
+			});
+		});
+
+		$("#description-href").click(function(){
+			var url = $("#descriptionModal").attr('data-remote');
+			$.ajax({
+				url: url,
+				dataType: "html",
+				success:  function(data, successText){
+					$("#descriptionModal").find(".modal-body").html(data);
+					$("#descriptionModal").modal("show");
+				},
+				error: function(){
+					$("#descriptionModal").find(".modal-body").html("<div class='alert alert-error'>Error: Cannot retrieve form for updating description and theme. Please contact the administrator about this</div>");
+				}
+			});
+		});
+
+		$("#descriptionModal").on('hidden',function(){
+			$(this).find(".modal-body").html("");
+		});
+
+		$("#locationModal").on('hidden',function(){
+			$(this).find(".modal-body").html("");
 		});
 
 		$("#newAttendeeModal").on('hidden',function(){
