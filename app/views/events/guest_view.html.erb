@@ -1,5 +1,5 @@
 <h2 style="text-align:center;margin:0em 1em 1em 0em"><%= @event.name %></h2>
-<div id="flash-message" class="row-fluid"><%= flash[:notice] %></div>
+<div id="notice" class="row-fluid"><%= flash[:notice] %></div>
 <div class="row-fluid">
 	<div class="span4">
 		<div>
@@ -156,12 +156,23 @@
 		}
 
 		$(document).ready(function(){
-			var category_array = [], dishes = {}, flash_message = $("#flash-message"), taken_queue = [];
+			var category_array = [], dishes = {}, flash_message = $("#notice"), taken_queue = [];
 
 			if (flash_message.text().length > 0)
 				flash_message.addClass("alert alert-info");
 			$("#guestcount_div").hide();
 			$("#comment-box").hide();
+
+			function removeActiveClass(){
+				$("li").removeClass("active");
+			}
+
+			$("li").each(function (index, data){
+				$(this).click(function(){
+					removeActiveClass();
+					$(this).addClass("active");
+				});
+			});
 
 			$.ajax({
 				url: window.location.pathname+"/potluck_items.json",
@@ -432,6 +443,15 @@
 		}
 
 		$("#emailHostLink").click(function(){
+			loadEmailTemplate($(this));
+			return false;
+		});
+
+		$(".email_individual").click(function(){
+			var activeModal = $(".active").find("a").attr('data-target');
+			$(activeModal).modal("hide");
+			//close the modal by finding which class is active
+
 			loadEmailTemplate($(this));
 			return false;
 		});

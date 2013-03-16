@@ -145,7 +145,7 @@ class EventsController < ApplicationController
 		@rsvp_group = params[:rsvp_group]
 		if @subject.blank? || @body.blank? || @rsvp_group.blank?
 			flash[:notice] = "You must include both a subject and body"
-			redirect_to(:action => :group_email) and return
+			render :nothing => true, status: :not_acceptable
 		else
 			attendees = @event.attendees.where('rsvp = ?',@rsvp_group)
 			Thread.new { AttendeeMailer.email_group(attendees, @event, @subject, @body).deliver }

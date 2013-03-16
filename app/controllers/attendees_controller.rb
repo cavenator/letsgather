@@ -126,10 +126,10 @@ class AttendeesController < ApplicationController
 		@attendee = Attendee.find(params[:id])
 		if @subject.blank? || @body.blank?
 			flash[:notice] = "You must include both a subject and body"
-			render :action => :email_guest
+			render :action => :email_guest, :status => :not_acceptable
 		else
 			Thread.new { AttendeeMailer.email_guest(@attendee, @subject, @body, current_user).deliver }
-			render :action => :email_guest
+			render :action => :email_guest, :status => 200
 		end
 
 	end

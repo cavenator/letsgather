@@ -1,6 +1,6 @@
 <h1>Email host <%= @host.full_name %></h1>
 <% if flash[:notice] %>
-		<div class="alert alert-error"><%= flash[:notice] %></div>
+		<div id="email-alert" class="alert alert-error"><%= flash[:notice] %></div>
 <% else %>
 		<div id="email-alert"></div>
 <% end %>
@@ -29,8 +29,8 @@
 				dataType: "html",
 				async: false,
 				success: function(data, stringText){
-					$("#flash-message").removeClass("alert alert-error alert-success").addClass("alert alert-success");
-					$("#flash-message").html("Message to host sent!");
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("Message to host sent!");
 					$("#emailModal").modal("hide");
 				},
 				error: function(){
