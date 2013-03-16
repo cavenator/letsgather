@@ -14,7 +14,7 @@
 			<div class="btn-group">
 				<button class="btn dropdown-toggle" data-toggle="dropdown">Settings<span class="caret"></span></button>
 				<ul class="dropdown-menu">
-					<li><a id="accountLink" data-toggle="modal" href="#userModal" onclick="$(this).show();">Edit Profile</a></li>
+					<li><%= link_to 'Edit profile', edit_user_registration_url %></li>
 					<li><%= link_to 'Sign out', {:controller => "devise/sessions", :action => "destroy" }, {:method => :delete} %></li>
 				</ul>
 			</div>
@@ -22,15 +22,6 @@
 	</div>
 </div>
 <%= yield %>
-</div>
-<div class="modal hide" id="userModal" data-remote="/users/edit">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-	</div>
-	<div class="modal-body"></div>
-	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal">Close</button>
-	</div>
 </div>
 </body>
 </html>
