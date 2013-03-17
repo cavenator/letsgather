@@ -1,7 +1,7 @@
 		<% unless @event.attendees.where("rsvp = 'Going'").map(&:email).compact.blank? %>
 			<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Going"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
 		<% end %>
-		<%= render :partial => "attending_attendee", :collection => @event.attendees.where("rsvp = 'Going'") %>
+		<%= render :partial => "attending_attendee", :collection => @event.attendees.where("rsvp = 'Going'"), :spacer_template => "spacer_hr" %>
 <script>
 
 	function loadEmailTemplate(emailObject){

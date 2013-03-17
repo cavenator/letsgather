@@ -1,15 +1,34 @@
 
 <div class="guest_breakpoint">
-	<p><% if attending_attendee.full_name.blank? %> <%= attending_attendee.email %> <% else %> <%= attending_attendee.full_name %> <% end %>
-<% unless attending_attendee.email.blank? %><span style="float:right"><%= link_to "Email guest", attending_attendee.event.id.to_s+'/attendees/'+attending_attendee.id.to_s+'/email_guest', {:style=>"color:blue", :class => "btn btn-link email_individual"} %></span><% end %></p>
-	<p>Additional guests:  <%= attending_attendee.num_of_guests %></p>
-	<p>Comment(s): <%= attending_attendee.comment %></p>
-	<p>Dish(es):  <% if attending_attendee.dish.blank? %> Undecided <% else %>
+	<table style="width:100%">
+		<thead>
+			<tr>
+				<th style="width:30%"></th>
+				<th style="width:30%"></th>
+				<th style="width:30%"></th>
+			</tr>
+		</thead>
+		<tbody style="vertical-align:-webkit-baseline-middle">
+			<tr>
+				<td style="width:30%">
+					<% if attending_attendee.full_name.blank? %> <%= attending_attendee.email %> <% else %> <%= attending_attendee.full_name %> <% end %>
+				</td>
+				<td style="width:30%">
+					<p>Additional guests:  <%= attending_attendee.num_of_guests %></p>
+					<p>Comment(s): <% if attending_attendee.comment.blank? %>None<% else %><%= attending_attendee.comment %><% end %></p>
+					<p>Dish(es):  <% if attending_attendee.dish.blank? %> Undecided <% else %>
 									<% attending_attendee.dish.each do |dish_item| %><div>
 										<%= dish_item["item"] %>(<%= dish_item["category"] %>) </div>
 									<% end %>
 								<% end %>
-	</p>
+					</p>
+				</td>
+				<td style="width:30%">
+				<% unless attending_attendee.email.blank? %><span style="float:right"><%= link_to "Email guest", attending_attendee.event.id.to_s+'/attendees/'+attending_attendee.id.to_s+'/email_guest', {:style=>"color:blue", :class => "btn btn-link email_individual"} %></span><% end %>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>
 
 

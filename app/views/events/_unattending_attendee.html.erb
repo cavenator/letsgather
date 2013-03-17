@@ -1,6 +1,24 @@
 <div class="guest_breakpoint">
-	<p><% if unattending_attendee.full_name.blank? %> <%= unattending_attendee.email %> <% else %> <%= unattending_attendee.full_name %><% end %>
-<% unless unattending_attendee.email.blank? %><span style="float:right"><%= link_to "Email guest", unattending_attendee.event.id.to_s+'/attendees/'+unattending_attendee.id.to_s+'/email_guest', {:style=>"color:blue", :class => "btn btn-link email_individual"} %></span><% end %></p>
-	<p>Comment(s): <%= unattending_attendee.comment %></p>
+	<table style="width:100%">
+		<thead>
+			<tr>
+				<th style="width:30%"></th>
+				<th style="width:30%"></th>
+				<th style="width:30%"></th>
+			</tr>
+		</thead>
+		<tbody style="vertical-align:-webkit-baseline-middle">
+			<tr>
+				<td style="width:30%">
+					<% if unattending_attendee.full_name.blank? %> <%= unattending_attendee.email %> <% else %> <%= unattending_attendee.full_name %><% end %>
+				</td>
+				<td style="width:30%">
+					<p>Comment(s): <% if unattending_attendee.comment.blank? %>None<% else %><%= unattending_attendee.comment %><% end %></p>
+				</td>
+				<td style="width:30%">
+					<% unless unattending_attendee.email.blank? %><span style="float:right"><%= link_to "Email guest", unattending_attendee.event.id.to_s+'/attendees/'+unattending_attendee.id.to_s+'/email_guest', {:style=>"color:blue", :class => "btn btn-link email_individual"} %></span><% end %>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>
-
