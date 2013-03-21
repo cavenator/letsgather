@@ -143,11 +143,15 @@ class EventsController < ApplicationController
 		@subject = params[:subject]
 		@body = params[:body]
 		@rsvp_group = params[:rsvp_group]
-		if @subject.blank? || @body.blank? || @rsvp_group.blank?
+		if @subject.blank? || @body.blank?
 			flash[:notice] = "You must include both a subject and body"
 			render :nothing => true, status: :not_acceptable
 		else
-			attendees = @event.attendees.where('rsvp = ?',@rsvp_group)
+			if @rsvp_group.blank?
+				attendees = @event.attendees
+			else
+				attendees = @event.attendees.where('rsvp = ?',@rsvp_group)
+			end
 			Thread.new { AttendeeMailer.email_group(attendees, @event, @subject, @body).deliver }
 			flash[:notice] = "Message to guests have been sent"
 			render :nothing=>true, :status => 200

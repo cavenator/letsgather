@@ -11,8 +11,8 @@
 	<tbody>
 <% @event.attendees.each do |attendee| %>
   <tr id="guest_<%= attendee.id %>">
-		<td><%= attendee.full_name %></td>
-		<td><%= attendee.email %></td>
+		<td class="attendee_name"><%= attendee.full_name %></td>
+		<td class="attendee_email"><%= attendee.email %></td>
 		<td style="text-align:center"><%= attendee.rsvp %></td>
 		<td><span class="btn btn-success"><%= link_to 'Edit', edit_event_attendee_url(@event, attendee), { :style => "color:white", :class=>"editAttendee"} %></span><span class="btn btn-danger"><%= link_to 'Remove', event_attendee_url(@event, attendee), { confirm: 'Are you sure?', method: :delete, :style=>"color:white", :class=>"removeAttendee"} %></span></td>
   </tr>
@@ -22,6 +22,7 @@
 
 <br />
 <button href="#newAttendeeModal" id="newAttendeeButton" class="btn btn-primary" data-toggle="modal">New Guest</button>
+<div style="float:right" id="emailAllGuestDiv"><% unless @event.get_unique_guest_email_list.blank? %><%= link_to 'Email all guests',{:controller => :events, :action => :group_email, :id => @event.id }, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link", :id=>"emailAllGuests"} %><% end %></div>
 <script>
 	$(document).ready(function(){
 
@@ -54,6 +55,7 @@
 					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
 					$("#notice").html("Guest has been removed from your event");
 					$("#"+table_row_id).remove();
+					shouldEmailButtonStillBeHere();
 				},
 				error: function(){
 					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
@@ -82,5 +84,40 @@
 			});
 			return false;
 		});
+
+		function shouldEmailButtonStillBeHere(){
+			var counter = 0, email = "";
+			$.map($(".attendee_email"), function(val, i){
+				email = $(val).text();
+				if (email != "")
+					counter++;
+			});
+
+			if (counter == 0)
+				$("#emailAllGuestDiv").empty();
+		}
+
+		function loadEmailTemplate(emailObject){
+		var url = $(emailObject).attr('href'), emailModal = $("#emailModal");
+
+		emailModal.attr('data-remote',url);
+		$.ajax({
+			url: url,
+			dataType: "html",
+			success: function(data){
+				emailModal.find(".modal-body").html(data);
+				emailModal.modal("show");
+			},
+			error: function(xhr, errorText, errorObject){
+				emailModal.find(".modal-body").html("<div class='alert alert-error'>"+errorText+": Cannot retrieve template for emailing guest. Please contact the administrator about this</div>");
+			}
+		});
+	}
+
+	$("#emailAllGuests").click(function(){
+			loadEmailTemplate($(this));
+			return false;
+		});
+
 	});
 </script>

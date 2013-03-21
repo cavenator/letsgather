@@ -65,7 +65,7 @@
 					success: function(data){
 						$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
 						$("#notice").html("Invitations have been sent. Take a look at your guest list to see who has been added");
-						$("#invite_guests").click();
+						$("#guests").click();
 					},
 					error: function() {
 						$(".form-horizontal").prepend("<div class='alert alert-error'>Invitations could not be sent out! Please contact your administrator and describe how to reproduce this issue</div>");

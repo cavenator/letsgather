@@ -13,7 +13,7 @@ class Event < ActiveRecord::Base
    attr_accessible :name, :start_date, :end_date, :user_id, :rsvp_date, :supplemental_info, :address1, :address2, :city, :state, :zip_code, :description, :theme
 
 	before_destroy do |event|
-		email_list = event.attendees.map(&:email).compact
+		email_list = event.get_unique_guest_email_list
 		Thread.new {  AttendeeMailer.send_event_cancellation(email_list, event).deliver }
 		event.attendees.destroy_all
 	end
@@ -125,19 +125,19 @@ class Event < ActiveRecord::Base
 
 	def send_rsvp_reminders_for_all_attendees
 		unless self.get_unique_guest_email_list.blank?
-			email_list = self.attendees.map(&:email).compact
+			email_list = self.get_unique_guest_email_list
 			AttendeeMailer.send_rsvp_emails(email_list, self).deliver
 		end
 	end
 
 	def get_unique_guest_email_list
-		self.attendee.map(&:email).compact
+		self.attendees.map(&:email).compact.reject{|email| email.empty? }
 	end
 
 	def send_event_reminders_for_attending_guests
 		guests = self.attendees.where("rsvp = 'Going'")
 		unless guests.blank?
-			email_list = guests.map(&:email).compact
+			email_list = guests.map(&:email).compact.reject{|email| email.empty? }
 			AttendeeMailer.send_event_reminders(email_list, self).deliver
 		end
 	end
