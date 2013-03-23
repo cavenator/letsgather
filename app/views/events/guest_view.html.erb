@@ -199,15 +199,15 @@
 					var category = $(".item").eq(i).find("#attendee_category").val(), attendee_dish_select = $(".item").eq(i).find("#attendee_select_dish"), options, available_for_category, selected_value;
 					options = $(".item").eq(i).find("#attendee_select_dish option").map(function(){ return $(this).val(); });
 					selected_value = $(".item").eq(i).find("#attendee_select_dish option:selected").val();
-					available_for_category = dishes[category];
-					
-					$.each(available_for_category, function(index, available_item){
-						var available_index = $.inArray(available_item, options);
-						if (available_index == -1){
-							$(".item").eq(i).find("#attendee_select_dish").append("<option value='"+available_item+"'>"+available_item+"</option>");
-						}
-					});
-
+					if (category != ""){
+						available_for_category = dishes[category];
+						$.each(available_for_category, function(index, available_item){
+							var available_index = $.inArray(available_item, options);
+							if (available_index == -1){
+								$(".item").eq(i).find("#attendee_select_dish").append("<option value='"+available_item+"'>"+available_item+"</option>");
+							}
+						});
+					}
 					//consider removing stuff
 					$.each(taken_queue, function(index, remove_item){
 						if (selected_value != remove_item.item){
@@ -258,6 +258,7 @@
 					$.each(dish_array, function(index, item){
 						dishes_select.append("<option value='"+item+"'>"+item+"</option>");
 					});
+					dishes_select.change();
 				});
 
 				//change the value in the hidden field
@@ -303,13 +304,16 @@
 				//add the event handler for checkbox
 				checkbox.change(function(){
 					if ($(this).is(":checked")){
-						dishes_select.val("").change(); // <- added this line for story
+						$(this).attr('checked','checked');
+						dishes_select.val("").change();
 						attendee_dish.show();
 						dishes_select.hide();
 					} else {
+						$(this).removeAttr('checked');
 						dishes_select.show();
 						attendee_dish.hide();
 						attendee_dish.val(dishes_select.val());
+						category_select.change();
 					}
 				});
 				return item_div;
