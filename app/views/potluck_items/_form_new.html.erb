@@ -15,7 +15,7 @@
 
 	<p>
 	<%= f.label :category %>
-	<%= f.text_field :category %>
+	<%= f.text_field :category, :placeholder => "E.g. Appetizers, Board Games" %>
 	</p>
 
 	<p>
@@ -31,7 +31,6 @@
 		<div id="list_items">
 			<label>Items: </label>
 			<input type="text" class="input-large" id="first_item" placeholder="List item here ...">
-			<input type="button" id="add_more_items" class="btn btn-success" value="Add more items" />
 	</div>
   <% else %>
 			<div id="list_items">
@@ -39,11 +38,7 @@
 		<% @potluck_item.dishes.each_with_index do |dish, index| %>
 				<div id="dish_<%= index %>">
 					<input type='text' class='input-large' value="<%= dish %>">
-					<% if index == 0 %>
-						<input type="button" id="add_more_items" class="btn btn-success" value="Add more items" />
-					<% else %>
-						<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em' onclick="$('#dish_<%= index %>').remove();">Remove</button>"
-					<% end %>
+						<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em' onclick="$('#dish_<%= index %>').remove();"><i class="icon-remove-sign"></i></button>
 				</div>
 		<% end %>
 		</div>
@@ -51,5 +46,6 @@
 
   <div>
 		<button id="submit_button" class="btn btn-primary">Save</button>
+		<button id="add_more_items" class="btn btn-success">Add more items</button>
   </div>
 <% end %>

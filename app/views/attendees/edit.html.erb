@@ -3,10 +3,13 @@
 
 		function rsvp(){
 			var answer = $("#attendee_rsvp").val();
-			if (answer == "Going")
+			if (answer == "Going"){
 				$("#guestcount_div").show();
-			else
+				$("#add_items").show();
+			} else {
 				$("#guestcount_div").hide();
+				$("#add_items").hide();
+			}
 		}
 
 		$(document).ready(function(){
@@ -166,7 +169,7 @@
 
 			//item is a hash object representing the rsvp item that a user previously has
 			function createRSVPItemWithRemoveButton(item){
-				var item_div, delete_button = $("<button class='btn btn-danger'>remove</button>");
+				var item_div, delete_button = $("<button class='btn btn-danger'><i class='icon-remove-sign'></i></button>");
 				item_div = createItemForRSVP();
 				delete_button.click(function(){
 					var category = item_div.find("#attendee_category").val(), selected_dish = item_div.find("#attendee_select_dish").val(), index = -1, removed_item;
@@ -207,19 +210,19 @@
 				}
 			}
 
-			function createRSVPItemWithAddButton(){
-				var item_div, add_button = $("<button class='btn btn-success'>one more item</button>");
+			function createFirstRSVPItem(){
+				var item_div;
 				item_div = createItemForRSVP();
-				add_button.click(function(){
-					createRSVPItemWithRemoveButton();
-					return false;
-				});
-				item_div.find("#dish_div").append(add_button);
 				$("#items").append(item_div);
 				return false;
 			}
 
-			createRSVPItemWithAddButton();
+			$("#add_items").click(function(){
+				createRSVPItemWithRemoveButton();
+				return false;
+			});
+
+			createFirstRSVPItem();
 
 			$.ajax({
 				url: $("form").attr('action'),

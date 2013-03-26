@@ -27,7 +27,7 @@
 	</p>
 	<div>
 		<%= f.label :comment, 'Comments?' %>
-		<%= f.text_field :comment %>
+		<%= f.text_field :comment, :placeholder => "Gonna be five mins late" %>
 	</div>
 	<div id="guestcount_div">
 		<%= f.label :num_of_guests, "Number of guests you are bringing (excluding yourself):" %>
@@ -40,6 +40,7 @@
 	</div>
 
   <div>
+		<button id="add_items" class="btn btn-success" style="color:white">Add more</button>
 		<button id="submit" class="btn btn-primary" style="color:white">Save</button>
   </div>
 
