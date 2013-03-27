@@ -4,12 +4,11 @@
 	<div class="span8 offset1">
 			<div id="form-proxy">
 				<div class="input-prepend" style="display:block"><span class="add-on"><i class="icon-envelope"></i></span>
-					<input type="text" class="input-large" placeholder="Email">
+					<textarea id="email_area" rows="10" style="width:60%" placeholder="E.g. email1, email2, email3" ></textarea>
 				</div>
 			</div>
 	</div>
 	<div class="span9 offset1">
-			<button id="add-more" class="btn btn-success">Add more ...</button>
 			<button id="send-invitations" class="btn btn-primary">Send</button>
 	</div>
 </div>
@@ -18,39 +17,24 @@
 </form>
 <script>
   $(document).ready(function(){
-		$("#add-more").click(function(){
-			var form = $("#form-proxy");
-			var additionalDiv = $("<div class='input-prepend' style='display:block'></div>");
-			var emailIcon = $("<span class='add-on'><i class='icon-envelope'></i></span>");
-			var emailText = $("<input type='text' class='input-large' placeholder='Email'>");
-			var removeButton = $("<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em'>Remove</button>");
-			removeButton.click(function(){
-				additionalDiv.remove();
-			});
-			emailText.click(function(){
-				$(this).removeAttr('style');
-			});
-			additionalDiv.appendTo(form);
-			emailIcon.appendTo(additionalDiv);
-			emailText.appendTo(additionalDiv);
-			removeButton.appendTo(additionalDiv);
-		});
 
 		$("#send-invitations").click(function(){
 			var outputJSON = {};
 			var emailArray = [];
-			$(".input-large").each(function(index, data){
-					var value = $(data).val();
-					if ($.trim(value).length == 0){
-						$(data).css('background-color','red');
-						return true;
-					}
-					emailArray.push(value);
-			});
-			if ( $(".input-large[style]").length > 0){
-				var count = $(".input-large[style]").length;
+			var value = $("#email_area").val();
+
+			if ($.trim(value).length == 0){
+				$("#email_area").css('background-color','red');
+			} else {
+				emailArray = value.split(",");
+				emailArray = $.map(emailArray, function(data){
+					return $.trim(data);
+				});
+			}
+
+			if ( $("#email_area[style]").length > 0){
 				$("#alert-flash").addClass("alert alert-error");
-				$("#alert-flash").text("There are currently "+count+" blank email entries. Please either remove them or populate them.");
+				$("#alert-flash").text("There are currently no email entries. Please populate them.");
 			}
 			else {
 				outputJSON["email"] = emailArray;
@@ -64,7 +48,7 @@
 					async: false,
 					success: function(data){
 						$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
-						$("#notice").html("Invitations have been sent. Take a look at your guest list to see who has been added");
+						$("#notice").html("Invitations have been processed. Take a look at your guest list to see who has been added");
 						$("#guests").click();
 					},
 					error: function() {
@@ -76,7 +60,7 @@
 		});
 
 		//Need this for the first entry since the others are dynamically added.
-		$(".input-large").click(function(){ $(this).removeAttr('style'); });
+		$("#email_area").click(function(){ $(this).removeAttr('style'); });
 	});
 </script>
 
