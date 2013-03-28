@@ -53,4 +53,10 @@ class AttendeeMailer < ActionMailer::Base
 		subject = "Cancelled: #{event.name} hosted by #{event.user.full_name}"
 		mail(to: email_list, subject: subject, from: @event.user.email )
 	end
+
+	def send_host_guest_acknowledgement(email_hash, event)
+		subject = "Invitation summary for event #{event.name}"
+		@invitation_summary_hash = email_hash
+		mail(to: event.user.email, subject: subject)
+	end
 end

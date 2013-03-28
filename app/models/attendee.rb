@@ -114,6 +114,7 @@ class Attendee < ActiveRecord::Base
 					email_hash["unsuccessful"] << email
 				end
 			end
+			Thread.new { AttendeeMailer.send_host_guest_acknowledgement(email_hash, event).deliver }
 			return email_hash
 		end
 
