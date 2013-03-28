@@ -32,6 +32,9 @@
 <div class="row-fluid">
 	<div class="span3">
 		<ul class="nav nav-pills nav-stacked">
+		<li id="taken_items">
+			<a href="#" data-target="#takenItems" data-toggle="modal">Taken potluck items</a>
+		</li>
 		<li id="attending_guests">
 			<a href="#" data-target="#attendingGuests" data-toggle="modal">Who's coming?</a>
 		</li>
@@ -41,11 +44,8 @@
 		<li id="undecided_guests">
 			<a href="#" data-target="#undecidedGuests" data-toggle="modal">Who's not sure?</a>
 		</li>
-		<li id="taken_items">
-			<a href="#" data-target="#takenItems" data-toggle="modal">Taken potluck items</a>
-		</li>
 		<li>
-			<%= link_to 'Back to Events', events_path, :style=>"color:black" %>
+			<%= link_to 'Back to my events', events_path, :style=>"color:black" %>
 		</li>
 		</ul>
 	</div>
