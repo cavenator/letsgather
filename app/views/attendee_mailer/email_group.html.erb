@@ -4,7 +4,7 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h2>A message from your host regarding <%= @event.name %></h2>
+    <h2>A message from your host (<%= @event.user.email %>) regarding <%= @event.name %></h2>
     <p>
 			<%= @body %>
     </p>
