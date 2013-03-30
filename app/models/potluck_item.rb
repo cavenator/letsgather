@@ -10,7 +10,6 @@ class PotluckItem < ActiveRecord::Base
 	end
 
 	validates :event_id, :category, :host_quantity, :presence => true
-	validates :dishes, :presence => true, :on => :create
 	validates :host_quantity, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
 	validates :category, :uniqueness => { :scope => :event_id, :message => "should be unique per event" }
 	validate :verify_no_duplicates_dishes
