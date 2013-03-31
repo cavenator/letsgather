@@ -4,17 +4,28 @@
   <%= javascript_include_tag "application" %>
 </head>
 	<body>
+		<div style="display:block; margin: 1em 0 1em 0"><a href="#general_tag" class="btn btn-link">General</a></div>
+		<div style="display:block; margin: 1em 0 1em 0"><a href="#getting_started_tag" class="btn btn-link">Getting started</a></div>
+		<div style="display:block; margin: 1em 0 1em 0"><a href="#lists_tag" class="btn btn-link">Potluck Lists Questions</a></div>
+		<div style="display:block; margin: 1em 0 1em 0"><a href="#messaging_tag" class="btn btn-link">Messaging questions</a></div>
+		<div style="display:block; margin: 1em 0 1em 0"><a href="#rsvp_tag" class="btn btn-link">RSVP questions</a></div>
+		<div style="display:block; margin: 1em 0 1em 0"><a href="#future_tag" class="btn btn-link">Future releases and roadmap questions</a></div>
+		<a id="general_tag"></a>
 		<div class="alert">What is this app about?</div>
 		<div style="display:block; margin: 1em 0 1em 0">The primary purpose of this app is to help people plan, manage and collaborate on potlucks easier and more efficiently.</div>
 		<div class="alert">Can I use this app for other events like baby showers, birthdays and other events?</div>
 		<div style="display:block; margin: 1em 0 1em 0">While this app was originally intended for potlucks, you can use this app for events as you see fit.</div>
 
 		<div class="alert">What are some of the key features about this app?</div>
-		<div style="display:block; margin: 1em 0 1em 0"><ul><li>Create your own custom potluck lists (e.g. Appetizers, Board games, Snacks, Movies, etc).</li><li>Easily RSVP with potluck items.</li><li>Easily track the total amount of guests attending, not coming and undecided.</li><li>An easy-to-use dashboard which provides the information you need to know fast</li><li>Easily notify groups of individuals or individual emails at a time.</li><li>Automated email reminders that remind guests to rsvp and that the event is coming.</li></ul></div>
+		<div style="display:block; margin: 1em 0 1em 0"><ul><li>Create your own custom potluck lists (e.g. Appetizers, Board games, Snacks, Movies, etc).</li><li>Easily RSVP with potluck items.</li><li>Easily track the total amount of guests attending, not coming and undecided.</li><li>An easy-to-use dashboard which provides the information you need fast</li><li>Easily notify groups of individuals or individual guests at a time.</li><li>Automated email reminders that remind guests to rsvp and that the event is coming.</li></ul></div>
 
 		<div class="alert">Do I have to pay for this?</div>
 		<div style="display:block; margin: 1em 0 1em 0">As this is currently in beta, this is free. In return I would like to get your honest feedback about what you like, what you don't like, what could be improved and any potential future features that would encourage you to continue using it.</div>
 
+		<div class="alert">What should I do if I encounter a problem with the app or if there are defects?</div>
+		<div style="display:block; margin: 1em 0 1em 0">Email me at cavenator@gmail.com and provide me a description of what the defect is and how to reproduce it (e.g. the steps that you took in order to encounter this defect).</div>
+
+		<a id="getting_started_tag"></a>
 		<div class="alert">Great! What do I need to do in order to start using this?</div>
 		<div style="display:block; margin: 1em 0 1em 0">First, create an account.</div>
 
@@ -27,6 +38,11 @@
 		<div class="alert">Can I manually add guests without using the <b>Invite guest</b> option?</div>
 		<div style="display:block; margin: 1em 0 1em 0">I understand that certain guests may not have email and would rather call you instead of using the system. For this purpose, this app will allow you to rsvp on their behalf. You can do so by using the <b>The guest list</b> option (enter guest manually and rsvp for them).</div>
 
+		<div class="alert">Any other advice for getting started?</div>
+		<div style="display:block; margin: 1em 0 1em 0">I would recommend creating your potluck list before inviting guests. While it is possible for your guests to rsvp without declaring what they are bringing, it might be good for them to get an idea of what is needed for the event.</div>
+
+		<a id="lists_tag"></a>
+
 		<div class="alert">What kind of lists can I create?</div>
 		<div style="display:block; margin: 1em 0 1em 0">You can pretty much create any type of list you wish: Appetizers, Snacks, Beer/Alcohol, Boardgames, Movies, Xbox games, etc. For example, create a list with Games as your category and enter each game on a separate field (you can dynamically add as many items as you wish for a particular category).</div>
 
@@ -36,15 +52,31 @@
 		<div class="alert">What is this <b>Host quantity</b> that I am seeing when I create my list?</div>
 		<div style="display:block; margin: 1em 0 1em 0">That is a poorly-labeled field. That is meant to represent the number of items you need for guest to contribute for the potluck. For example, you create a list of category Boardgames with a host quantity of 2 and provide 5 games as suggestions. This is primarily for you to keep track of whether or not your "quota" for that particular category has been met.</div>
 
+		<a id="messaging_tag"></a>
+
 		<div class="alert">When I send someone a message, how does that work?</div>
-		<div style="display:block; margin: 1em 0 1em 0">The message gets routed to their email account specified. Therefore, they will get the message as you send it.</div>
+		<div style="display:block; margin: 1em 0 1em 0">The message gets routed to their declared email account. Therefore, they will get the message as you send it.</div>
+
+		<div class="alert">Why can I message some people and others I cannot?</div>
+		<div style="display:block; margin: 1em 0 1em 0">Thats because the host added them to the system without specifying what their email address is. You are only allowed to message guests that have email addresses declared.</div>
 
 		<div class="alert">i keep getting messages from devmailer@gmail.com.  what's this about?</div>
 		<div style="display:block; margin: 1em 0 1em 0">That is the automated emailer that sends messages to users and guests of this sytem. until i get a more professional name for this emailer, the name remains. therefore, please advise people to not label this as spam. When you send a message using this app, you'll see the subject where it belongs but the message will start with "a message from name" followed by the message contents.</div>
 
-		<div class="alert">What should I do if I encounter a problem with the app or if there are defects?</div>
-		<div style="display:block; margin: 1em 0 1em 0">Email me at cavenator@gmail.com and provide me a description of what the defect is and how to reproduce it (e.g. the steps that you took in order to encounter this defect).</div>
+		<a id="rsvp_tag"></a>
+		<div class="alert">I want to RSVP for an event I was invited to. How difficult is it?</div>
+		<div style="display:block; margin: 1em 0 1em 0">It should be pretty easy. Once you sign in, select the event you wish to rsvp to. Click "Modify RSVP" to enter your response.</div>
 
+		<div class="alert">What is the bare minimum I need to RSVP?</div>
+		<div style="display:block; margin: 1em 0 1em 0">By default, your response is <b>Undecided</b>. You only need to change that answer. However, once you decide you are going, you will be presented another list of options. Those options include: <ul><li># of guests you are bringing (excluding you)</li><li>Any items you wish to bring</li></ul>You also have the option of providing a comment (or updating your comment to let the host know of any updates).</div>
+
+		<div class="alert">Do I have to RSVP with an item?</div>
+		<div style="display:block; margin: 1em 0 1em 0">No. You may decide what to bring to the event later but inform the host you plan on coming.</div>
+
+		<div class="alert">What if I want to bring more than one item (or if I am answering on behalf of a guest I am bringing)?</div>
+		<div style="display:block; margin: 1em 0 1em 0">If you are bringing someone to an event you are invited to (such as a friend and/or partner), you may add items to your rsvp and just provide a short comment saying that you and your guests are bringing those items. This app allows for multiple items to be umbrellaed under one RSVP response (e.g. You could be bringing a guest and each of you brings an item. Therefore, you can add another item to your rsvp (Just press the <b>Add more</b> button).</div>
+
+		<a id="future_tag"></a>
 		<div class="alert">Do you anticipate delivering new features while this is in beta?</div>
 		<div style="display:block; margin: 1em 0 1em 0">Yes, I do. So far, the following features will be released sometime during beta-testing and you'll be notified: <ul><li>Ability to save distribution-list so you could easily import them into an event</li><li>Export potluck items that no one rsvped with</li><li>Export the guest list</li></ul>If there are things that the majority of users are bringing to my attention, I'll prioritize it accordingly.</div>
 
