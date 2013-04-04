@@ -96,6 +96,22 @@ class Event < ActiveRecord::Base
 		return self.potluck_items.map{|i| {"category" => i.category, "dishes" => i.dishes} }
 	end
 
+	def get_host_quantity_for_each_category
+		return Hash[self.potluck_items.map{ |i| [i.category, i.host_quantity] }]
+	end
+
+	def get_remaining_items_for_guests
+		category_hash = self.get_host_quantity_for_each_category
+		remaining_count_hash = Hash.new
+		category_hash.each do |key, value|
+			guest_category_count = self.find_attendee_dish_count(key)
+			unless guest_category_count >= value
+				remaining_count_hash[key] = value - guest_category_count
+			end
+		end
+		remaining_count_hash
+	end
+
 	def get_items_guests_are_bringing
 		guests = self.attendees.where("rsvp = 'Going'")
 		items = []
