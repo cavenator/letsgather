@@ -18,7 +18,7 @@
 		<% end %>
 
 		<% if @invitation_summary_hash["unsuccessful"].length > 0 %>
-		<div style="display: block;background-color: #f2dede;border-color: #eed3d7;margin: 1em 1em 1em 1em">These emails were invalid and could not be sent:</div>
+		<div style="display: block;background-color: #f2dede;border-color: #eed3d7;margin: 1em 1em 1em 1em">These emails were invalid (or duplicated) and could not be sent:</div>
 			<div style="display: block">
 				<div class="span6 offset2">
 					<% @invitation_summary_hash["unsuccessful"].each do |email| %>
@@ -29,17 +29,6 @@
 		<br/>
 		<% end %>
 
-		<% if @invitation_summary_hash["duplicated"].length > 0 %>
-			<div style="display: block; background-color: lightblue; border-color: lightskyblue">These emails were already sent out sometime ago: </div>
-			<div style="display: block">
-				<div class="span6 offset2">
-					<% @invitation_summary_hash["duplicated"].each do |email| %>
-						<%= email %><br />
-					<% end %>
-				</div>
-			</div>
-			<br/>
-		<% end %>
 	</body>
 </html>
 
