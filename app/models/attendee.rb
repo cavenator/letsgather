@@ -10,7 +10,8 @@ class Attendee < ActiveRecord::Base
 
 		validates :event_id, :rsvp, :presence => true
 		validates :email, :uniqueness => { :scope => :event_id, :message => "should be unique per event", :allow_blank => true }
-		validates :email, :format => { :with => /^([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})$/i, :message => "needs to be a valid email format", :allow_blank => true }
+#		validates :email, :format => { :with => /^([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})$/i, :message => "needs to be a valid email format", :allow_blank => true }
+		validates :email, :email_format => { :message => 'is not looking good', :allow_blank => true }
 		validates :rsvp, :inclusion => { :in => ["Going", "Not Going", "Undecided"] , :message => "needs to be submitted with 'Going', 'Not Going', 'Undecided'" }
 		validates :num_of_guests, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :message => "need to be specified with a number" }
 		validate  :verify_correctness_of_dishes, :unless => :is_dish_empty?

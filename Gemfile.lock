@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/alexdunae/validates_email_format_of.git
+  revision: 46b832f7c778cc73f45ebc84cffba03c33294928
+  specs:
+    validates_email_format_of (1.5.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -162,4 +168,5 @@ DEPENDENCIES
   tlsmail
   twitter-bootstrap-rails
   uglifier (>= 1.0.3)
+  validates_email_format_of!
   webrat
