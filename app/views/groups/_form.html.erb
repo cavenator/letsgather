@@ -1,0 +1,24 @@
+<%= form_for(@group, :url => '/users/'+@user.id.to_s+'/groups', :method => :post) do |f| %>
+  <% if @group.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@group.errors.count, "error") %> prohibited this group from being saved:</h2>
+
+      <ul>
+      <% @group.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<p>
+	<%= f.label :name %>
+	<%= f.text_field :name %>
+</p>
+<p>
+	<%= f.label :email_distribution_list %>
+	<%= f.text_area :email_distribution_list %>
+</p>
+  <div>
+		<button class="btn btn-primary">Save</button>
+  </div>
+<% end %>

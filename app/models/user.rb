@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 	has_many :events, :dependent => :destroy
 	has_many :roles, :dependent => :destroy
+	has_many :groups, :dependent => :destroy
 
 	before_destroy do |user|
 		attendee_reference = Attendee.where("user_id = ? or email = ?", user.id, user.email)

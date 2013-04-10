@@ -1,0 +1,16 @@
+<p id="notice"><%= notice %></p>
+<p>
+	<span style="font-size:1.25em;font-weight:bold">Name:</span><span style="font-size:1em;margin-left:1em"><%= @group.name %></span>
+</p>
+<p>
+	<span style="font-size:1.25em;font-weight:bold">Email distribution list:</span><br/>
+		<div style="margin: 1em 0 1em 0">
+		<% @group.email_distribution_list.each do |email| %>
+			<%= email %><br/>
+		<% end %>
+		</div>
+</p>
+<div style="margin:1em 0 1em 0">
+<%= link_to 'Edit', { :action => :edit, :user_id => @user.id, :id => @group.id }, {:class=>"btn btn-info", :style=>"color:white"} %> |
+<%= link_to 'Back', { :action=>:index }, { :class=>"btn", :style=>"color:blue" } %>
+</div>

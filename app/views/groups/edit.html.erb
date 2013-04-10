@@ -1,0 +1,39 @@
+<h1>Editing group</h1>
+
+<%= render 'form_edit' %>
+
+<%= link_to 'Show', {:action => :show, :user_id => @user.id, :id => @group.id} %> |
+<%= link_to 'Back', {:action => :index} %>
+<script>
+	$(document).ready(function(){
+		$("#add_more_emails").click(function(){
+			var email_list = $("#list_emails");
+			var additionalDiv = $("<div></div>");
+			var itemText = $("<input type='text' class='input-large' placeholder='List item here ....'>");
+			var removeButton = $("<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em'><i class='icon-remove-sign'></i></button>");
+			removeButton.click(function(){
+				additionalDiv.remove();
+				return false;
+			});
+			additionalDiv.appendTo(email_list);
+			itemText.appendTo(additionalDiv);
+			removeButton.appendTo(additionalDiv);
+			return false;
+		});
+
+		$("#submit_button").click(function(){
+			var email_array = [];
+
+			$("#flash_notice").removeClass("alert alert-error");
+			$("#flash_notice").html("");
+			$(".input-large").each(function(index, input){
+				if ($.trim($(input).val()) != "")
+					email_array.push($(input).val());
+			});
+
+			$("<input type='hidden' name='group[email_distribution_list]' value="+email_array.join(",")+" />").appendTo($("#group_form"));
+		});
+
+	});
+
+</script>

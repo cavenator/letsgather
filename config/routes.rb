@@ -14,7 +14,14 @@ MaximusSamurai::Application.routes.draw do
 	get 'events/:id/unattending_guests', :to => 'events#unattending_guests'
 	get 'events/:id/undecided_guests', :to => 'events#undecided_guests'
 	get 'events/:id/potluck_statistics', :to => 'events#potluck_statistics'
-  
+	get 'users/:user_id/groups(.:format)', :to => 'groups#index'
+	post 'users/:user_id/groups(.:format)',:to => 'groups#create'
+	get  'users/:user_id/groups/new(.:format)', :to => 'groups#new'
+	get 'users/:user_id/groups/:id(.:format)', :to => 'groups#show'
+	get 'users/:user_id/groups/:id/edit(.:format)', :to => 'groups#edit'
+	put 'users/:user_id/groups/:id(.:format)', :to => 'groups#update'
+	delete 'users/:user_id/groups/:id(.:format)', :to => 'groups#destroy'
+
 	resources :events do
 		get 'attendees/add_attendees', :to => 'attendees#add_attendees'
 		post 'attendees/invite_guests', :to => 'attendees#invite_guests'

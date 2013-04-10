@@ -1,0 +1,27 @@
+<h1>My groups</h1>
+
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th style="width:70%">Name</th>
+			<th>Options</th>
+		</tr>
+	</thead>
+
+<tbody>
+<% @groups.each do |group| %>
+  <tr>
+		<td style="width:70%"><%= group.name %></td>
+    <td><%= link_to 'Show', {:action => :show, :user_id => @user.id, :id => group.id}, {:class=>"btn btn-success", :style=>"color:white"} %> | <%= link_to 'Edit', {:action => :edit, :user_id => @user.id, :id => group.id }, {:class=>"btn btn-warning", :style=>"color:white"} %> | <%= link_to 'Destroy', {:action => :destroy, :user_id => @user.id, :id => group.id }, { method: :delete, data: { confirm: 'Are you sure?' }, :class=>"btn btn-danger", :style=>"color:white" } %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<br />
+<p>
+<%= link_to 'New Group', { :action => :new }, { :class => "btn btn-link", :style => "color:blue;margin-left:1em" } %>
+</p>
+<p>
+<%= link_to 'Back to events', "/", { :class => "btn btn-link", :style=>"color:blue" } %>
+</p>

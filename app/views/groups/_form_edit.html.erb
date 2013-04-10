@@ -1,0 +1,38 @@
+<%= form_for(@group, :url => '/users/'+@user.id.to_s+'/groups/'+@group.id.to_s, :method => :put, :html=>{ :id => "group_form"}) do |f| %>
+  <% if @group.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@group.errors.count, "error") %> prohibited this group from being saved:</h2>
+
+      <ul>
+      <% @group.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<p>
+	<%= f.label :name %>
+	<%= f.text_field :name %>
+</p>
+<p>
+	<div id="list_emails">
+	<label>Emails: </label>
+	<% @group.email_distribution_list.each_with_index do |email, index| %>
+		<% if index == 0 %>
+			<div>
+				<input type='text' class='input-large' value="<%= email %>" />
+			</div>
+		<% else %>
+			<div id="email_<%= index %>">
+				<input type='text' class='input-large' value="<%= email %>">
+				<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em' onclick="$('#email_<%= index %>').remove();"><i class="icon-remove-sign"></i></button>
+			</div>
+		<% end %>
+	<% end %>
+	</div>
+</p>
+  <div>
+		<button id="add_more_emails" class="btn btn-success">Add more</button>
+		<button id="submit_button" class="btn btn-primary">Save</button>
+  </div>
+<% end %>
