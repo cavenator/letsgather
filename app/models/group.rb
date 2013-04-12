@@ -8,6 +8,7 @@ class Group < ActiveRecord::Base
 	end
 
 	validates :user_id, :name, :email_distribution_list, :presence => true
+	validates :name, :uniqueness => { :scope => :user_id, :message => "should be unique" }
 	validate  :unique_emails, :unless => Proc.new{|group| group.email_distribution_list.blank? }
 
 	def unique_emails
