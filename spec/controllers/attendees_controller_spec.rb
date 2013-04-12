@@ -28,26 +28,6 @@ describe AttendeesController do
 		end
 	end
 
-	describe "RSVP for Guests" do
-		before(:all) do
-			User.destroy_all
-			Event.destroy_all
-			Attendee.destroy_all
-		end
-
-		it "should allow guests to rsvp" do
-			@request.env["devise.mapping"] = Devise.mappings[:user]
-			@rico = FactoryGirl.create(:rico)
-			@attendee = FactoryGirl.create(:attendee, :user_id => @rico.id, :email => @rico.email )
-			@event = @attendee.event
-			sign_in @rico
-			Attendee.stub(:find).and_return(@attendee)
-			@attendee.stub(:rsvp).and_return('Going')
-
-			post 'rsvp', :event_id=> @event.id, :id => @attendee.id
-		end
-	end
-
 	describe "Host emailing attendee" do
 		before(:all) do
 			User.destroy_all

@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
-  # GET /groups
-  # GET /groups.json
+	before_filter :verify_access
+
   def index
 		@user = current_user
     @groups = current_user.groups
@@ -91,4 +91,13 @@ class GroupsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+	protected
+
+	def verify_access
+		user_id = params[:user_id]
+		unless user_id.to_i == current_user.id
+			render file: "public/401.html", :formats => [:html], status: :unauthorized and return
+		end
+	end
 end
