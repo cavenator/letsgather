@@ -3,11 +3,8 @@ require 'spec_helper'
 describe Group do
 	describe "minimum group requirements" do
 		before(:all) do
-			@user = FactoryGirl.create(:user)
-		end
-
-		after(:all) do
 			User.destroy_all
+			@user = FactoryGirl.create(:user)
 		end
 
 		it "should always have a name and at least one email" do

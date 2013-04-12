@@ -4,7 +4,7 @@ class Group < ActiveRecord::Base
 	serialize :email_distribution_list
 
 	before_validation do |group|
-		group.email_distribution_list =  group.email_distribution_list.split(",").map{|email| email.strip} unless group.email_distribution_list.blank? || group.email_distribution_list.is_a?(Array)
+		group.email_distribution_list =  group.email_distribution_list.strip.split(",").map{|email| email.strip} unless group.email_distribution_list.blank? || group.email_distribution_list.is_a?(Array)
 	end
 
 	validates :user_id, :name, :email_distribution_list, :presence => true
