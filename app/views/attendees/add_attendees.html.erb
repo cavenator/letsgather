@@ -10,6 +10,21 @@
 	</div>
 	<div class="span9 offset1">
 			<button id="send-invitations" class="btn btn-primary">Send</button>
+			<% if @event.user.groups.count > 0 %>
+				<button id="add-distribution-group" class="btn btn-success">Add from Groups</button>
+			<% end %>
+	</div>
+</div>
+<div id="addFromGroupsModal" class="modal hide">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h2>Add From Groups</h2>
+	</div>
+	<div class="modal-body">
+		<%= render :partial => "add_from_groups", :locals => { :user => @event.user } %>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Close</a>
 	</div>
 </div>
 <form accept-charset="UTF-8" action="" class="form-horizontal" method="post">
@@ -17,6 +32,11 @@
 </form>
 <script>
   $(document).ready(function(){
+
+		$("#add-distribution-group").click(function(){
+			$("#addFromGroupsModal").modal("show");
+			return false;
+		});
 
 		$("#send-invitations").click(function(){
 			var outputJSON = {};
@@ -33,7 +53,7 @@
 				});
 			}
 
-			if ( $("#email_area[style]").length > 0){
+			if ( emailArray.length == 0){
 				$("#alert-flash").addClass("alert alert-error");
 				$("#alert-flash").text("There are currently no email entries. Please populate them.");
 			}

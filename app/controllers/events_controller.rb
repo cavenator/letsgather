@@ -127,6 +127,15 @@ class EventsController < ApplicationController
 		render :layout => false
 	end
 
+	def get_host_groups
+		@event = Event.find(params[:id])
+		@groups = @event.user.groups
+		respond_to do |format|
+			format.html # new.html.erb
+			format.json { render json: @groups }
+		end
+	end
+
 	def send_host_email
 		@event = Event.find(params[:id])
 		@host = @event.user

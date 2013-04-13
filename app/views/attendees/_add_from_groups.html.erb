@@ -1,0 +1,66 @@
+<div class="row-fluid">
+	<div class="span4">
+		<ul class="nav nav-pills nav-stacked">
+			<% user.groups.each_with_index do |group, index| %>
+				<li class="group_name" id="name_<%= index %>">
+					<%= group.name %>
+				</li>
+			<% end %>
+		</ul>
+	</div>
+	<div id="email-list-group" class="span6">
+	</div>
+</div>
+<div>
+	<button id="importGroupsButton" class="btn btn-primary">Add group</button>
+</div>
+<script>
+	$(document).ready(function(){
+		var group_map = {};
+
+		function removeActiveClass(){
+			$(".group_name").removeAttr('style');
+		}
+
+		function addClickEventForGroupNames(){
+			$(".group_name").each(function(){
+				addClickEventForObject($(this));
+			});
+		}
+
+		function addClickEventForObject(domObject){
+				domObject.click(function(){
+					var group_name = $.trim(domObject.text());
+					removeActiveClass();
+					domObject.attr('style','background-color:skyblue');
+					$("#email-list-group").text(group_map[group_name]);
+				});
+		}
+
+		function populateGroupMap(groups){
+			$.each(groups, function(index, group){
+				group_map[group.name] = group.email_distribution_list.join(", ");
+			});
+		}
+
+		$.ajax({
+			url: window.location.pathname+"/get_host_groups.json",
+			dataType: "json",
+			type: "GET",
+			async: false,
+			success: function(groups_json){
+				populateGroupMap(groups_json);
+				addClickEventForGroupNames();
+			},
+			error: function(){
+				alert("Error retrieved while fetching your groups");
+			}
+		});
+
+		$("#importGroupsButton").click(function(){
+			var emailList = $("#email-list-group").text();
+			$("#email_area").text(emailList);
+			$("#addFromGroupsModal").modal("hide");
+		});
+	});
+</script>

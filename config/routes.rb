@@ -14,6 +14,7 @@ MaximusSamurai::Application.routes.draw do
 	get 'events/:id/unattending_guests', :to => 'events#unattending_guests'
 	get 'events/:id/undecided_guests', :to => 'events#undecided_guests'
 	get 'events/:id/potluck_statistics', :to => 'events#potluck_statistics'
+	get 'events/:id/get_host_groups', :to => 'events#get_host_groups'
 	get 'users/:user_id/groups(.:format)', :to => 'groups#index'
 	post 'users/:user_id/groups(.:format)',:to => 'groups#create'
 	get  'users/:user_id/groups/new(.:format)', :to => 'groups#new'
