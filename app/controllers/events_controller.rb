@@ -131,7 +131,7 @@ class EventsController < ApplicationController
 		@event = Event.find(params[:id])
 		@groups = @event.user.groups
 		respond_to do |format|
-			format.html # new.html.erb
+			format.html { render :partial=> "/attendees/add_from_groups", :locals => { :user => @event.user }, :layout => false }
 			format.json { render json: @groups }
 		end
 	end

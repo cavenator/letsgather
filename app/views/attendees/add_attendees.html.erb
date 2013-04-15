@@ -34,7 +34,21 @@
   $(document).ready(function(){
 
 		$("#add-distribution-group").click(function(){
-			$("#addFromGroupsModal").modal("show");
+			var url = document.location.pathname+"/get_host_groups";
+			$("#alert-flash").html();
+			$("#alert-flash").removeClass("alert alert-error alert-success");
+			$.ajax({
+				url: url,
+				dataType: "html",
+				success: function(data){
+					$("#addFromGroupsModal").find(".modal-body").html(data);
+					$("#addFromGroupsModal").modal("show");
+				},
+				error: function(){
+					$("#alert-flash").addClass("alert alert-error");
+					$("#alert-flash").html("Problems fetching your groups. Please contact your administrator");
+				}
+			});
 			return false;
 		});
 
