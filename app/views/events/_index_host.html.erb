@@ -6,8 +6,7 @@
 		</div>
     </td>
 		<td style="font-size:16px"><%= "Starts on "+ event.start_date.strftime("%m/%d/%Y") %></td>
-    <td><span class="btn btn-success"><%= link_to 'Show', event, {:style=>"color:white"} %></span></td>
-    <td><span class="btn btn-warning"><%= link_to 'Edit', edit_event_path(event), {:style=>"color:white"} %></span></td>
+    <td><span class="btn btn-success"><%= link_to 'View/Edit', event, {:style=>"color:white"} %></span></td>
     <td><span class="btn btn-danger"><%= link_to 'Cancel', event, { confirm: 'Are you sure?', method: :delete, :style=>"color:white" } %></td>
 		</div>
   </tr>

@@ -3,7 +3,7 @@ class EventsController < ApplicationController
 	before_filter :verify_access, :except => [:index, :new, :create]
 	before_filter :align_attendee_events, :only => :index
 	before_filter :verify_privileges, :only => [:edit, :update, :destroy, :email_group, :send_group_email]
-	before_filter :get_current_user, :only => [:index, :new, :show, :edit]
+	before_filter :get_current_user, :only => [:index, :new, :show, :edit, :update]
 
   # GET /events
   # GET /events.json
