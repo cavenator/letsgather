@@ -10,7 +10,7 @@ class EventsController < ApplicationController
   def index
 		attendee_event_ids = Attendee.where("user_id=?",current_user.id).map{|attendee| attendee.event_id }
 		attendee_events = Event.find(attendee_event_ids)
-		@events = current_user.events.where("start_date >= ?", 1.week.ago) | attendee_events
+		@events = current_user.events | attendee_events
 	
     respond_to do |format|
       format.html # index.html.erb
