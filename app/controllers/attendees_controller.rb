@@ -1,8 +1,8 @@
 
 class AttendeesController < ApplicationController
 	before_filter :verify_access
-	before_filter :verify_host_privileges, :only => [:new, :create, :add_attendees, :invite_guests, :destroy ]
-	before_filter :verify_correct_attendee, :only => [:rsvp, :show, :edit, :update ]
+	before_filter :verify_host_privileges, :only => [:new, :create, :add_attendees, :invite_guests ]
+	before_filter :verify_correct_attendee, :only => [:rsvp, :show, :edit, :update, :destroy ]
 
   # GET /attendees
   # GET /attendees.json

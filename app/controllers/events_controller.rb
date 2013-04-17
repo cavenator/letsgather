@@ -10,7 +10,7 @@ class EventsController < ApplicationController
   def index
 		attendee_event_ids = Attendee.where("user_id=?",current_user.id).map{|attendee| attendee.event_id }
 		attendee_events = Event.find(attendee_event_ids)
-		@events = current_user.events | attendee_events
+		@events = current_user.events.where("start_date >= ?", 1.week.ago) | attendee_events
 	
     respond_to do |format|
       format.html # index.html.erb
@@ -104,6 +104,18 @@ class EventsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+	def remove_from_event
+		@event = Event.find(params[:id])
+		user = User.find(params[:user_id])
+		@attendee = Attendee.find_attendee_for(user, @event)
+		if @attendee.destroy
+			message = "You have successfully removed yourself from the event #{@event.name}"
+		else
+			message = "Unsuccessful attempt of removing yourself from the event #{@event.name}. Please contact your administrator!"
+		end
+		redirect_to events_url, notice: message
+	end
 
 	def supplemental_info
 		@event = Event.find(params[:id])

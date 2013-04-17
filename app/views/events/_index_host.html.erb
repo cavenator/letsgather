@@ -7,6 +7,7 @@
     </td>
 		<td style="font-size:16px"><%= "Starts on "+ event.start_date.in_time_zone("Pacific Time (US & Canada)").strftime("%m/%d/%Y") %></td>
     <td><span class="btn btn-success"><%= link_to 'View/Edit', event, {:style=>"color:white"} %></span></td>
+		<td />
     <td><span class="btn btn-danger"><%= link_to 'Cancel', event, { confirm: 'Are you sure?', method: :delete, :style=>"color:white" } %></td>
 		</div>
   </tr>

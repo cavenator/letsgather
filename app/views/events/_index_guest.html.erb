@@ -9,7 +9,7 @@
 		<div>You are currently <%= Attendee.find_rsvp_for(current_user, event) %></div></td>
     <td><span class="btn btn-success"><%= link_to 'View', event, { :style => "color:white" } %></span></td>
 		<td />
-		<td />
+		<td><span class="btn btn-danger"><%= link_to 'Remove myself', { :action => "remove_from_event", :id => event.id, :user_id => current_user.id }, { confirm: 'Are you sure?', method: :delete, :style=>"color:white" } %></span></td>
 		</div>
   </tr>
 
