@@ -161,7 +161,7 @@ class AttendeesController < ApplicationController
 
 	def verify_access
 		event = Event.find(params[:event_id])
-		unless current_user.belongs_to_event?(event)
+		unless current_user.is_host_for?(event) || current_user.belongs_to_event?(event)
 			render file: "public/401.html" ,status: :unauthorized
 		end
 	end

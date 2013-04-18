@@ -56,7 +56,7 @@ class EventsController < ApplicationController
     @event = Event.new(params[:event])
 		@event.user_id = current_user.id
     if @event.save
-				Role.create(:user_id => current_user.id, :event_id => @event.id, :privilege => "host")
+#				Role.create(:user_id => current_user.id, :event_id => @event.id, :privilege => "host")
 				respond_to do |format|
         	format.html { redirect_to @event, notice: 'Event was successfully created.' }
         	format.json { render json: @event, status: :created, location: @event }
@@ -225,7 +225,7 @@ class EventsController < ApplicationController
 
 	def verify_access
 		event = Event.find(params[:id])
-		unless current_user.belongs_to_event?(event)
+		unless current_user.is_host_for?(event)|| current_user.belongs_to_event?(event)
 			render file: "public/401.html" , :formats => [:html], status: :unauthorized and return
 		end
 	end

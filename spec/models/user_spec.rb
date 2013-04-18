@@ -42,19 +42,18 @@ describe User do
 		before(:all) do
 			@user = FactoryGirl.create(:user, :first_name => "Rico", :last_name => "Suave")
 			@event = FactoryGirl.create(:event, :name=>'Sedation', :start_date => 7.days.from_now, :rsvp_date => 5.days.from_now)
-			@role = Role.create(:user_id => @user.id, :event_id => @event.id, :privilege => "host")
 		end
 
 		after(:all) do
 			User.destroy_all
 		end
 
-		it "should be able to find the appropriate role for an actual host" do
-			expect(@user.find_role_for(@event)).to eql("host")
-		end
-
 		it "should inform the user if they are the host to the event" do
 			expect(@user.is_host_for?(@event)) == true
+		end
+
+		it "should inform the user if they are a guest to an event" do
+
 		end
 	end
 

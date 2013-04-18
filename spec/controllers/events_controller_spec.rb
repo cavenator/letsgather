@@ -108,7 +108,7 @@ describe EventsController do
 			sign_in @event.user
 
 			get 'send_group_email', :id => @event.id, :subject =>"Something here", :body => "body goes here", :rsvp_group => "Undecided"
-			response.should redirect_to(:action => 'show')
+			response.status.should == 200
 		end
 
 		it "should redirect back to drafting email if the subject or body is blank" do
@@ -116,7 +116,7 @@ describe EventsController do
 			sign_in @event.user
 
 			get 'send_group_email', :id => @event.id, :subject =>"", :body => "body goes here"
-			response.should redirect_to(:action => 'group_email')
+			response.status.should  == 406
 		end
 	end
 
@@ -141,14 +141,13 @@ describe EventsController do
 		it "should redirect you back to guest event page if sent correctly" do
 			login_for_bob
 			get 'send_host_email', :id => @event.id, :subject => "Something something", :body => "I am a message"
-			response.status.should == 302
-			response.should redirect_to(:action => :show)
+			response.status.should == 200
 		end
 
 		it "should take you back to emailing draft page if subject or body is empty" do
 			login_for_bob
 			get 'send_host_email', :id => @event.id
-			response.should redirect_to(:action => :email_host)
+			response.status.should == 406
 		end
 	end
 end
