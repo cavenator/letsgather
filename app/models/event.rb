@@ -112,6 +112,14 @@ class Event < ActiveRecord::Base
 		remaining_count_hash
 	end
 
+	def get_available_items_for_event
+		items = []
+		self.potluck_items.each do |potluck_item|
+			items << {"category" => potluck_item.category, "available_items" => potluck_item.dishes }
+		end
+		return items
+	end
+
 	def get_items_guests_are_bringing
 		guests = self.attendees.where("rsvp = 'Going'")
 		items = []
