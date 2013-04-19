@@ -37,10 +37,6 @@
 </div>
 <hr />
 <div class="row-fluid">
-		<div class="span3 offset1"></div>
-		<div class="span3 offset1"><button class="btn btn-primary btn-large" id="modifyRSVPButton" onclick="showRSVPSettings()">Modify RSVP</button></div>
-</div>
-<div class="row-fluid">
 	<div class="span3">
 		<ul class="nav nav-pills nav-stacked">
 		<li id="available_items">
@@ -64,6 +60,9 @@
 		</ul>
 	</div>
 	<div class="span8">
+		<div class="row-fluid">
+			<div class="span8 offset4" style="margin:1em 0 3em 0; text-align:center"><button class="btn btn-primary btn-large" id="modifyRSVPButton" onclick="showRSVPSettings()">Modify RSVP</button></div>
+		</div>
 		<div id="comment-box" style="margin-top:1.5em">
 		<%= form_for(@attendee, :url=> [@event,@attendee], :method=>"PUT") do |f| %>
 		
