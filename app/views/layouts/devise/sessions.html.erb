@@ -10,17 +10,5 @@
 <div class="container-fluid" style="background-color:white;margin-left:10em;margin-right:20em">
 <%= yield %>
 </div>
-<div id="infoModal" class="modal hide fade">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>About this app</h3>
-  </div>
-  <div class="modal-body">
-    <%= render :file=>"public/info.html" %>
-  </div>
-  <div class="modal-footer">
-    <a href="#" data-dismiss="modal">Close</a>
-  </div>
-</div>
 </body>
 </html>

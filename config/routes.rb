@@ -23,6 +23,7 @@ MaximusSamurai::Application.routes.draw do
 	get 'users/:user_id/groups/:id/edit(.:format)', :to => 'groups#edit'
 	put 'users/:user_id/groups/:id(.:format)', :to => 'groups#update'
 	delete 'users/:user_id/groups/:id(.:format)', :to => 'groups#destroy'
+	get '/faq', :to => 'events#faq'
 
 	resources :events do
 		get 'attendees/add_attendees', :to => 'attendees#add_attendees'
