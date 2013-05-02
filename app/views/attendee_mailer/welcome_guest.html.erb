@@ -4,12 +4,16 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1>Welcome, <%= @attendee.email %></h1>
-    <p>
-      <%= @host.full_name %> has invited you to their event: <%= @event.name%>. This is scheduled to occur at <%= @event.display_start_time %>.  Please sign in and RSVP by the following date: <%= @event.display_rsvp_time %>. If you do not have an account with us, please sign into <%= link_to 'Maximus Samurai', root_url %> and create an account using this email (otherwise, you will not be able to rsvp). If you do decide to create an account using a different email address, notify <%= @host.full_name %> at <%= @host.email %> and inform them which email you would prefer to use.<br /><br/>
-      Your username is: <%= @attendee.email %>.<br/>
+    <h1>Salutations!</h1>
+    <p style="text-align:center;margin:2em 0 2em 0">
+			<%= @host.full_name %> has invited you to their event: <%= @event.name%>. <br/>
+			Start Date: <%= @event.display_start_time %>.<br/>
+			RSVP: <%= @event.display_rsvp_time %>.
+		</p>
+		<p style="margin-bottom:1em">If you do not have an account with us, please <%= link_to 'create one', new_user_registration_url %> with the following email address: <%= @attendee.email %>.</p><p>If you do decide to create an account using a different email address, notify <%= @host.full_name %> at <%= @host.email %> and inform them which email you would prefer to use.  Otherwise, please <%= link_to 'sign in', root_url %><br /><br/>
     </p>
     <p>Thanks and have a great day!</p>
+
   </body>
 </html>
 
