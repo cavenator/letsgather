@@ -7,7 +7,7 @@
 			<span style='font-weight:bold;font-size:1em'>You are bringing </span>
 			<div style="inline-block">
 				<% attendee.dish.each do |dish| %>
-					<%= dish["item"] %>(<%= dish["category"] %>) <br />
+					<span class="label"><%= dish["category"] %></span>&nbsp;&nbsp;&nbsp;<span style="font-weight:bold"><%= dish["item"] %></span><br />
 				<% end %>
 			</div>
 		<% else %>

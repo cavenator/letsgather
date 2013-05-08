@@ -18,7 +18,7 @@
 					<p>Comment(s): <% if attending_attendee.comment.blank? %>None<% else %><%= attending_attendee.comment %><% end %></p>
 					<p>Dish(es):  <% if attending_attendee.dish.blank? %> Undecided <% else %>
 									<% attending_attendee.dish.each do |dish_item| %><div>
-										<%= dish_item["item"] %>(<%= dish_item["category"] %>) </div>
+										<span class="label"><%= dish_item["category"] %></span>&nbsp;&nbsp;&nbsp;<span style="font-weight:bold"><%= dish_item["item"] %></span></div>
 									<% end %>
 								<% end %>
 					</p>
