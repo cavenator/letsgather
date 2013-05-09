@@ -86,7 +86,7 @@ class Attendee < ActiveRecord::Base
 
 		after_destroy do |attendee|
 			unless attendee.user_id.blank?
-				role = Role.where("user_id = ? and event_id = ? and privilege = 'guest'", attendee.user_id, attendee.event_id).first
+				role = Role.where("user_id = ? and event_id = ?", attendee.user_id, attendee.event_id).first
 			end
 
 			Role.destroy(role) unless role.blank?

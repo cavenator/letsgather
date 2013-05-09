@@ -222,7 +222,7 @@ class EventsController < ApplicationController
 		user_attendee_event.each do |attendee_user|
 			attendee_user.user_id = current_user.id
 			attendee_user.full_name = current_user.full_name
-			Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => "guest")
+			Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => ROLE.GUEST)
 			attendee_user.save
 		end
 	end

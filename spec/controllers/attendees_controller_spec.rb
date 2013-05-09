@@ -34,7 +34,7 @@ describe AttendeesController do
 			Event.destroy_all
 			@event = FactoryGirl.create(:event)
 			@user = @event.user
-			Role.create(:user_id => @user.id, :event_id => @event.id, :privilege => "host")
+			Role.create(:user_id => @user.id, :event_id => @event.id, :privilege => Role.HOST)
 			@attendee = FactoryGirl.create(:attendee, :event_id => @event.id)
 		end
 

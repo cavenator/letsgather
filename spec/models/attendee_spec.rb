@@ -319,7 +319,7 @@ describe Attendee do
 			@event = FactoryGirl.create(:event)
 			@bob = FactoryGirl.create(:bob)
 			@attendee = Attendee.create(:event_id => @event.id, :user_id => @bob.id, :rsvp => "Going", :email => @bob.email)
-			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => "guest")
+			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => Role.GUEST)
 
 			Attendee.destroy(@attendee)
 			expect(Role.where("user_id = ? and event_id = ?",@bob.id,@event.id).count).to eql(0)

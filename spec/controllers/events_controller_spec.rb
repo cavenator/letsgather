@@ -49,7 +49,7 @@ describe EventsController do
 		it "should show the correct view for a host" do
 			login
 			@event = FactoryGirl.create(:event, :user_id => @user.id)
-			@host = Role.create(:user_id => @user.id, :event_id => @event.id, :privilege => "host")
+			@host = Role.create(:user_id => @user.id, :event_id => @event.id, :privilege => Role.HOST)
 
 			get 'show', :id => @event.id
 		end
@@ -63,7 +63,7 @@ describe EventsController do
 
 		it "should only allow users to access their events or events they are invited to only" do
 			@event = FactoryGirl.create(:event_secondary)
-			Role.create(:user_id => @event.user.id, :event_id => @event.id, :privilege => "host")
+			Role.create(:user_id => @event.user.id, :event_id => @event.id, :privilege => Role.HOST)
 			login
 			get 'show', :id => @event.id
 			response.should render_template(:file => "#{Rails.root}/public/401.html")
@@ -74,7 +74,7 @@ describe EventsController do
 			@event = FactoryGirl.create(:event)
 			@bob = FactoryGirl.create(:bob)
 			attendee = Attendee.create(:event_id => @event.id, :user_id => @bob.id, :rsvp => "Going", :email => @bob.email)
-			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => "guest")
+			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => Role.GUEST)
 
 			Attendee.destroy(attendee)
 			login_for_bob
@@ -89,7 +89,7 @@ describe EventsController do
 			User.destroy_all
 			Event.destroy_all
 			@event = FactoryGirl.create(:event)
-			Role.create(:user_id => @event.user.id, :event_id => @event.id, :privilege => "host")
+			Role.create(:user_id => @event.user.id, :event_id => @event.id, :privilege => Role.HOST)
 			@attendees = []
 			@attendees << FactoryGirl.create(:attendee, :event_id => @event.id)
 			@attendees << FactoryGirl.create(:attendee, :event_id => @event.id)
@@ -125,11 +125,11 @@ describe EventsController do
 			User.destroy_all
 			Event.destroy_all
 			@event = FactoryGirl.create(:event)
-			Role.create(:user_id => @event.user.id, :event_id => @event.id, :privilege => "host")
+			Role.create(:user_id => @event.user.id, :event_id => @event.id, :privilege => Role.HOST)
 
 			@bob = FactoryGirl.create(:bob)
 			Attendee.create(:full_name => @bob.full_name, :event_id=>@event.id, :user_id => @bob.id, :email => @bob.email, :rsvp => "Going")
-			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => "guest")
+			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => Role.GUEST)
 		end
 
 		it "should allow guests to email the host" do
