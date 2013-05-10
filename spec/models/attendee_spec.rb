@@ -35,6 +35,12 @@ describe Attendee do
 			expect(attendee2).to_not be_valid
 		end
 
+		it "should not allow a host to register themselves as a guest" do
+			event = FactoryGirl.create(:event)
+			attendee = FactoryGirl.build(:attendee, :event_id => event.id, :email => event.user.email, :user_id => event.user.id)
+			expect(attendee).to_not be_valid
+		end
+
 		it "should be allowed to have a blank email and be valid" do
 			attendee = FactoryGirl.build(:attendee, :email=> nil)
 			expect(attendee).to be_valid
