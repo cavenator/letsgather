@@ -38,7 +38,7 @@
 		<% @potluck_item.dishes.each_with_index do |dish, index| %>
 				<div id="dish_<%= index %>">
 					<input type='text' class='input-large' value="<%= dish %>">
-						<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em' onclick="$('#dish_<%= index %>').remove();"><i class="icon-remove-sign"></i></button>
+						<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em' onclick="$('#dish_<%= index %>').remove();"><i class="icon-remove"></i></button>
 				</div>
 		<% end %>
 		</div>

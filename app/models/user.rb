@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
 	end
 
 	def is_host_for?(event)
-		return self.id == event.user.id
+		return self.id == event.user.id || Role.where('user_id = ? and event_id = ? and privilege = ?',self.id, event.id, Role.HOST).count == 1
 	end
 
 	def belongs_to_event?(event)

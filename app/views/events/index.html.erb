@@ -16,7 +16,7 @@
 
 	<tbody>
 <% @events.each do |event| %>
-		<% if current_user.id == event.user_id %>
+		<% if current_user.is_host_for?(event) %>
 			<%= render :partial=>"index_host", :locals => {:event => event} %>
 		<% else %>
 			<%= render :partial=>"index_guest", :locals => {:event => event } %>

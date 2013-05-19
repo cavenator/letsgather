@@ -21,8 +21,8 @@
 	</td>
 		<td><div>
 		<div>
-    <span class="btn btn-success"><%= link_to 'Edit', edit_event_potluck_item_path(@event, potluck_item), {:style=>"color:white", :class=>"editPotluckItems" } %></span>
-    <span class="btn btn-danger"><%= link_to 'Remove', event_potluck_item_path(@event, potluck_item), {confirm: 'Are you sure?', method: :delete, :style=>"color:white", :class=>"removePotluckItems"} %></span></div></td>
+    <span class="btn btn-success"><%= link_to ' ', edit_event_potluck_item_path(@event, potluck_item), {:style=>"color:white", :class=>"editPotluckItems icon-edit" } %></span>
+    <span class="btn btn-danger"><%= link_to ' ', event_potluck_item_path(@event, potluck_item), {confirm: 'Are you sure?', method: :delete, :style=>"color:white", :class=>"removePotluckItems icon-remove"} %></span></div></td>
   </tr>
 <% end %>
 	</tbody>

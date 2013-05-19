@@ -2,7 +2,7 @@
 class EventsController < ApplicationController
 	before_filter :verify_access, :except => [:index, :new, :create, :faq]
 	before_filter :align_attendee_events, :only => :index
-	before_filter :verify_privileges, :only => [:edit, :update, :destroy, :email_group, :send_group_email]
+	before_filter :verify_privileges, :only => [:edit, :update, :destroy, :email_group, :send_group_email, :change_roles]
 	before_filter :get_current_user, :only => [:index, :new, :show, :edit, :update]
 
   # GET /events
@@ -206,6 +206,22 @@ class EventsController < ApplicationController
 		render :layout => false
 	end
 
+	def change_roles
+		@event = Event.find(params[:id])
+		user_id = params[:user_id].to_i
+		role = Role.get_role_for(user_id, @event.id)
+		if role.privilege.eql?(Role.GUEST)
+			role.privilege = Role.HOST
+		else
+			role.privilege = Role.GUEST
+		end
+		if role.save
+			render :nothing => true, :status => :no_content
+		else
+			render :nothing => true, :status => :unprocessable_entity
+		end
+	end
+
 	def edit_location
 		@event = Event.find(params[:id])
 		render :layout => false
@@ -222,7 +238,7 @@ class EventsController < ApplicationController
 		user_attendee_event.each do |attendee_user|
 			attendee_user.user_id = current_user.id
 			attendee_user.full_name = current_user.full_name
-			Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => ROLE.GUEST)
+			Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => Role.GUEST)
 			attendee_user.save
 		end
 	end

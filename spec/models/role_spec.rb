@@ -27,6 +27,8 @@ describe Role do
 			expect(role2).to_not be_valid
 			role3 = Role.new(:user_id => @user.id, :event_id => @event3.id, :privilege => Role.GUEST)
 			expect(role3).to be_valid
+			role3.save
+			expect(@user.roles.count).to eql(2)
 		end
 	end
 end

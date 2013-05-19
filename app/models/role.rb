@@ -12,4 +12,8 @@ class Role < ActiveRecord::Base
 		"host"
 	end
 
+	def self.get_role_for(user_id, event_id)
+		return Role.where('user_id = ? and event_id = ?', user_id, event_id).first
+	end
+
 end

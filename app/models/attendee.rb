@@ -159,4 +159,12 @@ class Attendee < ActiveRecord::Base
 		def self.find_rsvp_for(user, event)
 			return self.find_attendee_for(user, event).rsvp
 		end
+
+		def has_role_for_event?(event)
+			unless self.user_id.blank?
+				role = Role.where('user_id = ? and event_id = ?',self.user_id, event.id)
+				return !role.blank?
+			end
+			return false
+		end
 end
