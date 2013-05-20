@@ -29,11 +29,12 @@ class AttendeeMailer < ActionMailer::Base
 		mail(to: guest.email, subject: subject, from: @event.user.email)
 	end
 
-	def email_host(host, event, subject, body, sender)
+	def email_host(hosts, event, subject, body, sender)
 		@body = body
 		@event = event
 		@sender = sender
-		mail(to: host.email, subject: subject )
+		hosts_email = hosts.map{|host| host.email }
+		mail(to: hosts_email, subject: subject )
 	end
 
 	def send_rsvp_emails(email_list, event)

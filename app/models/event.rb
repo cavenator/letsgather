@@ -183,4 +183,11 @@ class Event < ActiveRecord::Base
 		end
 		return item_hash_array
 	end
+
+	def get_hosts
+		user_ids = Role.where('event_id = ? and privilege = ?', self.id, Role.HOST).map{|role| role.user_id }
+		hosts = User.find(user_ids)
+		hosts << self.user
+		return hosts.uniq
+	end
 end

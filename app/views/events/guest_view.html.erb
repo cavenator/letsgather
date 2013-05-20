@@ -4,10 +4,10 @@
 	<div class="span4">
 		<div>
 			<span style="font-weight:bold;font-size:1em">Host: </span>
-			<span style="font-size:1em"><%= @event.user.full_name %></span>
+			<span style="font-size:1em"><%= @event.get_hosts.map{|host| host.full_name }.join(",") %></span>
 		</div>
 		<div>
-			<%= link_to 'Email host', @event.id.to_s+'/email_host', { :id => "emailHostLink", :style=>"color:blue" } %>
+			<%= link_to 'Email host(s)', @event.id.to_s+'/email_host', { :id => "emailHostLink", :style=>"color:blue" } %>
 		</div>
 		<div>
 			<span style="font-weight:bold;font-size:1em">Start Date: </span>

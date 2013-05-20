@@ -135,7 +135,6 @@ class EventsController < ApplicationController
 
 	def email_host
 		@event = Event.find(params[:id])
-		@host = @event.user
 		render :layout => false
 	end
 
@@ -150,13 +149,13 @@ class EventsController < ApplicationController
 
 	def send_host_email
 		@event = Event.find(params[:id])
-		@host = @event.user
+		@hosts = @event.get_hosts
 		@subject = params[:subject]
 		@body = params[:body]
 		if @subject.blank? || @body.blank?
 			render :action => :email_host, :status => :not_acceptable
 		else
-			Thread.new { AttendeeMailer.email_host(@host, @event, @subject, @body, current_user).deliver }
+			Thread.new { AttendeeMailer.email_host(@hosts, @event, @subject, @body, current_user).deliver }
 			render :nothing=>true, :status => 200
 		end
 	end
