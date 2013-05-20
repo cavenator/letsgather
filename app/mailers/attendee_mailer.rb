@@ -2,10 +2,10 @@ class AttendeeMailer < ActionMailer::Base
   default from: "mydevmailer@gmail.com"
 
 	#guest = an Attendee object
-	def welcome_guest(guest)
+	def welcome_guest(guest, host)
 		@attendee = guest
 		@event = Event.find(guest.event_id)
-		@host = User.find(@event.user_id)
+		@host = host
 		subject = "You have been invited to #{@event.name} by #{@host.full_name}"
 		mail(to: guest.email, subject: subject)
 	end
@@ -58,6 +58,7 @@ class AttendeeMailer < ActionMailer::Base
 	def send_host_guest_acknowledgement(email_hash, event)
 		subject = "Invitation summary for event #{event.name}"
 		@invitation_summary_hash = email_hash
-		mail(to: event.user.email, subject: subject)
+		hosts_email = event.get_hosts.map{|host| host.email}
+		mail(to: hosts_email, subject: subject)
 	end
 end

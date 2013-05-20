@@ -137,7 +137,7 @@ class AttendeesController < ApplicationController
 	def invite_guests
 		@event = Event.find(params[:event_id])
 		email_invites = JSON.parse(params[:email_invites])
-		@invites = Attendee.invite(email_invites["email"], @event)
+		@invites = Attendee.invite(email_invites["email"], @event, current_user)
 		respond_to do |format|
 			format.html { render "invite_guests" }
       format.json  { render json: params[:email_invites] }

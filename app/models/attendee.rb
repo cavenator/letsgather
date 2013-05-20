@@ -101,17 +101,13 @@ class Attendee < ActiveRecord::Base
 		end
 
 		#accepts an email list in the form of an Array and the event object
-		def self.invite(email_list, event)
+		def self.invite(email_list, event, inviter)
 			email_hash = {"successful" => [], "unsuccessful" => [], "duplicated" => []}
 			email_list.each do |email|
-#				if email.match(/^([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})$/i)
 				attendee = Attendee.new(:event_id => event.id, :email => email, :rsvp => "Undecided")
 				if attendee.save
 					email_hash["successful"] << email
-					Thread.new { AttendeeMailer.welcome_guest(attendee).deliver }
-#				else
-#					email_hash["duplicated"] << email
-#				end
+					Thread.new { AttendeeMailer.welcome_guest(attendee, inviter).deliver }
 				else
 					email_hash["unsuccessful"] << email
 				end
