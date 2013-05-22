@@ -142,8 +142,8 @@ class Event < ActiveRecord::Base
 	end
 
 	def self.get_events_for_rsvp_reminders
-		start_time = Time.now + 2.days
-		end_time = Time.now + 3.days
+		start_time = Time.now
+		end_time = Time.now + 2.days
 		return Event.where(:rsvp_date => start_time..end_time)
 	end
 
@@ -167,8 +167,8 @@ class Event < ActiveRecord::Base
 	end
 
 	def self.get_events_for_event_reminders
-		start_time = Time.now + 1.day
-		end_time = Time.now + 2.days
+		start_time = Time.now
+		end_time = Time.now + 1.day
 		return Event.where(:start_date => start_time..end_time)
 	end
 
