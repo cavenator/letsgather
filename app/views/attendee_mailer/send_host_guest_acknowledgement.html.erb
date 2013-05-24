@@ -6,7 +6,7 @@
   <body>
 		<h2>Invite Confirmations</h2>
 			<% if @invitation_summary_hash["successful"].length > 0 %>
-			<div style="display: block; border-color: #d6e9c6; background-color: #dff0d8;margin: 1em 1em 1em 1em">The following emails have been successfully delivered:</div>
+			<div style="display: block; border-color: #d6e9c6; background-color: #dff0d8;margin: 1em 1em 1em 1em">The following emails have been successfully processed:</div>
 			<div style="display: block">
 			<div class="span6 offset2">
 				<% @invitation_summary_hash["successful"].each do |email| %>
