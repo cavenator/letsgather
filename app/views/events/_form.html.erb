@@ -15,22 +15,22 @@
 	<%= f.text_field :name %>
 </p>
 <p>
+		<%= f.label(:start_date, "Event Date:") %>
 	<% if @event.start_date.blank? %>
-		<%= f.label(:start_date, "Event Date:") %>
-		<%= f.text_field :start_date, :id => "start_date" %>
+		<%= f.hidden_field :start_date, :id => "start_date" %>
 	<% else %>
-		<%= f.label(:start_date, "Event Date:") %>
-		<input type="text" id="start_date" name="event[start_date]" value="<%= @event.start_date.in_time_zone('Pacific Time (US & Canada)').strftime('%Y-%m-%d %H:%M %z') %>" />
+		<input type="hidden" id="start_date" name="event[start_date]" value="<%= @event.start_date.in_time_zone('Pacific Time (US & Canada)').strftime('%Y-%m-%d %H:%M %z') %>" />
 	<% end %>
+		<input type="text" id="readable_start_date" value="" />
 </p>
 <p>
+		<%= f.label(:rsvp_date, "RSVP By:") %>
 	<% if @event.rsvp_date.blank? %>
-		<%= f.label(:rsvp_date, "RSVP By:") %>
-		<%= f.text_field :rsvp_date, :id => "rsvp_date" %>
+		<%= f.hidden_field :rsvp_date, :id => "rsvp_date" %>
 	<% else %>
-		<%= f.label(:rsvp_date, "RSVP By:") %>
-		<input type="text" id="rsvp_date" name="event[rsvp_date]" value="<%= @event.rsvp_date.in_time_zone('Pacific Time (US & Canada)').strftime('%Y-%m-%d %H:%M %z') %>" />
+		<input type="hidden" id="rsvp_date" name="event[rsvp_date]" value="<%= @event.rsvp_date.in_time_zone('Pacific Time (US & Canada)').strftime('%Y-%m-%d %H:%M %z') %>" />
 	<% end %>
+		<input type="text" id="readable_rsvp_date" value="" />
 </p>
   <div class="actions">
 		<button class="btn btn-primary" id="event_submit">Save</button>

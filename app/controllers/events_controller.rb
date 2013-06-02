@@ -54,7 +54,8 @@ class EventsController < ApplicationController
   # POST /events.json
   def create
     @event = Event.new(params[:event])
-		@event.user_id = current_user.id
+		@user = current_user
+		@event.user_id = @user.id
     if @event.save
 #				Role.create(:user_id => current_user.id, :event_id => @event.id, :privilege => "host")
 				respond_to do |format|

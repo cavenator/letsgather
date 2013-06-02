@@ -35,11 +35,11 @@ class Event < ActiveRecord::Base
 	end
 
 	def start_date_must_be_in_right_format
-		errors.add(:start_date, 'must be a valid datetime format (YYYY-MM-DD HH:MM -0700)') if ((DateTime.parse(self.start_date.to_s) rescue ArgumentError) == ArgumentError)
+		errors.add(:start_date, 'must be a valid datetime format: MM/dd/yyyy hh:mm:ss PM (or AM)') if ((DateTime.parse(self.start_date.to_s) rescue ArgumentError) == ArgumentError)
 	end
 
 	def rsvp_date_must_be_in_right_format
-		errors.add(:rsvp_date, 'must be a valid datetime format (YYYY-MM-DD HH:MM -0700)') if ((DateTime.parse(self.rsvp_date.to_s) rescue ArgumentError) == ArgumentError)
+		errors.add(:rsvp_date, 'must be a valid datetime format: MM/dd/yyyy hh:mm:ss PM (or AM)') if ((DateTime.parse(self.rsvp_date.to_s) rescue ArgumentError) == ArgumentError)
 	end
 
 	def rsvp_date_should_be_less_than_start_date
@@ -49,11 +49,11 @@ class Event < ActiveRecord::Base
 	end
 
 	def display_start_time
-		return self.start_date.in_time_zone("Pacific Time (US & Canada)").strftime("%b %d,%Y %I:%M %P")
+		return self.start_date.in_time_zone("Pacific Time (US & Canada)").strftime("%b %d,%Y %I:%M %p")
 	end
 
 	def display_rsvp_time
-		return self.rsvp_date.in_time_zone("Pacific Time (US & Canada)").strftime("%b %d,%Y %I:%M %P")
+		return self.rsvp_date.in_time_zone("Pacific Time (US & Canada)").strftime("%b %d,%Y %I:%M %p")
 	end
 
 	def attending_guest_count
@@ -167,8 +167,8 @@ class Event < ActiveRecord::Base
 	end
 
 	def self.get_events_for_event_reminders
-		start_time = Time.now
-		end_time = Time.now + 1.day
+		start_time = Time.now + 1.day
+		end_time = Time.now + 2.days
 		return Event.where(:start_date => start_time..end_time)
 	end
 
