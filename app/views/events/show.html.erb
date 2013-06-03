@@ -10,6 +10,12 @@
 			<span style="font-size:1em"><%= @event.name %></span>
 		</div>
 		<div>
+			<% unless @event.user.id == @user.id %>
+			<div>
+				<span style="font-weight:bold;font-size:1em">Organizer's email: </span>
+				<span style="font-size:1em"><%= @event.user.email %></span>
+			</div>
+			<% end %>
 			<div>
 			<span style="font-weight:bold;font-size:1em">Start Date: </span>
 			<span style="font-size:1em"><%= @event.display_start_time %></span></div>
