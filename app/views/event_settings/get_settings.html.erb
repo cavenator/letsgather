@@ -1,0 +1,82 @@
+<div class="row-fluid">
+	<div class="span6 offset3">
+		<h3>Notifications</h3>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6 offset3">
+		<table style="border-spacing: 5px;border-collapse: separate;">
+			<thead>
+				<th />
+				<th />
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align:baseline"><input type="checkbox" id="check_notify_attending_guests" /></td><td><label>Notify me when guests accept</label></td>
+				</tr>
+				<tr>
+					<td style="vertical-align:baseline"><input type="checkbox" id="check_notify_declining_guests" /></td><td><label>Notify me when guests decline</label></td>
+				</tr>
+				<tr>
+					<td style="vertical-align:baseline"><input type="checkbox" id="check_notify_all_guests" /></td><td><label>Notify me off all guest rsvp responses</label></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6 offset3">
+		<h3>Reminders</h3>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6 offset3">
+		<table style="border-spacing: 5px;border-collapse: separate;">
+			<thead>
+				<th />
+			</thead>
+			<tbody>
+				<tr>
+					<td style="vertical-align:baseline"><label>Send out rsvp reminders <input style="width:1.25em" type="text" id="rsvp_advance" value=0 maxlength="2"/> days from rsvp date</label></td>
+				</tr>
+				<tr>
+					<td style="vertical-align:baseline"><label>Send out event reminders <input style="width:1.25em" type="text" id="event_advance" value=0 size="2" maxlength="2"/> days from event date</label></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6 offset3">
+		<h3>Apply to the following events</h3>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6 offset3">
+		<table style="border-spacing: 5px;border-collapse: separate;">
+			<thead>
+				<th />
+			</thead>
+			<tbody>
+				<% @user.events.each do |event| %>
+					<tr>
+						<td style="vertical-align:baseline"><input type="checkbox" class="event_name" id="event_<%= event.id %>" /></td><td><label><%= event.name %> (<%= event.start_date.strftime("%b %d, %Y") %>)</label></td>
+					</tr>
+				<% end %>
+					<tr>
+						<td style="vertical-align:baseline"><input type="checkbox" class="event_name" id="event_futures" /></td><td><label>Apply for future events</label></td>
+					</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6 offset3">
+		<button class="btn btn-success">Save</button>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6 offset3">
+		<label style="font-size:0.5em"> *These changes only take effect when you create events </label>
+	</div>
+</div>

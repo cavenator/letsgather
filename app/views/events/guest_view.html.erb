@@ -183,7 +183,7 @@
 		}
 
 		$(document).ready(function(){
-			var category_array = [], dishes = {}, flash_message = $("#notice"), taken_queue = [];
+			var category_array = [], dishes = {}, flash_message = $("#notice"), taken_queue = [], map;
 
 			if (flash_message.text().length > 0)
 				flash_message.addClass("alert alert-info");

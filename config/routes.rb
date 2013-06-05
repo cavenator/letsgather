@@ -25,6 +25,7 @@ MaximusSamurai::Application.routes.draw do
 	delete 'users/:user_id/groups/:id(.:format)', :to => 'groups#destroy'
 	get '/faq', :to => 'events#faq'
 	put 'events/:id/change_roles/:user_id(.:format)', :to => 'events#change_roles'
+	get 'users/:user_id/event_settings(.:format)', :to => 'event_settings#get_settings'
 
 	resources :events do
 		get 'attendees/add_attendees', :to => 'attendees#add_attendees'

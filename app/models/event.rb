@@ -74,7 +74,7 @@ class Event < ActiveRecord::Base
 	end
 
 	def location
-		return true unless self.address1.eql?(nil)
+		return true if !self.address1.blank? && !self.location2.blank?
 	end
 
 	def location1
