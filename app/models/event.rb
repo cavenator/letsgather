@@ -1,6 +1,7 @@
 class Event < ActiveRecord::Base
 		has_many :attendees #, :dependent => :destroy
 		has_many :potluck_items, :dependent => :destroy
+		has_one :settings, :dependent => :destroy
 		belongs_to :user
 
 		validates :name,:user_id, :start_date, :rsvp_date, :presence => true
