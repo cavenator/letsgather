@@ -19,6 +19,10 @@ class Event < ActiveRecord::Base
 		event.attendees.destroy_all
 	end
 
+	after_create do |event|
+		Settings.create(:event_id => event.id)
+	end
+
 	def start_date_must_be_in_the_future
 			unless self.start_date.eql?(nil)
 				errors.add(:start_date,"cannot start in the past") if self.start_date < Date.today
