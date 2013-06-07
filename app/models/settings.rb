@@ -4,4 +4,24 @@ class Settings < ActiveRecord::Base
 		validates :event_id, :presence => true
 		validates :days_rsvp_reminders, :days_event_reminders, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :message => "need to be specified with a number ( 0 and greater)" }
 
+		def self.merge(update_attrs)
+			original = self.DEFAULT_SETTINGS
+			original.merge(update_attrs)
+		end
+
+		def self.DEFAULT_SETTINGS
+			return { "notify_on_guest_accept" => false, "notify_on_guest_decline" => false, "notify_on_guest_response" => false , "days_rsvp_reminders" => 0, "days_event_reminders" => 0 }
+		end
+
+		def self.AdditionalHashInfoForUser
+			return { "event_id" => 0, "id" => 0 }
+		end
+
+		def self.determineFutureSettings(user)
+			unless !user.future_options.blank?
+				event_zero = self.AdditionalHashInfoForUser
+				return self.DEFAULT_SETTINGS.merge(event_zero)
+			end
+			return user.future_options
+		end
 end
