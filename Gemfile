@@ -8,6 +8,7 @@ gem 'rails', '3.2.12'
 gem 'devise'
 gem 'tlsmail'
 gem 'pg'
+gem 'thin'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -44,7 +45,7 @@ end
 # gem 'jbuilder'
 
 # Use unicorn as the app server
-  gem 'unicorn'
+# gem 'unicorn'
 
 # Deploy with Capistrano
 # gem 'capistrano'
