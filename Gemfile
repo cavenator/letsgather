@@ -26,6 +26,7 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'twitter-bootstrap-rails'
 gem 'validates_email_format_of', :git => 'git://github.com/alexdunae/validates_email_format_of.git'
+gem 'delayed_job_active_record'
 
 group :test, :development do
   gem 'rspec-rails'

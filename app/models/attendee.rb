@@ -103,18 +103,16 @@ class Attendee < ActiveRecord::Base
 		#accepts an email list in the form of an Array and the event object
 		def self.invite(email_list, event, inviter)
 			email_hash = {"successful" => [], "unsuccessful" => [], "duplicated" => []}
-			threads = []
 			email_list.each do |email|
 				attendee = Attendee.new(:event_id => event.id, :email => email, :rsvp => "Undecided")
 				if attendee.save
 					email_hash["successful"] << email
-					threads << Thread.new do AttendeeMailer.welcome_guest(attendee, inviter).deliver end
+					AttendeeMailer.delay.welcome_guest(attendee, inviter)
 				else
 					email_hash["unsuccessful"] << email
 				end
 			end
-			threads << Thread.new do AttendeeMailer.send_host_guest_acknowledgement(email_hash, event).deliver end
-			threads.each(&:join)
+			AttendeeMailer.delay.send_host_guest_acknowledgement(email_hash, event)
 			return email_hash
 		end
 

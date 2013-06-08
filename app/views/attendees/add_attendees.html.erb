@@ -83,7 +83,7 @@
 					async: false,
 					success: function(data){
 						$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
-						$("#notice").html("Invitations have been processed. Take a look at your guest list to see who has been added");
+						$("#notice").html("Invitations have been processed and emails will be sent out to those added to your guest list.");
 						$("#guests").click();
 					},
 					error: function() {
