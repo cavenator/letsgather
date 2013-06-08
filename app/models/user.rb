@@ -32,4 +32,23 @@ class User < ActiveRecord::Base
 	def belongs_to_event?(event)
 		return self.roles.where("event_id = ?", event.id).count > 0
 	end
+
+	def transfer_settings_for_event(event)
+		settings = Settings.find_by_event_id(event.id)
+		self.future_options.each do |key, value|
+			case key when "notify_on_guest_accept"
+				settings.notify_on_guest_accept = value
+			when "notify_on_guest_decline"
+				settings.notify_on_guest_decline = value
+			when "notify_on_guest_response"
+				settings.notify_on_guest_response = value
+			when "days_rsvp_reminders"
+				settings.days_rsvp_reminders = value
+			when "days_event_reminders"
+				settings.days_event_reminders = value
+			else
+			end
+		end
+		settings.save
+	end
 end

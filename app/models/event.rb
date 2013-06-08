@@ -21,6 +21,9 @@ class Event < ActiveRecord::Base
 
 	after_create do |event|
 		Settings.create(:event_id => event.id)
+		unless event.user.future_options.blank?
+			event.user.transfer_settings_for_event(event)
+		end
 	end
 
 	def start_date_must_be_in_the_future
