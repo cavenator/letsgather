@@ -8,7 +8,6 @@ gem 'rails', '3.2.12'
 gem 'devise'
 gem 'tlsmail'
 gem 'pg'
-gem 'thin'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -26,6 +25,7 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'twitter-bootstrap-rails'
 gem 'validates_email_format_of', :git => 'git://github.com/alexdunae/validates_email_format_of.git'
+gem 'daemons'
 gem 'delayed_job_active_record'
 
 group :test, :development do
@@ -44,7 +44,7 @@ end
 # gem 'jbuilder'
 
 # Use unicorn as the app server
-# gem 'unicorn'
+  gem 'unicorn'
 
 # Deploy with Capistrano
 # gem 'capistrano'
