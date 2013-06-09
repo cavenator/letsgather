@@ -108,46 +108,38 @@ describe Event do
 		end
 	end
 
-	describe "Determine RSVP reminder" do
-		before(:all) do
+	describe "Reminder Settings" do
+		before(:each) do
 			User.destroy_all
 			Event.destroy_all
+			@user = FactoryGirl.create(:user)
+			@bob = FactoryGirl.create(:bob)
+			@event1 = Event.create(:user_id => @user.id, :name => "event 1", :rsvp_date =>  2.days.from_now, :start_date => 4.days.from_now)
+			@event2 = Event.create(:user_id => @bob.id, :name => "event 2", :rsvp_date => 1.day.from_now, :start_date => 2.days.from_now)
+			@event3 = Event.create(:user_id => @user.id, :name => "event 3", :rsvp_date =>  2.days.from_now, :start_date => 3.days.from_now)
+			@event4 = Event.create(:user_id => @bob.id, :name => "event 4", :rsvp_date => 1.day.from_now, :start_date => 2.days.from_now)
+			@event1.settings.days_rsvp_reminders = 2
+			@event4.settings.days_rsvp_reminders = 1
+			@event2.settings.days_event_reminders = 2
+			@event3.settings.days_event_reminders = 3
+			@event1.settings.save
+			@event2.settings.save
+			@event3.settings.save
+			@event4.settings.save
 		end
 
-		it "should get all events whose rsvp date is between 2 - 3 days away" do
-			@event = FactoryGirl.create(:event, :rsvp_date => Time.now + 2.days + 12.hours, :start_date => 5.days.from_now)
-			events = Event.get_events_for_rsvp_reminders
-
-			expect(events.count) == 1
-			expect(events).to_not be_empty
+		it "should fetch events whose rsvp_reminder settings match the days from rsvp_date" do
+			rsvp_events = Event.events_for_rsvp_reminders
+			expect(rsvp_events.count) == 2
+			expect(rsvp_events).to include(@event1)
+			expect(rsvp_events).to include(@event4)
 		end
 
-		it "should ignore all events whose rsvp date is not within the 2-3 day date range" do
-			@event = FactoryGirl.create(:event, :rsvp_date => Time.now + 5.days, :start_date => Time.now + 7.days)
-			events = Event.get_events_for_rsvp_reminders
-			expect(events).to be_blank
-		end
-	end
-
-	describe "Determine Event Reminder" do
-		before(:all) do
-			User.destroy_all
-			Event.destroy_all
-		end
-
-		it "should get all events whose start date is roughly 1 - 2 days away" do
-			@event = FactoryGirl.create(:event, :rsvp_date =>Time.now, :start_date => Time.now + 1.day + 12.hours)
-			events = Event.get_events_for_event_reminders
-
-			expect(events.count) == 1
-			expect(events).to_not be_empty
-		end
-
-		it "should ignore all events whose start date is farther than the 1-2 day range" do
-			@event = FactoryGirl.create(:event, :rsvp_date => Time.now + 1.day, :start_date => 3.days.from_now)
-			events = Event.get_events_for_event_reminders
-
-			expect(events).to be_blank
+		it "should send emails for events whose event_reminder settings match the days from start_date" do
+			events = Event.events_for_event_reminders
+			expect(events.count) == 2
+			expect(events).to include(@event2)
+			expect(events).to include(@event3)
 		end
 	end
 

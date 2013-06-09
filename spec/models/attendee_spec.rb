@@ -97,7 +97,7 @@ describe Attendee do
 		it "should provide a list of successful attendees" do
 			expect(Attendee.all.count) == 0
 			event = FactoryGirl.create(:event)
-			invites = Attendee.invite(["person@gmail.com","person2@yahoo.com"], event)
+			invites = Attendee.invite(["person@gmail.com","person2@yahoo.com"], event, event.user)
 			expect(Attendee.all.count) == 2
 			expect(invites["successful"].count) == 2
 
@@ -108,14 +108,14 @@ describe Attendee do
 
 		it "should also provide a list of failed attendees" do
 			event = FactoryGirl.create(:event)
-			invites = Attendee.invite(["whatever","whythis@jeez"], event)
+			invites = Attendee.invite(["whatever","whythis@jeez"], event, event.user)
 			expect(Attendee.all.count) == 0
 			expect(invites["unsuccessful"].count) == 2
 		end
 
 		it "should not send out duplicates" do
 			event = FactoryGirl.create(:event)
-			invites = Attendee.invite(["sameperson@gmail.com","samperson@gmail.com"], event)
+			invites = Attendee.invite(["sameperson@gmail.com","samperson@gmail.com"], event, event.user)
 			expect(Attendee.all.count) == 1
 			expect(invites["successful"].count) == 1
 		end

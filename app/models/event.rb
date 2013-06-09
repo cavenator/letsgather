@@ -149,15 +149,16 @@ class Event < ActiveRecord::Base
 		return items
 	end
 
-	def self.get_events_for_rsvp_reminders
-		start_time = Time.now + 2.days
-		end_time = Time.now + 3.days
-		return Event.where(:rsvp_date => start_time..end_time)
+	def self.events_for_rsvp_reminders
+		events = Event.joins(:settings).where('rsvp_date >= ? and settings.days_rsvp_reminders <> 0', Time.now)
+		today = Date.today
+		rsvp_days = events.map{ |event| today + event.settings.days_rsvp_reminders }.uniq
+		return events.select {|event| rsvp_days.include?(event.rsvp_date.to_date) }
 	end
 
 	def send_rsvp_reminders_for_all_attendees
-		unless self.get_unique_guest_email_list.blank?
-			email_list = self.get_unique_guest_email_list
+		email_list = self.get_unique_guest_email_list
+		unless email_list.blank?
 			ReminderMailer.send_rsvp_emails(email_list, self).deliver
 		end
 	end
@@ -174,10 +175,11 @@ class Event < ActiveRecord::Base
 		end
 	end
 
-	def self.get_events_for_event_reminders
-		start_time = Time.now + 1.day
-		end_time = Time.now + 2.days
-		return Event.where(:start_date => start_time..end_time)
+	def self.events_for_event_reminders
+		events = Event.joins(:settings).where('start_date >= ? and settings.days_event_reminders <> 0', Time.now)
+		today = Date.today
+		event_days = events.map{ |event| today + event.settings.days_event_reminders }.uniq
+		return events.select {|event| event_days.include?(event.start_date.to_date) }
 	end
 
 	def get_potluck_list_per_category(category)

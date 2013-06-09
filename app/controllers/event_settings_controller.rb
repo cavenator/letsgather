@@ -1,4 +1,6 @@
 class EventSettingsController < ApplicationController
+	before_filter :verify_access
+
 	#GET
 	def get_settings
 		@user = User.find(params[:user_id])
@@ -31,4 +33,14 @@ class EventSettingsController < ApplicationController
 			end
 		end
 	end
+
+	protected
+
+	def verify_access
+		user_id = params[:user_id]
+		unless user_id.to_i == current_user.id
+			render file: "public/401.html", :formats => [:html], status: :unauthorized and return
+		end
+	end
+
 end
