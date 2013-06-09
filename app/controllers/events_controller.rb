@@ -156,7 +156,7 @@ class EventsController < ApplicationController
 		if @subject.blank? || @body.blank?
 			render :action => :email_host, :status => :not_acceptable
 		else
-			Thread.new { AttendeeMailer.email_host(@hosts, @event, @subject, @body, current_user).deliver }
+			Thread.new { MessageMailer.email_host(@hosts, @event, @subject, @body, current_user).deliver }
 			render :nothing=>true, :status => 200
 		end
 	end
@@ -175,7 +175,7 @@ class EventsController < ApplicationController
 			else
 				attendees = @event.attendees.where('rsvp = ?',@rsvp_group)
 			end
-			Thread.new { AttendeeMailer.email_group(attendees, @event, @subject, @body).deliver }
+			Thread.new { MessageMailer.email_group(attendees, @event, @subject, @body).deliver }
 			flash[:notice] = "Message to guests have been sent"
 			render :nothing=>true, :status => 200
 		end

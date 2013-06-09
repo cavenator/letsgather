@@ -2,9 +2,10 @@ class EventSettingsController < ApplicationController
 	#GET
 	def get_settings
 		@user = User.find(params[:user_id])
+		@events = @user.events.where('start_date >= ?', Time.now)
 		respond_to do |format|
 			format.html { render :layout => "events.html.erb" }
-			format.json { render json: Settings.where("event_id in (?)", @user.events.map{|event| event.id}) << Settings.determineFutureSettings(@user) }
+			format.json { render json: Settings.where("event_id in (?)", @events.map{|event| event.id}) << Settings.determineFutureSettings(@user) }
 		end
 	end
 

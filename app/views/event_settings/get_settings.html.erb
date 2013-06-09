@@ -4,7 +4,7 @@
 <div class="row-fluid">
 	<div class="span6 offset3">
 		<h3>Apply for event:</h3>
-		<%= select_tag(:event_id, options_for_select(@user.events.map{ |event| [event.name, event.id]} | [['For future events',0]])) %>
+		<%= select_tag(:event_id, options_for_select(@events.map{ |event| [event.name, event.id]} | [['For future events',0]])) %>
 	</div>
 </div>
 <div class="row-fluid">

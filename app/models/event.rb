@@ -15,7 +15,7 @@ class Event < ActiveRecord::Base
 
 	before_destroy do |event|
 		email_list = event.get_unique_guest_email_list
-		Thread.new {  AttendeeMailer.send_event_cancellation(email_list, event).deliver }
+		AttendeeMailer.delay.send_event_cancellation(email_list, event)
 		event.attendees.destroy_all
 	end
 
@@ -158,7 +158,7 @@ class Event < ActiveRecord::Base
 	def send_rsvp_reminders_for_all_attendees
 		unless self.get_unique_guest_email_list.blank?
 			email_list = self.get_unique_guest_email_list
-			AttendeeMailer.send_rsvp_emails(email_list, self).deliver
+			ReminderMailer.send_rsvp_emails(email_list, self).deliver
 		end
 	end
 
@@ -170,7 +170,7 @@ class Event < ActiveRecord::Base
 		guests = self.attendees.where("rsvp = 'Going'")
 		unless guests.blank?
 			email_list = guests.map(&:email).compact.reject{|email| email.empty? }
-			AttendeeMailer.send_event_reminders(email_list, self).deliver
+			ReminderMailer.send_event_reminders(email_list, self).deliver
 		end
 	end
 
