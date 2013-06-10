@@ -73,6 +73,10 @@ class Event < ActiveRecord::Base
 		return guest_count
 	end
 
+	def has_notification_settings_on?
+		return self.settings.notify_on_guest_accept || self.settings.notify_on_guest_decline || self.settings.notify_on_guest_response
+	end
+
 	def find_attendee_dish_count(category)
 		category_count = 0
 		self.attendees.where("rsvp = 'Going'").each do |attendee|

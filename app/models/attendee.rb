@@ -34,6 +34,9 @@ class Attendee < ActiveRecord::Base
 			if attendee.id
 			#only perform this block once the attendee has actually been created and has an id
 				attendee.filter_out_potluck_lists
+				if attendee.event.has_notification_settings_on?
+					NotificationUtil.send_notifications_to_host_from(attendee)
+				end
 			end
 		end
 
