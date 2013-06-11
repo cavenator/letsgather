@@ -7,7 +7,7 @@
   <body>
     <p>
 			<%= @attendee.full_name %> has confirmed that they are not coming to your event: <%= @event.name %><br />
-			Their reason:  <% if @attendee.comment.blank? %>"None"<% else %> <%= @attendee.comment %><% end %>
+			<b>Their reason:</b>  <% if @attendee.comment.blank? %>"None"<% else %> <%= @attendee.comment %><% end %>
     </p>
   </body>
 </html>

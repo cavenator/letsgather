@@ -35,7 +35,7 @@ class Attendee < ActiveRecord::Base
 			#only perform this block once the attendee has actually been created and has an id
 				attendee.filter_out_potluck_lists
 				if attendee.event.has_notification_settings_on?
-					NotificationUtil.send_notifications_to_host_from(attendee)
+					NotificationDelegator.send_notifications_to_host_from(attendee)
 				end
 			end
 		end
@@ -81,6 +81,34 @@ class Attendee < ActiveRecord::Base
 					errors.add(:dish, " should have both a category and an item declared. You have selected #{item['category']} with item #{item['item']}")
 				end
 			end
+		end
+
+		#previous_state = previous saved persistant representation of attendee
+		#this method is invoked prior to saving the attendee but after passing validation
+		def difference_between(previous_state)
+			differences = {}
+				if !self.rsvp.eql?(previous_state.rsvp)
+					differences["rsvp"] = self.rsvp
+				end
+
+				if !self.comment.eql?(previous_state.comment)
+					differences["comment"] = self.comment
+				end
+
+				if !self.num_of_guests.eql?(previous_state.num_of_guests)
+					differences["num_of_guests"] = self.num_of_guests
+				end
+
+				if !self.dish.eql?(previous_state.dish)
+					differences["dish"] = self.dish
+				end
+			return differences
+		end
+
+		#previous_state = previous saved persistant representation of attendee
+		#this method is invoked prior to saving the attendee but after passing validation
+		def has_differences_between?(previous_state)
+			return !self.difference_between(previous_state).blank? && !self.user_id.blank?
 		end
 
 		def verify_host_is_not_guest

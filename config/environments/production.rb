@@ -36,7 +36,7 @@ MaximusSamurai::Application.configure do
   }
 
   # Don't care if the mailer can't send
-  config.action_mailer.default_url_options = { :host => 'powerful-coast-3365.herokuapp.com' }
+  config.action_mailer.default_url_options = { :host => 'letsgather.herokuapp.com' }
 
   # Defaults to nil and saved in location specified by config.assets.prefix
   # config.assets.manifest = YOUR_PATH

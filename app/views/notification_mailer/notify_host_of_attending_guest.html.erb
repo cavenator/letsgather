@@ -6,17 +6,17 @@
   <body>
     <p>
 			<%= @attendee.full_name %> has confirmed that they are coming to your event: <%= @event.name %></p>
-			<p>Number of additional guests: <%= @attendee.num_of_guests %> </p>
-			<p>Their comment:  <%= @attendee.comment %></p>
+			<p><b>Number of additional guests:</b> <%= @attendee.num_of_guests %> </p>
+			<p><b>Their comment:</b>  <%= @attendee.comment %></p>
 			<p><% unless @attendee.dish.empty? %>
-			<span style='font-weight:bold;font-size:1em'>Bringing items: </span>
+			<span style='font-weight:bold;font-size:1em'><b>Bringing items:</b> </span>
 			<div style="inline-block">
 				<% @attendee.dish.each do |dish| %>
 					<span class="label"><%= dish["category"] %></span>&nbsp;&nbsp;&nbsp;<span style="font-weight:bold"><%= dish["item"] %></span><br />
 				<% end %>
 			</div>
 		<% else %>
-			<%= "nothing" %>
+			<%= "Bringing nothing" %>
 		<% end %>
     </p>
   </body>

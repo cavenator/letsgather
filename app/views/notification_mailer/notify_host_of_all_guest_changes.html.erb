@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>
+			<%= @attendee.full_name %> has made some changes to their response regarding <%= @event.name %></p>
+			<% @differences_hash.each do |k, v| %>
+				<% if k.eql?("rsvp") %>
+					<p><b>Updated rsvp:</b> <%= v %></p>
+				<% end %>
+
+				<% if k.eql?("num_of_guests") %>
+					<p><b>Updated additional guests:</b> <%= v %></p>
+				<% end %>
+
+				<% if k.eql?("comment") %>
+					<p><b>Updated comment:</b>  <%= v %></p>
+				<% end %>
+
+				<% if k.eql?("dish") %>
+					<p><% unless @attendee.dish.empty? %>
+					<span style='font-weight:bold;font-size:1em'><b>Updated items:</b> </span>
+					<div style="inline-block">
+						<% @attendee.dish.each do |dish| %>
+							<span class="label"><%= dish["category"] %></span>&nbsp;&nbsp;&nbsp;<span style="font-weight:bold"><%= dish["item"] %></span><br />
+						<% end %>
+					</div>
+					<% else %>
+						<%= "Not bringing anything" %>
+					<% end %>
+				<% end %>
+		<% end %>
+    </p>
+  </body>
+</html>
+
