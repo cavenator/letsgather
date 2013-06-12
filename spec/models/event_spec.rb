@@ -22,11 +22,23 @@ describe Event do
 			event.should have(2).error_on(:start_date)
 		end
 
+		it "should always have an end date" do
+			event = FactoryGirl.build(:event, :end_date => nil)
+			expect(event).to_not be_valid
+			expect(event).to have(2).error_on(:end_date)
+		end
+
 		it "should always start in the future" do
 			event = FactoryGirl.build(:event, :start_date => (Date.today - 1.day))
 			expect(event).to_not be_valid
 		end
 	
+		it "should have a end date that is not before the start date" do
+			event = FactoryGirl.build(:event, :end_date => 6.days.from_now)
+			expect(event).to_not be_valid
+			expect(event).to have(1).error_on(:start_date)
+		end
+
 		it "should always have an rsvp date" do
 			event = FactoryGirl.build(:event, :rsvp_date => nil)
 			expect(event).to_not be_valid
@@ -36,6 +48,7 @@ describe Event do
 			event = FactoryGirl.build(:event, :rsvp_date => 7.days.from_now)
 			expect(event).to_not be_valid
 		end
+
 	end
 
 	describe "user minimum requirements before creating event" do
@@ -80,7 +93,7 @@ describe Event do
 		it "should be able to parse dates into valid datetime formats in PST" do
 			event = FactoryGirl.build(:event)
 			expect(event).to be_valid
-			event.start_date = "2014-02-02 22:10 -0700"
+			event.start_date = event.start_date.to_s
 			expect(event).to be_valid
 		end
 	end
@@ -114,10 +127,10 @@ describe Event do
 			Event.destroy_all
 			@user = FactoryGirl.create(:user)
 			@bob = FactoryGirl.create(:bob)
-			@event1 = Event.create(:user_id => @user.id, :name => "event 1", :rsvp_date =>  2.days.from_now, :start_date => 4.days.from_now)
-			@event2 = Event.create(:user_id => @bob.id, :name => "event 2", :rsvp_date => 1.day.from_now, :start_date => 2.days.from_now)
-			@event3 = Event.create(:user_id => @user.id, :name => "event 3", :rsvp_date =>  2.days.from_now, :start_date => 3.days.from_now)
-			@event4 = Event.create(:user_id => @bob.id, :name => "event 4", :rsvp_date => 1.day.from_now, :start_date => 2.days.from_now)
+			@event1 = Event.create(:user_id => @user.id, :name => "event 1", :rsvp_date =>  2.days.from_now, :start_date => 4.days.from_now, :end_date => (4.days.from_now + 3.hours))
+			@event2 = Event.create(:user_id => @bob.id, :name => "event 2", :rsvp_date => 1.day.from_now, :start_date => 2.days.from_now, :end_date => (2.days.from_now + 1.hour))
+			@event3 = Event.create(:user_id => @user.id, :name => "event 3", :rsvp_date =>  2.days.from_now, :start_date => 3.days.from_now, :end_date => (3.days.from_now + 2.hours))
+			@event4 = Event.create(:user_id => @bob.id, :name => "event 4", :rsvp_date => 1.day.from_now, :start_date => 2.days.from_now, :end_date => (2.days.from_now + 4.hours))
 			@event1.settings.days_rsvp_reminders = 2
 			@event4.settings.days_rsvp_reminders = 1
 			@event2.settings.days_event_reminders = 2
@@ -144,7 +157,7 @@ describe Event do
 	end
 
 	describe "User future settings applied to created events" do
-		before(:all) do
+		before(:each) do
 			User.destroy_all
 			Event.destroy_all
 		end

@@ -6,6 +6,8 @@ class AttendeeMailer < ActionMailer::Base
 		@attendee = guest
 		@event = Event.find(guest.event_id)
 		@host = host
+
+#		attachments['event.ics'] = {:mime_type => 'text/calendar', :content => calendar_event.export() } 
 		subject = "You have been invited to #{@event.name} by #{@host.full_name}"
 		mail(to: guest.email, subject: subject)
 	end

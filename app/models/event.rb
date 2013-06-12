@@ -4,12 +4,15 @@ class Event < ActiveRecord::Base
 		has_one :settings, :dependent => :destroy
 		belongs_to :user
 
-		validates :name,:user_id, :start_date, :rsvp_date, :presence => true
+		validates :name,:user_id, :start_date, :end_date, :rsvp_date, :presence => true
 		validates :description, :length => { :maximum => 1500, :too_long => "%{count} characters is the maximum allowed" }
 		validate :start_date_must_be_in_right_format
+		validate :end_date_must_be_in_right_format
 		validate :rsvp_date_must_be_in_right_format
 		validate :start_date_must_be_in_the_future
+		validate :end_date_must_be_in_the_future
 		validate :rsvp_date_should_be_less_than_start_date
+		validate :start_date_should_be_less_than_end_date
 
    attr_accessible :name, :start_date, :end_date, :user_id, :rsvp_date, :supplemental_info, :address1, :address2, :city, :state, :zip_code, :description, :theme
 
@@ -32,6 +35,12 @@ class Event < ActiveRecord::Base
 			end
 	end
 
+	def end_date_must_be_in_the_future
+			unless self.end_date.eql?(nil)
+				errors.add(:end_date,"end date must be in the future") if self.end_date < Date.today
+			end
+	end
+
 	def rsvp_countdown
 		days = ((self.rsvp_date.in_time_zone("Pacific Time (US & Canada)") - Time.now.in_time_zone("Pacific Time (US & Canada)"))/86400).ceil
 		unless days == 1
@@ -46,18 +55,32 @@ class Event < ActiveRecord::Base
 		errors.add(:start_date, 'must be a valid datetime format: MM/dd/yyyy hh:mm:ss PM (or AM)') if ((DateTime.parse(self.start_date.to_s) rescue ArgumentError) == ArgumentError)
 	end
 
+	def end_date_must_be_in_right_format
+		errors.add(:end_date, 'must be a valid datetime format: MM/dd/yyyy hh:mm:ss PM (or AM)') if ((DateTime.parse(self.end_date.to_s) rescue ArgumentError) == ArgumentError)
+	end
+
 	def rsvp_date_must_be_in_right_format
 		errors.add(:rsvp_date, 'must be a valid datetime format: MM/dd/yyyy hh:mm:ss PM (or AM)') if ((DateTime.parse(self.rsvp_date.to_s) rescue ArgumentError) == ArgumentError)
 	end
 
 	def rsvp_date_should_be_less_than_start_date
 		unless self.rsvp_date.eql?(nil) || self.start_date.eql?(nil)
-			errors.add(:rsvp_date, "rsvp date must be before the event start date") if self.rsvp_date >= self.start_date
+			errors.add(:rsvp_date, "rsvp date must be before the event start date") if self.rsvp_date > self.start_date
+		end
+	end
+
+	def start_date_should_be_less_than_end_date
+		unless self.end_date.eql?(nil) || self.start_date.eql?(nil)
+			errors.add(:start_date, "start date must be before the event's end date") if self.start_date > self.end_date
 		end
 	end
 
 	def display_start_time
 		return self.start_date.in_time_zone("Pacific Time (US & Canada)").strftime("%b %d,%Y %I:%M %p")
+	end
+
+	def display_end_time
+		return self.end_date.in_time_zone("Pacific Time (US & Canada)").strftime("%b %d,%Y %I:%M %p")
 	end
 
 	def display_rsvp_time
@@ -155,7 +178,7 @@ class Event < ActiveRecord::Base
 
 	def self.events_for_rsvp_reminders
 		events = Event.joins(:settings).where('rsvp_date >= ? and settings.days_rsvp_reminders <> 0', Time.now)
-		today = Date.today
+		today = Time.now.utc.to_date
 		rsvp_days = events.map{ |event| today + event.settings.days_rsvp_reminders }.uniq
 		return events.select {|event| rsvp_days.include?(event.rsvp_date.to_date) }
 	end
@@ -181,7 +204,7 @@ class Event < ActiveRecord::Base
 
 	def self.events_for_event_reminders
 		events = Event.joins(:settings).where('start_date >= ? and settings.days_event_reminders <> 0', Time.now)
-		today = Date.today
+		today = Time.now.utc.to_date
 		event_days = events.map{ |event| today + event.settings.days_event_reminders }.uniq
 		return events.select {|event| event_days.include?(event.start_date.to_date) }
 	end
