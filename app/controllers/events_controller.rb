@@ -9,8 +9,8 @@ class EventsController < ApplicationController
   # GET /events.json
   def index
 		attendee_event_ids = Attendee.where("user_id=?",current_user.id).map{|attendee| attendee.event_id }
-		attendee_events = Event.find(attendee_event_ids)
-		@events = current_user.events | attendee_events
+		attendee_events = Event.where('id in (?) and end_date > ?', attendee_event_ids, Time.now.utc)
+		@events = current_user.events.where('end_date > ?', Time.now.utc) | attendee_events
 	
     respond_to do |format|
       format.html # index.html.erb
