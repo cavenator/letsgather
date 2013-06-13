@@ -187,4 +187,5 @@ describe Event do
 			expect(@settings.days_event_reminders) == @user.future_options["days_event_reminders"]
 		end
 	end
+
 end

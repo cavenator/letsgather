@@ -23,3 +23,12 @@ desc "Heroku scheduled job for event reminders to attending guests"
 			puts "done sending emails to attendees"
 		end
 	end
+
+desc "Heroku scheduled job for removing all events that have already occured"
+	task :send_event_reminders => :environment do
+		puts "Currently finding events that have already occured in the past"
+		events = Event.where('end_date < ? or end_date is null', Time.now)
+		puts "Got events. Total count = #{events.count}"
+		events.destroy_all
+		puts "Past events have been purged from the database"
+	end

@@ -2,8 +2,8 @@
 
 <%= render 'form_edit' %>
 
-<%= link_to 'Show', {:action => :show, :user_id => @user.id, :id => @group.id} %> |
-<%= link_to 'Back', {:action => :index} %>
+<%= link_to 'Back to Groups', {:action => :index}, :class=>"btn" %>
+
 <script>
 	$(document).ready(function(){
 		$("#add_more_emails").click(function(){

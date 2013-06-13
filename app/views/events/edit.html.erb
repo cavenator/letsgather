@@ -2,8 +2,8 @@
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @event %> |
-<%= link_to 'Back', events_path %>
+<%= link_to 'Back', @event, :class =>"btn" %> 
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#readable_start_date").datetimepicker({

@@ -17,8 +17,10 @@ class Event < ActiveRecord::Base
    attr_accessible :name, :start_date, :end_date, :user_id, :rsvp_date, :supplemental_info, :address1, :address2, :city, :state, :zip_code, :description, :theme
 
 	before_destroy do |event|
-		email_list = event.get_unique_guest_email_list
-		AttendeeMailer.delay.send_event_cancellation(email_list, event)
+		unless event.end_date == nil || Time.now > event.end_date
+			email_list = event.get_unique_guest_email_list
+			AttendeeMailer.send_event_cancellation(email_list, event).deliver
+		end
 		event.attendees.destroy_all
 	end
 
