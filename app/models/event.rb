@@ -19,7 +19,7 @@ class Event < ActiveRecord::Base
 	before_destroy do |event|
 		unless event.end_date == nil || Time.now > event.end_date
 			email_list = event.get_unique_guest_email_list
-			AttendeeMailer.send_event_cancellation(email_list, event).deliver
+			AttendeeMailer.delay.send_event_cancellation(email_list, event)
 		end
 		event.attendees.destroy_all
 	end

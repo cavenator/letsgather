@@ -128,7 +128,7 @@ class AttendeesController < ApplicationController
 			flash[:notice] = "You must include both a subject and body"
 			render :action => :email_guest, :status => :not_acceptable
 		else
-			Thread.new { MessageMailer.email_guest(@attendee, @subject, @body, current_user).deliver }
+			MessageMailer.delay.email_guest(@attendee, @subject, @body, current_user)
 			render :action => :email_guest, :status => 200
 		end
 
