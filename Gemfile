@@ -8,6 +8,7 @@ gem 'rails', '3.2.12'
 gem 'devise'
 gem 'tlsmail'
 gem 'pg'
+gem 'ri_cal'
 # gem 'thin'
 
 # Gems used only for assets and not required
