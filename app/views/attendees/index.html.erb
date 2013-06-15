@@ -24,7 +24,10 @@
 
 <br />
 <button href="#newAttendeeModal" id="newAttendeeButton" class="btn btn-primary" data-toggle="modal">New Guest</button>
-<div style="float:right" id="emailAllGuestDiv"><% unless @event.get_unique_guest_email_list.blank? %><%= link_to 'Email all guests',{:controller => :events, :action => :group_email, :id => @event.id }, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link", :id=>"emailAllGuests"} %><% end %></div>
+<% unless @event.get_unique_guest_email_list.blank? %>
+	<button id="sendUpdatedCalendars" class="btn btn-info">Send updated calendar</button>
+	<div style="float:right" id="emailAllGuestDiv"><%= link_to 'Email all guests',{:controller => :events, :action => :group_email, :id => @event.id }, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link", :id=>"emailAllGuests"} %></div>
+<% end %>
 <script>
 	$(document).ready(function(){
 
@@ -73,8 +76,7 @@
 				success: function(){
 					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
 					$("#notice").html("Guest has been removed from your event");
-					$("#"+table_row_id).remove();
-					shouldEmailButtonStillBeHere();
+					$("#guests").click();
 				},
 				error: function(){
 					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
@@ -104,7 +106,7 @@
 			return false;
 		});
 
-		function shouldEmailButtonStillBeHere(){
+		function shouldEmailAndCalendarButtonStillBeHere(){
 			var counter = 0, email = "";
 			$.map($(".attendee_email"), function(val, i){
 				email = $(val).text();
@@ -112,8 +114,10 @@
 					counter++;
 			});
 
-			if (counter == 0)
+			if (counter == 0){
+				$("#sendUpdatedCalendars").remove();
 				$("#emailAllGuestDiv").empty();
+			}
 		}
 
 		function loadEmailTemplate(emailObject){
@@ -137,6 +141,23 @@
 			loadEmailTemplate($(this));
 			return false;
 		});
+
+	$("#sendUpdatedCalendars").click(function(){
+		var url = document.location.pathname;
+		$.ajax({
+			url: url+"/send_updated_calendar",
+			type: "GET", 
+			async: true,
+			success: function(){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("Calendar events have been sent to your guests");
+			},
+			error: function(){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
+					$("#notice").html("Error trying to send guest updated calendars. Please contact your adminstrator.");
+			}
+		});
+	});
 
 	});
 </script>

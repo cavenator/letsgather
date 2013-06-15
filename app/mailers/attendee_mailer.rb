@@ -6,11 +6,21 @@ class AttendeeMailer < ActionMailer::Base
 		@attendee = guest
 		@event = Event.find(guest.event_id)
 		@host = host
-		calendar_event = CalendarInviteBuilder.createCalendarInviteFrom(@event, guest.email)
+		calendar_event = CalendarInviteBuilder.createCalendarInviteFor(@event, guest.email)
 
 		attachments['event.ics'] = {:mime_type => 'text/calendar', :content => calendar_event.export() } 
 		subject = "You have been invited to #{@event.name} by #{@host.full_name}"
 		mail(to: guest.email, subject: subject)
+	end
+
+	def send_updated_calendar(event)
+		email_list = event.attendees.map(&:email).compact
+		@event = event
+		calendar_event = CalendarInviteBuilder.createCalendarInvitesFor(@event, email_list)
+		attachments['event.ics'] = {:mime_type => 'text/calendar', :content => calendar_event.export() }
+		subject = "Updated event info for #{event.name}"
+		mail(to: email_list, subject: subject)
+
 	end
 
 	def send_event_cancellation(email_list, event)
