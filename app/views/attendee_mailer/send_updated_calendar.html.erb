@@ -6,7 +6,25 @@
   <body>
     <h1>Salutations!</h1>
     <p style="text-align:center;margin:2em 0 2em 0">
-			Changes have been made to the following event: <%= @event.name%>.  Attached is the calendar event with the new details.  If you have the previous instance on your Google Calendar, Outlook or calendar software, please replace it with the attached.
+			Changes have been made to the following event: <%= @event.name%>.  Attached is the calendar event with the new details.  </p>
+		<p>
+			
+			Start Date: <%= @event.display_start_time %> <br/>
+			End Date: <%= @event.display_end_time %> <br/>
+			RSVP by: <%= @event.display_rsvp_time %> <br/>
+			<% if @event.description.blank? %>
+			Description: TBD <br />
+			<% else %>
+			Description: <%= @event.description %> <br />
+		  <% end %>
+			<% if @event.location %>
+				Location:  <%= @event.location1 + ","+@event.location2 %><br/>
+			<% else %>
+				Location: TBD<br/>
+			<% end %>
+		</p>
+
+		<p>If you have the previous instance on your Google Calendar, Outlook or calendar software, please replace it with the attached.
 		</p>
     <p>Thanks and have a great day!</p>
 
