@@ -1,3 +1,4 @@
+namespace :scheduler do 
 desc "Heroku scheduled job for rsvp reminders"
 	task :rsvp_reminders => :environment do
 		puts "Currently executing RSVP reminders"
@@ -14,7 +15,7 @@ desc "Heroku scheduled job for rsvp reminders"
 desc "Heroku scheduled job for event reminders to attending guests"
 	task :send_event_reminders => :environment do
 		puts "Currently finding events"
-		events = Event.get_events_for_event_reminders
+		events = Event.events_for_event_reminders
 		puts "Got events. Total count = #{events.count}"
 		puts "time to loop"
 		events.each do |event|
@@ -25,10 +26,12 @@ desc "Heroku scheduled job for event reminders to attending guests"
 	end
 
 desc "Heroku scheduled job for removing all events that have already occured"
-	task :send_event_reminders => :environment do
+	task :delete_past_events => :environment do
 		puts "Currently finding events that have already occured in the past"
 		events = Event.where('end_date < ? or end_date is null', Time.now)
 		puts "Got events. Total count = #{events.count}"
 		events.destroy_all
 		puts "Past events have been purged from the database"
 	end
+
+end
