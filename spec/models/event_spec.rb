@@ -19,13 +19,13 @@ describe Event do
 			event = FactoryGirl.build(:event, :start_date => nil)
 			expect(event).to_not be_valid
 			event.save
-			event.should have(2).error_on(:start_date)
+			event.should have(1).error_on(:start_date)
 		end
 
 		it "should always have an end date" do
 			event = FactoryGirl.build(:event, :end_date => nil)
 			expect(event).to_not be_valid
-			expect(event).to have(2).error_on(:end_date)
+			expect(event).to have(1).error_on(:end_date)
 		end
 
 		it "should always start in the future" do

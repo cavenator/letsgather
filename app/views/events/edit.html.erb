@@ -30,21 +30,40 @@
 		]
 		});
 
+		function convertDatesToReadableClient(dateObject){
+			var datePortion = dateObject.toLocaleDateString(),
+					timePortion = dateObject.toLocaleTimeString();
+
+			if (timePortion.indexOf(":") == 1){
+				return datePortion+" 0"+timePortion;
+			} else {
+				return datePortion+" "+timePortion;
+			}
+		}
+
 		function loadClientDatesFromServer(){
 			var startDateFromModel = $("#start_date");
 			var rsvpDateFromModel = $("#rsvp_date");
 			var endDateFromModel = $("#end_date");
-			if ($.trim(startDateFromModel.val()).length > 0  && $.trim(rsvpDateFromModel.val()).length > 0 && $.trim(endDateFromModel.val()).length > 0){
-				$("#readable_start_date").val(new Date(startDateFromModel.val()).toLocaleString());
-				$("#readable_rsvp_date").val(new Date(rsvpDateFromModel.val()).toLocaleString());
-				$("#readable_end_date").val(new Date(endDateFromModel.val()).toLocaleString());
+			if ($.trim(startDateFromModel.val()).length > 0){
+				$("#readable_start_date").val(convertDatesToReadableClient(new Date(startDateFromModel.val())));
+			}
+			if ($.trim(rsvpDateFromModel.val()).length > 0){
+				$("#readable_rsvp_date").val(convertDatesToReadableClient(new Date(rsvpDateFromModel.val())));
+			}
+			if ($.trim(endDateFromModel.val()).length > 0){
+				$("#readable_end_date").val(convertDatesToReadableClient(new Date(endDateFromModel.val())));
 			}
 		}
 
 		function convertDatesForServer(clientSideDate, element){
-			var dateInMillis = Date.parse(clientSideDate);
-			var dateObject = new Date(dateInMillis);
-			$(element).val(dateObject.toUTCString());
+			if ($.trim(clientSideDate) != 0){
+				var dateInMillis = Date.parse(clientSideDate);
+				var dateObject = new Date(dateInMillis);
+				$(element).val(dateObject.toUTCString());
+			} else {
+				$(element).val("");
+			}
 		}
 
 		loadClientDatesFromServer();

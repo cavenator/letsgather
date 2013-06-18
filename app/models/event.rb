@@ -32,13 +32,13 @@ class Event < ActiveRecord::Base
 	end
 
 	def start_date_must_be_in_the_future
-			unless self.start_date.eql?(nil)
+			unless self.start_date.blank?
 				errors.add(:start_date,"cannot start in the past") if self.start_date < Date.today
 			end
 	end
 
 	def end_date_must_be_in_the_future
-			unless self.end_date.eql?(nil)
+			unless self.end_date.blank?
 				errors.add(:end_date,"end date must be in the future") if self.end_date < Date.today
 			end
 	end
@@ -54,25 +54,31 @@ class Event < ActiveRecord::Base
 	end
 
 	def start_date_must_be_in_right_format
-		errors.add(:start_date, 'must be a valid datetime format: MM/dd/yyyy hh:mm:ss PM (or AM)') if ((DateTime.parse(self.start_date.to_s) rescue ArgumentError) == ArgumentError)
+		unless self.start_date.blank?
+			errors.add(:start_date, 'must be a valid datetime format: MM/dd/yyyy hh:mm:ss PM (or AM)') if ((DateTime.parse(self.start_date.to_s) rescue ArgumentError) == ArgumentError)
+		end
 	end
 
 	def end_date_must_be_in_right_format
-		errors.add(:end_date, 'must be a valid datetime format: MM/dd/yyyy hh:mm:ss PM (or AM)') if ((DateTime.parse(self.end_date.to_s) rescue ArgumentError) == ArgumentError)
+		unless self.end_date.blank?
+			errors.add(:end_date, 'must be a valid datetime format: MM/dd/yyyy hh:mm:ss PM (or AM)') if ((DateTime.parse(self.end_date.to_s) rescue ArgumentError) == ArgumentError)
+		end
 	end
 
 	def rsvp_date_must_be_in_right_format
-		errors.add(:rsvp_date, 'must be a valid datetime format: MM/dd/yyyy hh:mm:ss PM (or AM)') if ((DateTime.parse(self.rsvp_date.to_s) rescue ArgumentError) == ArgumentError)
+		unless self.rsvp_date.blank?
+			errors.add(:rsvp_date, 'must be a valid datetime format: MM/dd/yyyy hh:mm:ss PM (or AM)') if ((DateTime.parse(self.rsvp_date.to_s) rescue ArgumentError) == ArgumentError)
+		end
 	end
 
 	def rsvp_date_should_be_less_than_start_date
-		unless self.rsvp_date.eql?(nil) || self.start_date.eql?(nil)
+		unless self.rsvp_date.blank? || self.start_date.blank?
 			errors.add(:rsvp_date, "rsvp date must be before the event start date") if self.rsvp_date > self.start_date
 		end
 	end
 
 	def start_date_should_be_less_than_end_date
-		unless self.end_date.eql?(nil) || self.start_date.eql?(nil)
+		unless self.end_date.blank? || self.start_date.blank?
 			errors.add(:start_date, "start date must be before the event's end date") if self.start_date > self.end_date
 		end
 	end
