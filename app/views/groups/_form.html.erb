@@ -12,11 +12,11 @@
   <% end %>
 <p>
 	<%= f.label :name %>
-	<%= f.text_field :name %>
+	<%= f.text_field :name, :placeholder=>"E.g. Coworkers, besties" %>
 </p>
 <p>
 	<%= f.label :email_distribution_list %>
-	<%= f.text_area :email_distribution_list %>
+	<%= f.text_area :email_distribution_list, :placeholder => "Enter email list here (e.g. email1, email2, email3)" %>
 </p>
   <div>
 		<button class="btn btn-primary">Save</button>
