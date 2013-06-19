@@ -1,4 +1,4 @@
 
-		<span style="font-weight:bold;font-size:1em">Description: </span><% unless event.description.blank? %><%= event.description %><% else %><%= "Update Description please" %><% end %>
-			<br /><br />
-		<span style="font-weight:bold;font-size:1em">Theme: </span><% unless event.theme.blank? %><%= event.theme %><% else %><%= "None" %><% end %><br />
+		<span style="font-weight:bold;font-size:1em">Description: </span><% unless event.description.blank? %><%= simple_format event.description %><% else %><%= "Update Description please" %><% end %>
+			<br/>
+		<span style="font-weight:bold;font-size:1em">Theme: </span><% unless event.theme.blank? %><%= event.theme %><% else %><%= "None" %><% end %><br/>

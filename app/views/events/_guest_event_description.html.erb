@@ -8,7 +8,7 @@
 	<tbody>
 		<tr style="border-top:none">
 			<td style="border-top:none"><span style="font-weight:bold;font-size:1em">Description</span></td>
-			<td style="border-top:none"><% if event.description.nil? || event.description.blank? %><%= "TBD" %><% else %><%= event.description %><% end %></td>
+			<td style="border-top:none"><% if event.description.nil? || event.description.blank? %><%= "TBD" %><% else %><%= simple_format event.description %><% end %></td>
 		</tr>
 		<tr style="border-top:none">
 			<td style="border-top:none"><span style="font-weight:bold;font-size:1em">Theme</span></td>
@@ -27,7 +27,7 @@
 			<td style="border-top:none"><span style="font-weight:bold;font-size:1em">Additional info from host</span></td>
 			<td style="border-top:none">
 				<% if event.supplemental_info && !event.supplemental_info.blank? %>
-					<%= event.supplemental_info %>
+					<%= simple_format event.supplemental_info %>
 				<% else %>
 					<%= "TBD" %>
 				<% end %>
