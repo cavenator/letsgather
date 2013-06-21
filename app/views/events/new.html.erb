@@ -13,7 +13,8 @@
 		],
 		onClose: function(){
 			if ($.trim($(this).val()).length > 0){
-				var millis = Date.parse($(this).val()), oneDayMillis = 86400000, threeHoursMillis = 10800000, end_date = $("#readable_end_date"), rsvp_date = $("#readable_rsvp_date");
+				var startDate = $(this).val();
+				var millis = Date.parse(startDate), oneDayMillis = 86400000, threeHoursMillis = 10800000, end_date = $("#readable_end_date"), rsvp_date = $("#readable_rsvp_date");
 				if ($.trim(end_date.val()).length == 0){
 					end_date.val(convertDatesToReadableClient(new Date(millis+threeHoursMillis)))
 				}
@@ -41,28 +42,35 @@
 		});
 
 		function convertDatesToReadableClient(dateObject){
-			var datePortion = dateObject.toLocaleDateString(),
-					timePortion = dateObject.toLocaleTimeString();
-
-			if (timePortion.indexOf(":") == 1){
-				return datePortion+" 0"+timePortion;
-			} else {
-				return datePortion+" "+timePortion;
-			}
+			var day = dateObject.getDate();
+			var month = dateObject.getMonth()+1;
+			var year = dateObject.getFullYear();
+			var hour = dateObject.getHours();
+			var minute = dateObject.getMinutes();
+			var second = "00";
+			var meridian = hour > 11 ? "PM":"AM";
+			day = day < 10?"0"+day:day;
+			month = month < 10? "0"+month: month;
+			minute = minute < 10? "0"+minute: minute;
+			hour = (hour % 12) > 0 && (hour % 12) < 10? "0"+(hour%12): ( hour % 12 == 0? "12":hour%12);
+			return month+"/"+day+"/"+year+" "+hour+":"+minute+":"+second+" "+meridian;
 		}
 
 		function loadClientDatesFromServer(){
 			var startDateFromModel = $("#start_date");
 			var rsvpDateFromModel = $("#rsvp_date");
 			var endDateFromModel = $("#end_date");
-			if ($.trim(startDateFromModel.val()).length > 0){
-				$("#readable_start_date").val(convertDatesToReadableClient(new Date(startDateFromModel.val())));
+			var crossCompatibleStart = startDateFromModel.val().replace(/\-/,"/").replace(/\-/,"/");
+			var crossCompatibleEnd = endDateFromModel.val().replace(/\-/,"/").replace(/\-/,"/");
+			var crossCompatibleRsvp = rsvpDateFromModel.val().replace(/\-/,"/").replace(/\-/,"/");
+			if ($.trim(crossCompatibleStart).length > 0){
+				$("#readable_start_date").val(convertDatesToReadableClient(new Date(crossCompatibleStart)));
 			}
-			if ($.trim(rsvpDateFromModel.val()).length > 0){
-				$("#readable_rsvp_date").val(convertDatesToReadableClient(new Date(rsvpDateFromModel.val())));
+			if ($.trim(crossCompatibleRsvp).length > 0){
+				$("#readable_rsvp_date").val(convertDatesToReadableClient(new Date(crossCompatibleRsvp)));
 			}
-			if ($.trim(endDateFromModel.val()).length > 0){
-				$("#readable_end_date").val(convertDatesToReadableClient(new Date(endDateFromModel.val())));
+			if ($.trim(crossCompatibleEnd).length > 0){
+				$("#readable_end_date").val(convertDatesToReadableClient(new Date(crossCompatibleEnd)));
 			}
 		}
 
