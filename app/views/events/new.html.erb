@@ -10,7 +10,18 @@
 		timeFormat: 'hh:mm:ss TT',
 		timezoneList: [ 
 			{ value: '-0700', label: 'Pacific' } 
-		]
+		],
+		onClose: function(){
+			if ($.trim($(this).val()).length > 0){
+				var millis = Date.parse($(this).val()), oneDayMillis = 86400000, threeHoursMillis = 10800000, end_date = $("#readable_end_date"), rsvp_date = $("#readable_rsvp_date");
+				if ($.trim(end_date.val()).length == 0){
+					end_date.val(convertDatesToReadableClient(new Date(millis+threeHoursMillis)))
+				}
+				if ($.trim(rsvp_date.val()).length == 0){
+					rsvp_date.val(convertDatesToReadableClient(new Date(millis-oneDayMillis)));
+				}
+			}
+		}
 		});
 
 		$("#readable_end_date").datetimepicker({
