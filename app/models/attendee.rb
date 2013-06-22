@@ -28,11 +28,6 @@ class Attendee < ActiveRecord::Base
 					potluck_item.remove_dish_from_list(potluck_item.dishes.find_index(item["item"]), {"id"=>attendee.id, "item"=>item["item"]})
 				end
 			end
-
-			unless attendee.email.blank?
-				host = User.find(attendee.event.user.id)
-				AttendeeMailer.delay.welcome_guest(attendee,host)
-			end
 		end
 
 		before_save do |attendee|

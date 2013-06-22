@@ -68,6 +68,7 @@ class AttendeesController < ApplicationController
 		@attendee.event_id = @event.id
     respond_to do |format|
       if @attendee.save
+				send_message_to(@attendee, current_user)
         format.html { redirect_to [@event,@attendee], notice: 'Attendee was successfully created.' }
         format.json { render json: @attendee, status: :created, location: @attendee }
       else
@@ -163,6 +164,12 @@ class AttendeesController < ApplicationController
 		event = Event.find(params[:event_id])
 		unless current_user.is_host_for?(event) || current_user.belongs_to_event?(event)
 			render file: "public/401.html" ,status: :unauthorized
+		end
+	end
+
+	def send_message_to(attendee, inviter)
+		unless attendee.email.blank?
+			AttendeeMailer.delay.welcome_guest(attendee,inviter)
 		end
 	end
 
