@@ -1,7 +1,7 @@
 class Attendee < ActiveRecord::Base
 		belongs_to :event
   # attr_accessible :title, :body
-		attr_accessible :event_id, :user_id, :invitation_id, :full_name, :email, :rsvp, :num_of_guests, :comment, :dish
+		attr_accessible :event_id, :user_id, :invitation_id, :full_name, :email, :rsvp, :num_of_guests, :comment, :dish, :is_host
 		serialize :dish
 
 		before_validation do |attendee|
@@ -194,6 +194,44 @@ class Attendee < ActiveRecord::Base
 
 		def self.find_rsvp_for(user, event)
 			return self.find_attendee_for(user, event).rsvp
+		end
+
+		def can_cohost?
+			if self.user_id.blank? && !self.email.blank?
+				return self.is_host
+			elsif !self.user_id.blank? && !self.email.blank?
+				role = Role.where('user_id =? and event_id =?', self.user_id, self.event_id).first
+				return role.privilege.eql?(Role.HOST)
+			else
+				return false
+			end
+		end
+
+		def change_roles
+			if self.user_id.blank?
+				if self.is_host
+					self.is_host = false
+				else
+					self.is_host = true
+				end
+				if self.save
+					return true
+				else 
+					return false
+				end
+			else
+				role = Role.get_role_for(self.user_id, self.event_id)
+				if role.privilege.eql?(Role.GUEST)
+					role.privilege = Role.HOST
+				else
+					role.privilege = Role.GUEST
+				end
+				if role.save
+					return true
+				else
+					return false
+				end
+			end
 		end
 
 		def has_role_for_event?(event)

@@ -12,7 +12,7 @@
 	<tbody>
 <% @event.attendees.each do |attendee| %>
   <tr id="guest_<%= attendee.id %>">
-		<td><% if attendee.has_role_for_event?(@event) && current_user.id == @event.user.id %><% if Role.get_role_for(attendee.user_id, @event.id).privilege.eql?(Role.HOST) %><%= link_to ' ', {:controller => :events, :action => :change_roles, :id => @event.id, :user_id => attendee.user_id}, :class=>"btn btn-link icon-minus promotion" %><% else %><%= link_to ' ', {:controller => :events, :action => :change_roles, :id => @event.id, :user_id => attendee.user_id}, :class=>"btn btn-link icon-plus promotion" %><% end %><% elsif attendee.has_role_for_event?(@event) %><% if Role.get_role_for(attendee.user_id, @event.id).privilege.eql?(Role.HOST) %><span class="label">Host</span><% end %><% end %></td>
+		<td><% if current_user.id == @event.user.id && !attendee.email.blank? %><% if attendee.can_cohost? %><%= link_to ' ', {:controller => :events, :action => :change_roles, :id => @event.id, :attendee_id => attendee.id}, :class=>"btn btn-link icon-minus promotion" %><% else %><%= link_to ' ', {:controller => :events, :action => :change_roles, :id => @event.id, :attendee_id => attendee.id}, :class=>"btn btn-link icon-plus promotion" %><% end %><% elsif attendee.has_role_for_event?(@event) %><% if Role.get_role_for(attendee.user_id, @event.id).privilege.eql?(Role.HOST) %><span class="label">Host</span><% end %><% end %></td>
 		<td class="attendee_name"><%= attendee.full_name %></td>
 		<td class="attendee_email"><%= attendee.email %></td>
 		<td style="text-align:center"><%= attendee.rsvp %></td>

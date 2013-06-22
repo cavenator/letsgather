@@ -214,14 +214,10 @@ class EventsController < ApplicationController
 
 	def change_roles
 		@event = Event.find(params[:id])
-		user_id = params[:user_id].to_i
-		role = Role.get_role_for(user_id, @event.id)
-		if role.privilege.eql?(Role.GUEST)
-			role.privilege = Role.HOST
-		else
-			role.privilege = Role.GUEST
-		end
-		if role.save
+		@attendee = Attendee.find(params[:attendee_id])
+		verdict = @attendee.change_roles
+
+		if verdict
 			render :nothing => true, :status => :no_content
 		else
 			render :nothing => true, :status => :unprocessable_entity
@@ -244,7 +240,11 @@ class EventsController < ApplicationController
 		user_attendee_event.each do |attendee_user|
 			attendee_user.user_id = current_user.id
 			attendee_user.full_name = current_user.full_name
-			Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => Role.GUEST)
+			if attendee_user.is_host
+				Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => Role.HOST)
+			else
+				Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => Role.GUEST)
+			end
 			attendee_user.save
 		end
 	end
