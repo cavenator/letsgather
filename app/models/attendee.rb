@@ -197,14 +197,15 @@ class Attendee < ActiveRecord::Base
 		end
 
 		def can_cohost?
-			if self.user_id.blank? && !self.email.blank?
-				return self.is_host
-			elsif !self.user_id.blank? && !self.email.blank?
-				role = Role.where('user_id =? and event_id =?', self.user_id, self.event_id).first
-				return role.privilege.eql?(Role.HOST)
-			else
-				return false
+			unless self.email.blank?
+				if self.user_id.blank?
+					return self.is_host
+				else
+					role = Role.where('user_id =? and event_id =?', self.user_id, self.event_id).first
+					return role.privilege.eql?(Role.HOST)
+				end
 			end
+			return false
 		end
 
 		def change_roles
