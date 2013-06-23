@@ -5,6 +5,7 @@
 </head>
 	<body>
 		<div style="display:block; margin: 1em 1em 1em 1em"><a href="#general_tag" class="btn btn-link">General</a></div>
+		<div style="display:block; margin: 1em 1em 1em 1em"><a href="#overview_tag" class="btn btn-link">Quick overview</a></div>
 		<div style="display:block; margin: 1em 1em 1em 1em"><a href="#getting_started_tag" class="btn btn-link">Getting started</a></div>
 		<div style="display:block; margin: 1em 1em 1em 1em"><a href="#lists_tag" class="btn btn-link">Lists Questions</a></div>
 		<div style="display:block; margin: 1em 1em 1em 1em"><a href="#groups_tag" class="btn btn-link">My (Email) Groups Questions</a></div>
@@ -12,7 +13,7 @@
 		<div style="display:block; margin: 1em 1em 1em 1em"><a href="#messaging_tag" class="btn btn-link">Messaging questions</a></div>
 		<div style="display:block; margin: 1em 1em 1em 1em"><a href="#settings_tag" class="btn btn-link">Settings questions</a></div>
 		<div style="display:block; margin: 1em 1em 1em 1em"><a href="#future_tag" class="btn btn-link">Future releases and roadmap questions</a></div>
-		<a id="general_tag"></a>
+		<div class="alert alert-info"><a id="general_tag"></a>General info</div>
 		<div class="alert">What is this app about?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">The primary purpose of this app is to help people plan, manage and collaborate on gatherings easier and more efficiently.</div>
 		<div class="alert">Can I use this app for other events like baby showers, birthdays and other events?</div>
@@ -27,8 +28,18 @@
 		<div class="alert">What should I do if I encounter a problem with the app or if there are defects?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">Email me at cavenator@gmail.com and provide me a description of what the defect is and how to reproduce it (e.g. the steps that you took in order to encounter this defect).</div>
 
-		<a id="getting_started_tag"></a>
-		<div class="alert">Great! What do I need to do in order to start using this?</div>
+		<div class="alert alert-info"><a id="overview_tag"></a>Quick Overview</div>
+		<div class="alert">Options</div>
+		<div style="display:block; margin: 1em 1em 1em 1em"><ul><li><b>My Groups:</b>This is where you manage common groups of friends such as coworkers, college buddies, family, etc</li><li><b>Settings:</b>When you are hosting events, these settings adjust notifications and configure reminders. Settings for when you are a guest to a event will be coming shortly!</li></ul></div>
+
+		<div class="alert">As a host</div>
+		<div style="display:block; margin: 1em 1em 1em 1em"><ul><li><b>Potluck statistics:</b>This is a dashboard which indicates the amount of people coming, # of items they are bringing versus the amount of items requested</li><li><b>My list:</b>This is where you manage your list. While lists may seem ambiguous, the intent is to keep it generic enough to include things like boardgames, chairs, silverware and many more (including potluck items)</li><li><b>Invite Guest:</b>This is the automated way of inviting guests (especially if you want to add multiple guests at a time). As implied, you provide a comma-delimited email string which sends invites out and adds them to the guest list (when they sign up/login, they get synced up with events and their name fields populate automatically on the guest list)</li><li><b>The guest list:</b> As this implies, you can manage your guests here. You do have the option of entering them in manually if they have no email but I would advise that you use <b>Invite Guest</b> if you want to add more than one at a time.</li><li>The other options filter the guest list by whos coming, whos not coming, etc</li></ul></div>
+
+		<div class="alert">As a guest</div>
+		<div style="display:block; margin: 1em 1em 1em 1em"><ul><li><b>Available items:</b>Quick view of the items that the host is asking for.</li><li><b>Items others are bringing:</b>Quick view of what others are bringing. Helpful in getting an idea of what others are bringing so you know how to fill in gaps.</li></ul>Finally, the RSVP. This is pretty self explanatory except that when you declare you are coming, you can add items to your rsvp (with as little as none or as many as you can feasibly bring)</div>
+
+		<div class="alert alert-info"><a id="getting_started_tag"></a>Getting Started</div>
+		<div class="alert">What do I need to do in order to start using this?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">First, create an account.</div>
 
 		<div class="alert">What is the bare minimum that I need to provide in order to create an event?</div>
@@ -43,7 +54,7 @@
 		<div class="alert">Any other advice for getting started?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">I would recommend creating your lists before inviting guests. While it is possible for your guests to rsvp without declaring what they are bringing, it might be good for them to get an idea of what is needed for the event.</div>
 
-		<a id="lists_tag"></a>
+		<div class="alert alert-info"><a id="lists_tag"></a>List FAQ</div>
 
 		<div class="alert">What kind of lists can I create?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">You can pretty much create any type of list you wish: Appetizers, Snacks, Beer/Alcohol, Boardgames, Movies, Xbox games, etc. For example, create a list with Games as your category and enter each game on a separate field (you can dynamically add as many items as you wish for a particular category).</div>
@@ -54,7 +65,7 @@
 		<div class="alert">What is this <b>Desired number of items</b> that I am seeing when I create my list?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">That is meant to represent the number of items you need for guest to contribute for the potluck. For example, you create a list of category Boardgames with a host quantity of 2 and provide 5 games as suggestions. This is primarily for you to keep track of whether or not your "quota" for that particular category has been met.</div>
 
-		<a id="groups_tag"></a>
+		<div class="alert alert-info"><a id="groups_tag"></a>My Groups FAQ</div>
 		<div class="alert">What is this &quot;My Groups&quot; thing?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em"><b>My Groups</b> is analogous to an email distribution list.  This way, you can manage multiple email distributions and easily import groups into your event. This is helpful if you do plan multiple events with the same group of friends, coworkers, etc.</div>
 
@@ -67,7 +78,7 @@
 		<div class="alert">So how do I add emails to an existing group?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">Click the button <b>Add more</b> button. Each new box <b>ONLY</b> should contain one email at a time if you want it to work properly.</div>
 
-		<a id="cohost_tag"></a>
+		<div class="alert alert-info"><a id="cohost_tag"></a>Cohost FAQ</div>
 		<div class="alert">What can a cohost do?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">Since the event creator is the only one who can promote their guest to cohost, the cohost is a designated guest who can assist in managing the event details (such as inviting guests, managing lists for guests to choose from, etc). The only thing a cohost cannot do is promote other guests.</div>
 
@@ -75,12 +86,12 @@
 		<div style="display:block; margin: 1em 1em 1em 1em">For a event you create, click on the <b>The Guest List</b>. You'll see a + next to the people you can promote. Once you click the +, they will be promoted. To demote them and make them an ordinary guest again, click the - instead.</div>
 
 		<div class="alert">Why don't I see +/- next to some entries?</div>
-		<div style="display:block; margin: 1em 1em 1em 1em">You will only see +/- once your guest actually logs in.</div>
+		<div style="display:block; margin: 1em 1em 1em 1em">You will only see +/- once your guest actually has an email address</div>
 
 		<div class="alert">+/- is lame. Couldn't you use better images?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">Thats in progress .... :)</div>
 
-		<a id="messaging_tag"></a>
+		<div class="alert alert-info"><a id="messaging_tag"></a>Messaging FAQ</div>
 
 		<div class="alert">When I send someone a message, how does that work?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">The message gets routed to their declared email account. Therefore, they will get the message as you send it.</div>
@@ -88,10 +99,10 @@
 		<div class="alert">Why can I message some people and others I cannot?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">Thats because the host added them to the system without specifying what their email address is. You are only allowed to message guests that have email addresses declared.</div>
 
-		<div class="alert">i keep getting messages from devmailer@gmail.com.  what's this about?</div>
-		<div style="display:block; margin: 1em 1em 1em 1em">That is the automated emailer that sends messages to users and guests of this sytem. until i get a more professional name for this emailer, the name remains. therefore, please advise people to not label this as spam. When you send a message using this app, you'll see the subject where it belongs but the message will start with "a message from name" followed by the message contents.</div>
+		<div class="alert">i keep getting messages from letsgather.apartyapp@gmail.com.  what's this about?</div>
+		<div style="display:block; margin: 1em 1em 1em 1em">That is the automated emailer that sends messages to users and guests of this sytem. Until I switch over from using Gmail to a more scalable SMTP server like SendGrid, the name remains. therefore, please advise people to not label this as spam. When you send a message using this app, you'll see the subject where it belongs but the message will start with "a message from name" followed by the message contents.</div>
 
-		<a id="rsvp_tag"></a>
+		<div class="alert alert-info"><a id="rsvp_tag"></a>RSVP FAQ (Guest)</div>
 		<div class="alert">I want to RSVP for an event I was invited to. How difficult is it?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">It should be pretty easy. Once you sign in, select the event you wish to rsvp to. Click "Modify RSVP" to enter your response.</div>
 
@@ -104,7 +115,7 @@
 		<div class="alert">What if I want to bring more than one item (or if I am answering on behalf of a guest I am bringing)?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">If you are bringing someone to an event you are invited to (such as a friend and/or partner), you may add items to your rsvp and just provide a short comment saying that you and your guests are bringing those items. This app allows for multiple items to be umbrellaed under one RSVP response (e.g. You could be bringing a guest and each of you brings an item. Therefore, you can add another item to your rsvp (Just press the <b>Add more</b> button).</div>
 
-		<a id="settings_tag"></a>
+		<div class="alert alert-info"><a id="settings_tag"></a>Settings FAQ</div>
 		<div class="alert">What kind of settings are available?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">Right now, settings are only available for hosts (I got feedback from a particular host. Guest settings per event are coming soon). Those settings are as follows: <ul><li>Notify me when a guest rsvps yes</li><li>Notify me when a guest rsvps no</li><li>Notify me of all guest response changes (use tthis with discretion since you might get spammed depending on the fickleness of your guest)</li><li>Send out rsvp reminders X days before the rsvp deadline</li><li>Send out Event reminders X days before the start date</li></ul></div>
 
@@ -114,9 +125,9 @@
 		<div class="alert">When are guest settings coming?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">Hopefully very soon! The only setting that I can think of for the time being is <b>Notify me of any major event changes (applies to event times, description, location).</b> There will be more for when you have cohost settings and even more depending on what type of feedback I get.</div>
 
-		<a id="future_tag"></a>
+		<div class="alert alert-info"><a id="future_tag"></a>Future plans</div>
 		<div class="alert">Do you anticipate delivering new features while this is in alpha?</div>
-		<div style="display:block; margin: 1em 1em 1em 1em">Yes, I do. So far, the following features will be released sometime during beta-testing and you'll be notified: <ul><li>Guest settings for events they are invited to</li><li>Attach a ics file to the event invitation so that it can be added to your calendar</li><li>More infrastructure changes</li><li>Find a UI/UX person to hopefully make it prettier</li></ul>If there are things that the majority of users are bringing to my attention, I'll prioritize it accordingly.</div>
+		<div style="display:block; margin: 1em 1em 1em 1em">Yes, I do. So far, the following features will be released sometime during beta-testing and you'll be notified: <ul><li>Guest settings for events they are invited to</li><li>More infrastructure changes</li><li>Find a UI/UX person to hopefully make it prettier (with colors and themes)</li></ul>If there are things that the majority of users are bringing to my attention, I'll prioritize it accordingly.</div>
 
 		<div class="alert">What if I have an idea for some killer features?</div>
 		<div style="display:block; margin: 1em 1em 1em 1em">Email me at cavenator@gmail.com and let me know. I would love to hear feedback about how you are enjoying my app, what you do not like about it and if you have any ideas on how to make it better.</div>
