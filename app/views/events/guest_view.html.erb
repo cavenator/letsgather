@@ -67,14 +67,14 @@
 		<div class="row-fluid">
 			<div class="span8 offset4" style="margin:1em 0 3em 0; text-align:center"><button class="btn btn-primary btn-large" id="modifyRSVPButton" onclick="showRSVPSettings()">Modify RSVP</button></div>
 		</div>
-		<div id="comment-box" style="margin-top:1.5em">
+		<div id="comment-box" style="margin-top:1.5em;display:none">
 		<%= form_for(@attendee, :url=> [@event,@attendee], :method=>"PUT") do |f| %>
 		
 		<%= f.label :rsvp, 'Responding with' %>
 		<%= f.select :rsvp, [["Going","Going"],["Not Going","Not Going"],["Undecided","Undecided"]],{}, :onchange => "rsvp();" %>
 
 		<div>
-			<%= f.label :comment, 'Comments?' %>
+			<div><span style="font-weight:bold">Comments? </span><span id="count-down-limit"></span></div>
 			<%= f.text_area :comment, :style=>"width:35em;height:8em" %>
 		</div>
 		<div id="guestcount_div">
@@ -192,7 +192,6 @@
 			if (flash_message.text().length > 0)
 				flash_message.addClass("alert alert-info");
 			$("#guestcount_div").hide();
-			$("#comment-box").hide();
 
 			function removeActiveClass(){
 				$("li").removeClass("active");
@@ -203,6 +202,25 @@
 					removeActiveClass();
 					$(this).addClass("active");
 				});
+			});
+
+			function updateCharLimit(){
+				var limit = 255, num_of_chars = $("#attendee_comment").val().length, countDownSpan = $("#count-down-limit");
+				if (num_of_chars == 0){
+					countDownSpan.text("You have "+limit+" characters left");
+				} else if (limit - num_of_chars > 0){
+					countDownSpan.text("You have "+(limit - num_of_chars)+" character(s) left");
+				} else if (num_of_chars == limit){
+					countDownSpan.text("You have reached your limit");
+				} else {
+					countDownSpan.text("You have exceeded your limit! Please reduce your comment.");
+				}
+			}
+
+			updateCharLimit();
+
+			$("#attendee_comment").keyup(function(){
+				updateCharLimit();
 			});
 
 			$.ajax({

@@ -18,6 +18,25 @@
 			$("#guestcount_div").hide();
 			$("#attendee_rsvp").change();
 
+			function updateCharLimit(){
+				var limit = 255, num_of_chars = $("#attendee_comment").val().length, countDownSpan = $("#count-down-limit");
+				if (num_of_chars == 0){
+					countDownSpan.text("You have "+limit+" characters left");
+				} else if (limit - num_of_chars > 0){
+					countDownSpan.text("You have "+(limit - num_of_chars)+" character(s) left");
+				} else if (num_of_chars == limit){
+					countDownSpan.text("You have reached your limit");
+				} else {
+					countDownSpan.text("You have exceeded your limit! Please reduce your comment.");
+				}
+			}
+
+			updateCharLimit();
+
+			$("#attendee_comment").keyup(function(){
+				updateCharLimit();
+			});
+
 			$.ajax({
 				url: window.location.pathname.replace(/attendees.*/,"")+"/potluck_items.json",
 				dataType: "json",
