@@ -1,7 +1,7 @@
 
 class AttendeesController < ApplicationController
 	before_filter :verify_access
-	before_filter :verify_host_privileges, :only => [:new, :create, :add_attendees, :invite_guests ]
+	before_filter :verify_host_privileges, :only => [:new, :create, :add_attendees, :invite_guests, :send_updated_calendar, :send_individual_calendar ]
 	before_filter :verify_correct_attendee, :only => [:rsvp, :show, :edit, :update, :destroy ]
 
   # GET /attendees
@@ -137,6 +137,12 @@ class AttendeesController < ApplicationController
 	def send_updated_calendar
 		@event = Event.find(params[:event_id])
 		AttendeeMailer.delay.send_updated_calendar(@event)
+		render :nothing => true, :status => 200
+	end
+
+	def send_individual_calendar
+		@attendee = Attendee.find(params[:id])
+		AttendeeMailer.delay.welcome_guest(@attendee, current_user)
 		render :nothing => true, :status => 200
 	end
 

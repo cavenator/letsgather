@@ -33,6 +33,7 @@ MaximusSamurai::Application.routes.draw do
 		post 'attendees/invite_guests', :to => 'attendees#invite_guests'
 		get 'attendees/send_updated_calendar', :to => 'attendees#send_updated_calendar'
 		post 'attendees/:id/rsvp', :to => 'attendees#rsvp'
+		get 'attendees/:id/send_calendar', :to => 'attendees#send_individual_calendar'
 		get 'attendees/:id/email_guest', :to => "attendees#email_guest"
 		get 'attendees/:id/send_guest_email', :to => "attendees#send_guest_email"
 		resources :attendees 

@@ -30,8 +30,8 @@ MaximusSamurai::Application.configure do
     :port => 587,
     :authentication => :plain,
 	 :domain => 'gmail.com',
-	 :user_name => 'mydevmailer@gmail.com',
-	 :password => 'MyD3vM#*l3r',
+	 :user_name => 'letsgather.apartyapp@gmail.com',
+	 :password => 'L3tsG#th3r',
     :enable_starttls_auto => true
   }
 
