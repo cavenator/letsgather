@@ -25,7 +25,7 @@
 <br />
 <button href="#newAttendeeModal" id="newAttendeeButton" class="btn btn-primary" data-toggle="modal">New Guest</button>
 <% unless @event.get_unique_guest_email_list.blank? %>
-	<button id="sendUpdatedCalendars" class="btn btn-info">Send updated calendar</button>
+	<button id="sendUpdatedCalendars" class="btn btn-info">Send <i class="icon-calendar"></i></button>
 	<div style="float:right" id="emailAllGuestDiv"><%= link_to 'Email all guests',{:controller => :events, :action => :group_email, :id => @event.id }, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link", :id=>"emailAllGuests"} %></div>
 <% end %>
 <script>
@@ -145,7 +145,7 @@
 	$("#sendUpdatedCalendars").click(function(){
 		var url = document.location.pathname;
 		$.ajax({
-			url: url+"/send_updated_calendar",
+			url: url+"/attendees/send_updated_calendar",
 			type: "GET", 
 			async: true,
 			success: function(){

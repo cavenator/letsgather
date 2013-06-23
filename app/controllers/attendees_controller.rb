@@ -132,7 +132,12 @@ class AttendeesController < ApplicationController
 			MessageMailer.delay.email_guest(@attendee, @subject, @body, current_user)
 			render :action => :email_guest, :status => 200
 		end
+	end
 
+	def send_updated_calendar
+		@event = Event.find(params[:event_id])
+		AttendeeMailer.delay.send_updated_calendar(@event)
+		render :nothing => true, :status => 200
 	end
 
 	def invite_guests

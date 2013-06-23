@@ -21,7 +21,7 @@ class MessageMailer < ActionMailer::Base
 		@event = event
 		@sender = sender
 		hosts_email = hosts.map{|host| host.email }
-		mail(to: hosts_email, subject: subject )
+		mail(to: hosts_email, subject: subject, from: @sender.email)
 	end
 
 end

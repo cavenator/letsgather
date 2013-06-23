@@ -139,12 +139,6 @@ class EventsController < ApplicationController
 		render :layout => false
 	end
 
-	def send_updated_calendar
-		@event = Event.find(params[:id])
-		AttendeeMailer.delay.send_updated_calendar(@event)
-		render :nothing => true, :status => 200
-	end
-
 	def get_host_groups
 		@event = Event.find(params[:id])
 		@groups = @event.user.groups

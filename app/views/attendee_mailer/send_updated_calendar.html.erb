@@ -9,18 +9,18 @@
 			Changes have been made to the following event: <%= @event.name%>.  Attached is the calendar event with the new details.  </p>
 		<p>
 			
-			Start Date: <%= @event.display_start_time %> <br/>
-			End Date: <%= @event.display_end_time %> <br/>
-			RSVP by: <%= @event.display_rsvp_time %> <br/>
+			<span style="font-weight:bold">Start Date:</span> <%= @event.display_start_time %> <br/>
+			<span style="font-weight:bold">End Date: </span><%= @event.display_end_time %> <br/>
+			<span style="font-weight:bold">RSVP by:</span> <%= @event.display_rsvp_time %> <br/>
 			<% if @event.description.blank? %>
-			Description: TBD <br />
+			<span style="font-weight:bold">Description:</span> TBD <br />
 			<% else %>
-			Description: <%= @event.description %> <br />
+			<span style="font-weight:bold">Description:</span> <%= simple_format @event.description %> <br />
 		  <% end %>
 			<% if @event.location %>
-				Location:  <%= @event.location1 + ","+@event.location2 %><br/>
+				<span style="font-weight:bold">Location:</span>  <%= @event.location1 + ","+@event.location2 %><br/>
 			<% else %>
-				Location: TBD<br/>
+				<span style="font-weight:bold">Location:</span> TBD<br/>
 			<% end %>
 		</p>
 

@@ -10,7 +10,7 @@
 			<h2>A message from <%= @sender.full_name %>(<%= @sender.email %>) </h2>
 		<% end %>
     <p>
-			<%= @body %>
+			<%= simple_format @body %>
     </p>
   </body>
 </html>
