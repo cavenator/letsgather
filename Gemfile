@@ -36,6 +36,7 @@ group :test, :development do
 #  gem 'sqlite3'
 #  gem 'mysql'
   gem 'factory_girl_rails'
+	gem 'qunit-rails' #https://github.com/frodsan/qunit-rails
 end
 
 

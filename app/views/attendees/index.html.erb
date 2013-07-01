@@ -12,7 +12,7 @@
 	<tbody>
 <% @event.attendees.each do |attendee| %>
   <tr id="guest_<%= attendee.id %>">
-		<td><% if current_user.id == @event.user.id && !attendee.email.blank? %><% if attendee.can_cohost? %><%= link_to ' ', {:controller => :events, :action => :change_roles, :id => @event.id, :attendee_id => attendee.id}, :class=>"btn btn-link icon-minus promotion" %><% else %><%= link_to ' ', {:controller => :events, :action => :change_roles, :id => @event.id, :attendee_id => attendee.id}, :class=>"btn btn-link icon-plus promotion" %><% end %><% elsif attendee.can_cohost? %><span class="label">Host</span><% end %></td>
+		<td><% if current_user.id == @event.user.id && !attendee.email.blank? %><% if attendee.can_cohost? %><%= link_to "Host", {:controller => :events, :action => :change_roles, :id => @event.id, :attendee_id => attendee.id}, :class=>"btn btn-link promotion" %><% else %><%= link_to "Guest", {:controller => :events, :action => :change_roles, :id => @event.id, :attendee_id => attendee.id}, :class=>"btn btn-link promotion" %><% end %><% elsif attendee.can_cohost? %><span class="label">Host</span><% end %></td>
 		<td class="attendee_name"><%= attendee.full_name %></td>
 		<td class="attendee_email"><%= attendee.email %></td>
 		<td style="text-align:center"><%= attendee.rsvp %></td>
@@ -23,7 +23,7 @@
 </table>
 
 <br />
-<button href="#newAttendeeModal" id="newAttendeeButton" class="btn btn-primary" data-toggle="modal">New Guest</button>
+<button href="#newAttendeeModal" id="newAttendeeButton" class="btn btn-primary" data-toggle="modal">Add Guest</button>
 <% unless @event.get_unique_guest_email_list.blank? %>
 	<button id="sendUpdatedCalendars" class="btn btn-info">Send <i class="icon-calendar"></i></button>
 	<div style="float:right" id="emailAllGuestDiv"><%= link_to 'Email all guests',{:controller => :events, :action => :group_email, :id => @event.id }, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link", :id=>"emailAllGuests"} %></div>
