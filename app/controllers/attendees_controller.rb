@@ -109,6 +109,22 @@ class AttendeesController < ApplicationController
     end
   end
 
+	def going
+		@event = Event.find(params[:event_id])
+		@collection = @event.attendees.where("rsvp = 'Going' and user_id <> ?", current_user.id)
+		render :layout=>false
+	end
+
+	def not_going
+		@event = Event.find(params[:event_id])
+		render :layout=>false, :partial => 'events/unattending_attendee', :collection => @event.attendees.where("rsvp = 'Not Going' and user_id <> ?", current_user.id)
+	end
+
+	def undecided
+		@event = Event.find(params[:event_id])
+		render :layout=>false, :partial => "events/undecided_attendee", :collection => @event.attendees.where("rsvp = 'Undecided' and user_id <> ?", current_user.id)
+	end
+
 	def add_attendees
 		@event = Event.find(params[:event_id])
 		render :layout => false

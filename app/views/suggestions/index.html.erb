@@ -1,0 +1,19 @@
+<h1>Pending suggestions</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @suggestions.each do |suggestion| %>
+  <tr>
+    <td><%= link_to 'Show', event_suggestion_path(@event, suggestion) %></td>
+    <td><%= link_to 'Edit', edit_event_suggestion_path(@event, suggestion) %></td>
+    <td><%= link_to 'Destroy', event_suggestion_path(@event, suggestion), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />

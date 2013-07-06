@@ -49,6 +49,9 @@
 		<li class="phoney-button" id="taken_items">
 			<a style="color:white" href="#" data-target="#takenItems" data-toggle="modal">Items others are bringing</a>
 		</li>
+		<li class="phoney-button" id="suggestions">
+			<a style="color:white" href="#" data-target="#suggestionsModal" data-toggle="modal">Suggest items for event</a>
+		</li>
 		<li class="phoney-button" id="attending_guests">
 			<a style="color:white" href="#" data-target="#attendingGuests" data-toggle="modal">Who else is coming?</a>
 		</li>
@@ -104,7 +107,6 @@
 			<h2>Attending</h2>
 		</div>
 		<div class="modal-body">
-			<%= render :partial => "attending_attendee", :collection => @event.attendees.where("rsvp = 'Going' and id <> ?", @attendee.id) %>
 		</div>
 		<div class="modal-footer">
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
@@ -117,7 +119,6 @@
 			<h2>Not Coming</h2>
 		</div>
 		<div class="modal-body">
-			<%= render :partial => "unattending_attendee", :collection => @event.attendees.where("rsvp = 'Not Going' and id <> ?", @attendee.id) %>
 		</div>
 		<div class="modal-footer">
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
@@ -130,7 +131,6 @@
 			<h2>Undecided</h2>
 		</div>
 		<div class="modal-body">
-			<%= render :partial => "undecided_attendee", :collection => @event.attendees.where("rsvp = 'Undecided' and id <> ?", @attendee.id) %>
 		</div>
 		<div class="modal-footer">
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
@@ -154,7 +154,6 @@
 			<h2>Items others are bringing</h2>
 		</div>
 		<div class="modal-body">
-			<%= render :partial=> "taken_items", :collection => @event.get_items_guests_are_bringing %>
 		</div>
 	</div>
 
@@ -164,7 +163,18 @@
 			<h2>Available items left</h2>
 		</div>
 		<div class="modal-body">
-			<%= render :partial=> "available_items", :collection => @event.get_available_items_for_event %>
+		</div>
+	</div>
+
+	<div id="suggestionsModal" class="modal hide">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">x</button>
+			<h2>Suggest a new item list for event</h2>
+		</div>
+		<div class="modal-body">
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
 		</div>
 	</div>
 <script type="text/javascript">
@@ -187,7 +197,20 @@
 		}
 
 		$(document).ready(function(){
-			var category_array = [], dishes = {}, flash_message = $("#notice"), taken_queue = [], map;
+			var category_array = [], dishes = {}, flash_message = $("#notice"), taken_queue = [], map, modals = ["#suggestionsModal", "#takenItems","#availableItems","#attendingGuests","#notAttendingGuests","#undecidedGuests"];
+
+			function removeClickHandlerFor(elem){
+				elem.off("click");
+			}
+
+			$.each(modals, function(index, elem){
+				$(elem).on('hide',function(){
+					var id = $(this).prop("id");
+					if (id == "notAttendingGuests" || id == "attendingGuests" || id == "undecidedGuests")
+						removeClickHandlerFor($(this).find(".modal-body").find(".email_individual"));
+					$(this).find(".modal-body").html("");
+				});
+			});
 
 			if (flash_message.text().length > 0)
 				flash_message.addClass("alert alert-info");
@@ -197,12 +220,30 @@
 				$("li").removeClass("active");
 			}
 
-			$("li").each(function (index, data){
+			$(".phoney-button").each(function (index, data){
 				$(this).click(function(){
 					removeActiveClass();
 					$(this).addClass("active");
+					displayContent($(this).prop('id'), $(this).find("a").data("target"));
 				});
 			});
+
+			function displayContent(id, targetId){
+				var idMap = {"attending_guests": "/attendees/going", "suggestions": "/suggestions/new","unattending_guests": "/attendees/not_going","undecided_guests":"/attendees/undecided", "taken_items":"/taken_items", "available_items":"/available_items"};
+
+				$.ajax({
+					url: document.location.pathname+idMap[id],
+					dataType: "html",
+					success: function(data){
+						$(targetId).find(".modal-body").html(data);
+						$(targetId).modal("show");
+						bindEmailElement(id);
+					},
+					error: function(){
+						$(targetId).find(".modal-body").html("<div class='alert alert-error'>Error:  Cannot do what you asked!  Please contact your administrator</div>");
+					}
+				});
+			}
 
 			function updateCharLimit(){
 				var limit = 255, num_of_chars = $("#attendee_comment").val().length, countDownSpan = $("#count-down-limit");
@@ -236,7 +277,7 @@
 				}
 			});
 
-			$("#emailModal").on('hidden',function(){
+			$("#emailModal").on('hide',function(){
 				$(this).attr('data-remote',"");
 				$(this).find(".modal-body").html("");
 			});
@@ -481,7 +522,8 @@
 
 		function loadEmailTemplate(emailObject){
 			var url = $(emailObject).attr('href'), emailModal = $("#emailModal");
-			emailModal.attr('data-remote',url);
+			console.log(url);
+			console.log(emailModal);
 			$.ajax({
 				url: url,
 				dataType: "html",
@@ -500,15 +542,16 @@
 			return false;
 		});
 
-		$(".email_individual").click(function(){
-			var activeModal = $(".active").find("a").attr('data-target');
-			$(activeModal).modal("hide");
-			//close the modal by finding which class is active
-
-			loadEmailTemplate($(this));
-			return false;
-		});
-
-		});
+		function bindEmailElement(id){
+			if (id == "attending_guests" || id == "unattending_guests" || id == "undecided_guests"){
+				$(".email_individual").click(function(){
+					var activeModal = $(".active").find("a").attr('data-target');
+					$(activeModal).modal("hide");
+					loadEmailTemplate($(this));
+					return false;
+				});
+			}
+		}
+	});
 
 </script>

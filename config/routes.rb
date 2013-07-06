@@ -10,6 +10,8 @@ MaximusSamurai::Application.routes.draw do
 	get 'events/:id/send_group_email', :to => 'events#send_group_email'
 	get 'events/:id/email_host', :to => 'events#email_host'
 	get 'events/:id/send_host_email', :to => 'events#send_host_email'
+	get 'events/:id/taken_items', :to=>'events#taken_items'
+	get 'events/:id/available_items', :to=>'events#available_items'
 	get 'events/:id/attending_guests', :to => 'events#attending_guests'
 	get 'events/:id/unattending_guests', :to => 'events#unattending_guests'
 	get 'events/:id/undecided_guests', :to => 'events#undecided_guests'
@@ -31,6 +33,9 @@ MaximusSamurai::Application.routes.draw do
 	resources :events do
 		get 'attendees/add_attendees', :to => 'attendees#add_attendees'
 		post 'attendees/invite_guests', :to => 'attendees#invite_guests'
+		get 'attendees/going', :to => 'attendees#going'
+		get 'attendees/not_going', :to => 'attendees#not_going'
+		get 'attendees/undecided', :to => 'attendees#undecided'
 		get 'attendees/send_updated_calendar', :to => 'attendees#send_updated_calendar'
 		post 'attendees/:id/rsvp', :to => 'attendees#rsvp'
 		get 'attendees/:id/send_calendar', :to => 'attendees#send_individual_calendar'
@@ -38,6 +43,7 @@ MaximusSamurai::Application.routes.draw do
 		get 'attendees/:id/send_guest_email', :to => "attendees#send_guest_email"
 		resources :attendees 
 		resources :potluck_items
+		resources :suggestions
   end
 
   devise_for :users

@@ -1,0 +1,162 @@
+<div id="flash_notice"><%= flash[:notice] %></div>
+<div class="row">
+	<div class="span6">I want to....</div>
+</div>
+<div class="row">
+	<div class="span6">
+		<input type="radio" name="type" value="new"><span style="margin-left:1em">Create a new list</span><br/>
+		<% if @event.potluck_items.count > 0 %>
+			<input type="radio" name="type" value="existing"><span style="margin-left:1em">Add items to an existing list</span>
+		<% end %>
+	</div>
+</div>
+
+<div class="row" style="margin: 1.5em 0 1.5em 0">
+	<div id="new_suggestion" class="span4">
+		<%= render 'new_suggestion' %>
+	</div>
+</div>
+
+<div class="row" style="margin: 1.5em 0 1.5em 0">
+	<div id="existing_list" class="span4">
+		<%= render :partial => 'existing_template', :locals=>{:event => @event} %>
+	</div>
+</div>
+
+<div style="display:none">
+<%= render 'form' %>
+</div>
+
+<script>
+	$(document).ready(function(){
+
+		function toggle(typeChosen){
+			if (typeChosen == "new"){
+				$("#new_suggestion").show();
+				$("#existing_list").hide();
+			} else {
+				$("#new_suggestion").hide();
+				$("#existing_list").show();
+			}
+		}
+
+		function submitForm(){
+			var url = $("#suggestionsForm").prop("action"), serialized_form = $("#suggestionsForm").serialize();
+			$.ajax({
+				url: url,
+				dataType: "html",
+				type: "POST",
+				data: serialized_form,
+				async: false,
+				success: function(data, successText){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("Suggestion has been submitted for this event");
+					$("#suggestionsModal").modal("hide");
+				},
+				error: function(xhr){
+					$("#flash_notice").addClass("alert alert-error");
+					var responseObject = JSON.parse(xhr.responseText);
+					var stringResponse = "We cannot submit your suggestion until you address the following: <ul>";
+					for (var key in responseObject){
+						stringResponse += "<li>"+responseObject[key]+"</li>"
+					}
+					$("#flash_notice").html(stringResponse+"</ul>");
+				}
+			});
+			return false;
+		}
+
+		function addErrorBackgroundFill(element){
+			element.css('background-color','red');
+		}
+
+		function removeErrorBackgroundFill(element){
+			element.css('background-color','');
+		}
+
+		function passedValidation(categoryElement, listElement){
+			var counter = 0;
+			if ($.trim(categoryElement.val()).length == 0){
+				addErrorBackgroundFill(categoryElement);
+				counter++;
+			}
+			$.each(listElement.find(".input-large"), function(index, elem){
+				var list = $(elem).val();
+				if ($.trim(list).length == 0){
+					addErrorBackgroundFill($(elem));
+					counter++;
+				}
+			});
+			return counter == 0;
+		}
+
+		function fillInFormForSubmission(type, categoryElement, listElement){
+			var category = categoryElement.val(), lists = [];
+			if (passedValidation(categoryElement, listElement)) {
+				lists = $.map(listElement.find(".input-large"), function(item){
+					return $(item).val();
+				});
+				$("form").find("#suggestion_new_or_existing").val(type);
+				$("form").find("#suggestion_category").val(category);
+				$("form").find("#suggestion_suggested_items").val(JSON.stringify(lists));
+				submitForm();
+			}
+		}
+
+		function addInputElementTo(divElement){
+			var element = divElement;
+			var additionalDiv = $("<div></div>");
+			var itemText = $("<span style='font-weight:bold'>Item: </span><input type='text' class='input-large' placeholder='List item here ....'>");
+			var removeButton = $("<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em'><i class='icon-remove-sign'></i></button>");
+			removeButton.click(function(){
+				additionalDiv.remove();
+			});
+			itemText.click(function(){
+				removeErrorBackgroundFill($(this));
+			});
+			additionalDiv.appendTo(element);
+			itemText.appendTo(additionalDiv);
+			removeButton.appendTo(additionalDiv);
+		}
+
+		$("input[type=radio]").change(function(){
+			var typeChosen = $(this).val();
+			toggle(typeChosen);
+		});
+
+		$("input[type=radio]").eq(0).prop("checked",true).change();
+
+		$("#add-new-button").click(function(){
+			addInputElementTo($("#new-list"));
+		});
+
+		$("#new-existing-button").click(function(){
+			addInputElementTo($("#existing-list"));
+		});
+
+		$("#new-category").click(function(){
+			removeErrorBackgroundFill($(this));
+		});
+
+		$("#existing-category").change(function(){
+			if ($(this).val() == "None"){
+				$("#existing-list").hide();
+				$("#existing-actions").hide();
+			} else {
+				$("#existing-list").show();
+				$("existing-actions").show();
+			}
+		});
+
+		$("#existing-category").trigger("change");
+
+		$("#submit-new-list").click(function(){
+			fillInFormForSubmission("New", $("#new-category"), $("#new-list"));
+		});
+
+		$("#submit-existing-list").click(function(){
+			fillInFormForSubmission("Existing",$("#existing_category"), $("#existing-list"));
+		});
+
+	});
+</script>

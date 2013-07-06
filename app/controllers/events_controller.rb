@@ -186,6 +186,16 @@ class EventsController < ApplicationController
 		render :layout => false
 	end
 
+	def taken_items
+		@event = Event.find(params[:id])
+		render :layout=>false, :partial=> "taken_items", :collection => @event.get_items_guests_are_bringing
+	end
+
+	def available_items
+		@event = Event.find(params[:id])
+		render :layout=>false, :partial=> "available_items", :collection => @event.get_available_items_for_event
+	end
+
 	def attending_guests
 		@event = Event.find(params[:id])
 		render :layout => false
