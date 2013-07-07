@@ -2,6 +2,7 @@ class SuggestionsController < ApplicationController
 		before_filter :find_event
 		before_filter :verify_access
 		before_filter :prohibit_host, :only => [:new, :create]
+		before_filter :verify_hosts, :only => [:approve, :reject]
 		layout false
 
   # GET /suggestions
@@ -52,6 +53,7 @@ class SuggestionsController < ApplicationController
 
     respond_to do |format|
       if @suggestion.save
+				SuggestionMailer.delay.notify_hosts(@suggestion, @event)
         format.html { render :nothing => true, :status => :created, notice: 'Suggestion was successfully created.' }
         format.json { render json: @suggestion, status: :created, location: [@event, @suggestion] }
       else
@@ -60,6 +62,28 @@ class SuggestionsController < ApplicationController
       end
     end
   end
+
+	def approve
+		@suggestion = Suggestion.find(params[:id])
+		@potluck_item = PotluckItem.build_from_suggestion(@suggestion)
+		if @potluck_item.save
+			SuggestionMailer.delay.approval_email(@suggestion.requester_email, @suggestion.category)
+			@suggestion.destroy
+			render :nothing => true, status: :ok, notice: 'Suggestion was approved'
+		else
+			render :nothing => true, status: :unprocessable_entity, json: @potluck_item.errors, notice: 'Items from suggestion could not be added to event'
+		end
+	end
+
+	def reject
+		@suggestion = Suggestion.find(params[:id])
+		if @suggestion.destroy
+			SuggestionMailer.delay.rejection_email(@suggestion.requester_email, @suggestion.category)
+			render :nothing => true, status: :ok, notice: 'Suggestion was rejected'
+		else
+			render :nothing => true, status: :unprocessable_entity, notice: 'Suggestion could not be rejected. Please notify your administrator'
+		end
+	end
 
   # PUT /suggestions/1
   # PUT /suggestions/1.json
@@ -98,6 +122,12 @@ class SuggestionsController < ApplicationController
 
 	def prohibit_host
 		if current_user.is_host_for?(@event)
+			render file: "public/401.html" , :formats => [:html], status: :unauthorized and return
+		end
+	end
+
+	def verify_hosts
+		unless current_user.is_host_for?(@event)
 			render file: "public/401.html" , :formats => [:html], status: :unauthorized and return
 		end
 	end

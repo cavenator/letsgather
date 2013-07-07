@@ -6,7 +6,7 @@
 </div>
 <div class="row">
 	<div id="existing-list" class="span4">
-		<span style="font-weight:bold">Item: </span><%= text_field_tag nil, nil, :placeholder => "Enter list item here" %>
+		<span style="font-weight:bold">Item: </span><%= text_field_tag nil, nil, {:class=>"input-large", :placeholder => "Enter list item here"} %>
 	</div>
 	<div id="existing-actions" class="span4">
 		<button id="new-existing-button" class="btn btn-success">Add items</button>

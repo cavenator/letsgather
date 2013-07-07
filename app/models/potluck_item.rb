@@ -35,4 +35,14 @@ class PotluckItem < ActiveRecord::Base
 		taken_items = self.taken_items.map{|i| i["item"] }
 		errors.add(:dishes, "Item cannot be added since it's already taken by guest") unless taken_items.blank? || (taken_items & self.dishes).count == 0
 	end
+
+	def self.build_from_suggestion(suggestion)
+		if suggestion.new_or_existing.eql?("New")
+			return PotluckItem.new(:event_id => suggestion.event_id, :category => suggestion.category, :dishes => suggestion.suggested_items, :host_quantity => 1)
+		else
+			potluck_item = suggestion.event.potluck_items.find{|item| item.category.eql?(suggestion.category)}
+			potluck_item.dishes |= suggestion.suggested_items
+			return potluck_item
+		end
+	end
 end

@@ -41,6 +41,8 @@ MaximusSamurai::Application.routes.draw do
 		get 'attendees/:id/send_calendar', :to => 'attendees#send_individual_calendar'
 		get 'attendees/:id/email_guest', :to => "attendees#email_guest"
 		get 'attendees/:id/send_guest_email', :to => "attendees#send_guest_email"
+		get 'suggestions/:id/approve', :to => "suggestions#approve"
+		get 'suggestions/:id/reject', :to => "suggestions#reject"
 		resources :attendees 
 		resources :potluck_items
 		resources :suggestions

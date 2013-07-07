@@ -1,19 +1,79 @@
 <h1>Pending suggestions</h1>
+<div id="flash-notice"></div>
+<table style="width:100%">
+	<thead>
+  	<tr>
+    	<th>Type</th>
+    	<th>Category</th>
+			<th>Items</th>
+    	<th>Requester</th>
+			<th>Options</th>
+		</tr>
+	</thead>
 
-<table>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
+	<tbody>
 <% @suggestions.each do |suggestion| %>
   <tr>
-    <td><%= link_to 'Show', event_suggestion_path(@event, suggestion) %></td>
-    <td><%= link_to 'Edit', edit_event_suggestion_path(@event, suggestion) %></td>
-    <td><%= link_to 'Destroy', event_suggestion_path(@event, suggestion), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td style="text-align:center"><%= suggestion.new_or_existing %></td>
+    <td style="text-align:center"><%= suggestion.category %></td>
+		<td style="text-align:center"><%= simple_format suggestion.suggested_items.join("<br/>") %></td>
+    <td style="text-align:center"><%= suggestion.requester_name %></td>
+		<td style="text-align:center"><span class="btn btn-success"><%= link_to " ", {:controller=>:suggestions, :action=>:approve, :event_id => @event.id, :id => suggestion.id}, {:style=>"color:white", :class=>"suggestion-approval icon-ok"} %></span>|<span class="btn btn-danger"><%= link_to " ", {:controller=>:suggestions, :action=>:reject, :event_id => @event.id, :id => suggestion.id}, {:style=>"color:white", :class=>"suggestion-reject icon-remove"} %></span></td>
   </tr>
 <% end %>
+</tbody>
 </table>
 
 <br />
+<script>
+	$(document).ready(function(){
+
+		$(".suggestion-approval").click(function(){
+			var url = $(this).attr("href");
+
+			$.ajax({
+				url: url,
+				dataType: "html",
+				success: function(){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("Items have been added to your event");
+					$("#potluck_list").click();
+				},
+				error: function(xhr){
+					var responseObject = JSON.parse(xhr.responseText), responseText = "List category cannot be added to your event for the following reasons: <ul>";
+					for (var key in responseObject){
+						responseText += "<li>"+responseObject[key]+"</li>";
+					}
+					responseText += "</ul> Please contact your event administrator";
+					$("#flash-notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
+					$("#flash-notice").html(responseText);
+				}
+			});
+			return false;
+		});
+
+		$(".suggestion-reject").click(function(){
+			var url = $(this).attr("href");
+
+			$.ajax({
+				url: url,
+				dataType: "html",
+				success: function(){
+					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+					$("#notice").html("Suggestion has been rejected");
+					$("#pending_suggestions").click();
+				},
+				error: function(xhr){
+					var responseObject = JSON.parse(xhr.responseText), responseText = "Suggestion could not be rejected for the following reasons: <ul>";
+					for (var key in responseObject){
+						responseText += "<li>"+responseObject[key]+"</li>";
+					}
+					responseText += "</ul> Please contact your event administrator";
+					$("#flash-notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
+					$("#flash-notice").html(responseText);
+				}
+			});
+			return false;
+		});
+	});
+</script>

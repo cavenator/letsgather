@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Salutations!</h1>
+    <p style="text-align:center;margin:2em 0 2em 0">
+			<%= @suggestion.requester_name %> has made the following suggestion to the party: <br/>
+			New or Existing?: <%= @suggestion.new_or_existing %>.<br/>
+			Category: <%= @suggestion.category %> <br/>
+			Items: <%= @suggestion.suggested_items.join(",") %>
+		</p>
+		<p style="margin-bottom:1em">Please <%= link_to 'sign in', root_url %> and approve/reject their suggestion.<br /><br/>
+    </p>
+    <p>Thanks and have a great day!</p>
+
+  </body>
+</html>
+
