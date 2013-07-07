@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-		has_many :attendees #, :dependent => :destroy
+		has_many :attendees 
 		has_many :potluck_items, :dependent => :destroy
 		has_many :suggestions, :dependent => :destroy
 		has_one :settings, :dependent => :destroy
@@ -209,6 +209,10 @@ class Event < ActiveRecord::Base
 			email_list = guests.map(&:email).compact.reject{|email| email.empty? }
 			ReminderMailer.send_event_reminders(email_list, self).deliver
 		end
+	end
+
+	def has_disabled_suggestions
+		return self.settings.disable_suggestions
 	end
 
 	def self.events_for_event_reminders

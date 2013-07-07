@@ -56,9 +56,11 @@
 		<li class="phoney-button">
 			<a style="color:white" id="potluck_list">Item list for party</a>
 		</li>
+		<% unless @event.has_disabled_suggestions %>
 		<li class="phoney-button">
 			<a style="color:white" id="pending_suggestions">Pending suggestions</a>
 		</li>
+		<% end %>
 		<li class="phoney-button">
 			<a style="color:white" id="invite_guests">Invite guests</a>
 		</li>

@@ -49,9 +49,11 @@
 		<li class="phoney-button" id="taken_items">
 			<a style="color:white" href="#" data-target="#takenItems" data-toggle="modal">Items others are bringing</a>
 		</li>
+		<% unless @event.has_disabled_suggestions %>
 		<li class="phoney-button" id="suggestions">
 			<a style="color:white" href="#" data-target="#suggestionsModal" data-toggle="modal">Suggest items for event</a>
 		</li>
+		<% end %>
 		<li class="phoney-button" id="attending_guests">
 			<a style="color:white" href="#" data-target="#attendingGuests" data-toggle="modal">Who else is coming?</a>
 		</li>

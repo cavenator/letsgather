@@ -9,7 +9,7 @@
 </div>
 <div class="row-fluid">
 	<div class="span6 offset3">
-		<h3>Notifications</h3>
+		<h3>Notifications And Toggles</h3>
 	</div>
 </div>
 <div class="row-fluid">
@@ -28,6 +28,9 @@
 				</tr>
 				<tr>
 					<td style="vertical-align:baseline"><input type="checkbox" id="check_notify_all_guests" name="settings[notify_on_guest_response]" value="true" /></td><td><label>Notify me off all guest rsvp responses</label></td>
+				</tr>
+				<tr>
+					<td style="vertical-align:baseline"><input type="checkbox" id="check_disabled_suggestions" name="settings[disable_suggestions]" value="true" /></td><td><label>Disable suggestions</label></td>
 				</tr>
 			</tbody>
 		</table>
@@ -75,6 +78,7 @@
 			$("#check_notify_attending_guests").prop('checked', settings_hash[event_id].notify_on_guest_accept);
 			$("#check_notify_declining_guests").prop('checked', settings_hash[event_id].notify_on_guest_decline);
 			$("#check_notify_all_guests").prop('checked', settings_hash[event_id].notify_on_guest_response);
+			$("#check_disabled_suggestions").prop('checked', settings_hash[event_id].disable_suggestions);
 			$("#rsvp_advance").val(settings_hash[event_id].days_rsvp_reminders);
 			$("#event_advance").val(settings_hash[event_id].days_event_reminders);
 		}
