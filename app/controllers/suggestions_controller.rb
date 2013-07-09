@@ -9,9 +9,13 @@ class SuggestionsController < ApplicationController
   # GET /suggestions.json
   def index
     @suggestions = @event.suggestions
+		view = "index"
+		unless current_user.is_host_for?(@event)
+			view = "readonly_suggestions"
+		end
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { render view } # index.html.erb
       format.json { render json: @suggestions }
     end
   end

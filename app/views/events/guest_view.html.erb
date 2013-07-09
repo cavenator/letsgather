@@ -50,6 +50,9 @@
 			<a style="color:white" href="#" data-target="#takenItems" data-toggle="modal">Items others are bringing</a>
 		</li>
 		<% unless @event.has_disabled_suggestions %>
+		<li class="phoney-button" id="readonly_suggestions">
+			<a style="color:white" href="#" data-target="#readOnlySuggestionsModal" data-toggle="modal">View suggestions from guests</a>
+		</li>
 		<li class="phoney-button" id="suggestions">
 			<a style="color:white" href="#" data-target="#suggestionsModal" data-toggle="modal">Suggest items for event</a>
 		</li>
@@ -179,6 +182,18 @@
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
 		</div>
 	</div>
+
+	<div id="readOnlySuggestionsModal" class="modal hide">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">x</button>
+			<h2>Suggestions by others</h2>
+		</div>
+		<div class="modal-body">
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+		</div>
+	</div>
 <script type="text/javascript">
 		function showRSVPSettings(){
 			$("#previewMode").hide();
@@ -199,7 +214,7 @@
 		}
 
 		$(document).ready(function(){
-			var category_array = [], dishes = {}, flash_message = $("#notice"), taken_queue = [], map, modals = ["#suggestionsModal", "#takenItems","#availableItems","#attendingGuests","#notAttendingGuests","#undecidedGuests"];
+			var category_array = [], dishes = {}, flash_message = $("#notice"), taken_queue = [], map, modals = ["#suggestionsModal", "#takenItems","#availableItems","#attendingGuests","#notAttendingGuests","#undecidedGuests","#readOnlySuggestionsModal"];
 
 			function removeClickHandlerFor(elem){
 				elem.off("click");
@@ -231,7 +246,7 @@
 			});
 
 			function displayContent(id, targetId){
-				var idMap = {"attending_guests": "/attendees/going", "suggestions": "/suggestions/new","unattending_guests": "/attendees/not_going","undecided_guests":"/attendees/undecided", "taken_items":"/taken_items", "available_items":"/available_items"};
+				var idMap = {"attending_guests": "/attendees/going", "suggestions": "/suggestions/new","unattending_guests": "/attendees/not_going","undecided_guests":"/attendees/undecided", "taken_items":"/taken_items", "available_items":"/available_items", "readonly_suggestions":"/suggestions"};
 
 				$.ajax({
 					url: document.location.pathname+idMap[id],
