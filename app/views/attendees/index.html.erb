@@ -1,3 +1,8 @@
+<h3>Invite Guests via email</h3>
+<%= render :partial=>"add_attendees", :locals => { :event => @event } %>
+<p></p>
+<hr/>
+<h3>The Guest list</h3>
 <table class="table table-condensed">
 	<thead>
 		<tr>
@@ -175,5 +180,68 @@
 		});
 	});
 
+		$("#add-distribution-group").click(function(){
+			var url = document.location.pathname+"/get_host_groups";
+			$("#alert-flash").empty();
+			$("#alert-flash").removeClass("alert alert-error alert-success");
+			$.ajax({
+				url: url,
+				dataType: "html",
+				success: function(data){
+					$("#addFromGroupsModal").find(".modal-body").html(data);
+					$("#addFromGroupsModal").modal("show");
+				},
+				error: function(){
+					$("#alert-flash").addClass("alert alert-error");
+					$("#alert-flash").html("Problems fetching your groups. Please contact your administrator");
+				}
+			});
+			return false;
+		});
+
+		$("#send-invitations").click(function(){
+			var outputJSON = {};
+			var emailArray = [];
+			var value = $("#email_area").val();
+
+			if ($.trim(value).length == 0){
+				$("#email_area").css('background-color','red');
+			} else {
+					value = value.replace(/\r|\n/g,"");
+					emailArray = value.split(",");
+					emailArray = $.map(emailArray, function(data){
+					return $.trim(data);
+				});
+			}
+
+			if ( emailArray.length == 0){
+				$("#alert-flash").addClass("alert alert-error");
+				$("#alert-flash").text("There are currently no email entries. Please populate them.");
+			}
+			else {
+				outputJSON["email"] = emailArray;
+				$("#email_invites").val(JSON.stringify(outputJSON));
+				var invite_guest_link = document.location.pathname+"/attendees/invite_guests", serialized_form = $(".form-horizontal").serialize();
+				$.ajax({
+					url: invite_guest_link,
+					type: 'POST',
+					data: serialized_form,
+					dataType: 'html',
+					async: false,
+					success: function(data){
+						$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
+						$("#notice").html("Invitations have been processed and emails will be sent out to those added to your guest list.");
+						$("#guests").click();
+					},
+					error: function() {
+						$(".form-horizontal").prepend("<div class='alert alert-error'>Invitations could not be sent out! Please contact your administrator and describe how to reproduce this issue</div>");
+					}
+				});
+				return false;
+			}
+		});
+
+		//Need this for the first entry since the others are dynamically added.
+		$("#email_area").click(function(){ $(this).css('background-color',''); });
 	});
 </script>

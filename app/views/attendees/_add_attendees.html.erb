@@ -1,0 +1,35 @@
+<div id="alert-flash"></div>
+<div class="row">
+	<div class="span6">
+			<div id="form-proxy">
+				<div class="input-prepend" style="display:block"><span class="add-on"><i class="icon-envelope"></i></span>
+					<textarea id="email_area" rows="5" style="width:100%" placeholder="Enter comma-delimited email list here (ex: email1, email2, email3)" />
+				</div>
+			</div>
+	</div>
+</div>
+<div class="row">
+	<div class="span1 offset1">
+			<button id="send-invitations" class="btn btn-primary">Send</button>
+	</div>
+		<% if event.user.groups.count > 0 %>
+			<div class="span2">
+				<button id="add-distribution-group" class="btn btn-success">Add from Groups</button>
+			</div>
+		<% end %>
+</div>
+<div id="addFromGroupsModal" class="modal hide">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h2>Add From Groups</h2>
+	</div>
+	<div class="modal-body">
+		<%= render :partial => "add_from_groups", :locals => { :user => event.user } %>
+	</div>
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+	</div>
+</div>
+<form accept-charset="UTF-8" action="" class="form-horizontal" method="post">
+		<input type="hidden" name="email_invites" id="email_invites" value="" >
+</form>

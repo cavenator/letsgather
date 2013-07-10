@@ -62,9 +62,6 @@
 		</li>
 		<% end %>
 		<li class="phoney-button">
-			<a style="color:white" id="invite_guests">Invite guests</a>
-		</li>
-		<li class="phoney-button">
 		<a style="color:white" id="guests">The guest list</a>
 		</li>
 		<li class="phoney-button">
@@ -84,7 +81,7 @@
 		</li>
 	</ul>
 	</div>
-	<div id="contentContainer" class="span6"> 
+	<div id="contentContainer" class="span8"> 
 	</div>
 
 	<div id="locationModal" class="modal hide" data-remote="">
@@ -272,7 +269,7 @@
 		});
 
 		function displayContent(id){
-			var idMap = {"guests": "/attendees", "supplemental_info": "/supplemental_info","invite_guests": "/attendees/add_attendees","potluck_list":"/potluck_items", "attending_guests":"/attending_guests","unattending_guests":"/unattending_guests","undecided_guests": "/undecided_guests", "potluck_statistics": "/potluck_statistics", "pending_suggestions":"/suggestions" };
+			var idMap = {"guests": "/attendees", "supplemental_info": "/supplemental_info","potluck_list":"/potluck_items", "attending_guests":"/attending_guests","unattending_guests":"/unattending_guests","undecided_guests": "/undecided_guests", "potluck_statistics": "/potluck_statistics", "pending_suggestions":"/suggestions" };
 
 			$.ajax({
 				url: document.location.pathname+idMap[id],
