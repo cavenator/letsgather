@@ -65,16 +65,10 @@
 		<a style="color:white" id="guests">The guest list</a>
 		</li>
 		<li class="phoney-button">
+			<a style="color:white" id="rsvp_guest_info">RSVP Guest Info</a>
+		</li>
+		<li class="phoney-button">
 			<a style="color:white" id="supplemental_info">Additional info for guests</a>
-		</li>
-		<li class="phoney-button">
-			<a style="color:white" id="attending_guests">Who's coming?</a>
-		</li>
-		<li class="phoney-button">
-			<a style="color:white" id="unattending_guests">Who's not coming?</a>
-		</li>
-		<li class="phoney-button">
-			<a style="color:white" id="undecided_guests">Who's undecided?</a>
 		</li>
 		<li class="phoney-button">
 			<%= link_to 'Back to my events', events_path, :style=>"color:white" %>
@@ -269,7 +263,7 @@
 		});
 
 		function displayContent(id){
-			var idMap = {"guests": "/attendees", "supplemental_info": "/supplemental_info","potluck_list":"/potluck_items", "attending_guests":"/attending_guests","unattending_guests":"/unattending_guests","undecided_guests": "/undecided_guests", "potluck_statistics": "/potluck_statistics", "pending_suggestions":"/suggestions" };
+			var idMap = {"guests": "/attendees", "supplemental_info": "/supplemental_info","potluck_list":"/potluck_items", "potluck_statistics": "/potluck_statistics", "pending_suggestions":"/suggestions","rsvp_guest_info":"/guests" };
 
 			$.ajax({
 				url: document.location.pathname+idMap[id],

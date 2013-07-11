@@ -57,14 +57,8 @@
 			<a style="color:white" href="#" data-target="#suggestionsModal" data-toggle="modal">Suggest items for event</a>
 		</li>
 		<% end %>
-		<li class="phoney-button" id="attending_guests">
-			<a style="color:white" href="#" data-target="#attendingGuests" data-toggle="modal">Who else is coming?</a>
-		</li>
-		<li class="phoney-button" id="unattending_guests">
-			<a style="color:white" href="#" data-target="#notAttendingGuests" data-toggle="modal">Who else is not coming?</a>
-		</li>
-		<li class="phoney-button" id="undecided_guests">
-			<a style="color:white" href="#" data-target="#undecidedGuests" data-toggle="modal">Who else is not sure?</a>
+		<li class="phoney-button" id="other_guests">
+			<a style="color:white" href="#" data-target="#otherGuests" data-toggle="modal">Who is on the list?</a>
 		</li>
 		<li class="phoney-button">
 			<%= link_to 'Back to my events', events_path, :style=>"color:white" %>
@@ -106,36 +100,13 @@
 		</div>
 	</div>
 </div>
-	<div id="attendingGuests" class="modal hide">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">x</button>
-			<h2>Attending</h2>
-		</div>
-		<div class="modal-body">
-		</div>
-		<div class="modal-footer">
-			<a href="#" class="btn" data-dismiss="modal">Close</a>
-		</div>
-	</div>
 
-	<div id="notAttendingGuests" class="modal hide">
+	<div id="otherGuests" class="modal hide" style="min-width:750px">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal">x</button>
-			<h2>Not Coming</h2>
+			<h2>The Guest List</h2>
 		</div>
-		<div class="modal-body">
-		</div>
-		<div class="modal-footer">
-			<a href="#" class="btn" data-dismiss="modal">Close</a>
-		</div>
-	</div>
-
-	<div id="undecidedGuests" class="modal hide">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal">x</button>
-			<h2>Undecided</h2>
-		</div>
-		<div class="modal-body">
+		<div class="modal-body" style="text-align:right">
 		</div>
 		<div class="modal-footer">
 			<a href="#" class="btn" data-dismiss="modal">Close</a>
@@ -214,7 +185,7 @@
 		}
 
 		$(document).ready(function(){
-			var category_array = [], dishes = {}, flash_message = $("#notice"), taken_queue = [], map, modals = ["#suggestionsModal", "#takenItems","#availableItems","#attendingGuests","#notAttendingGuests","#undecidedGuests","#readOnlySuggestionsModal"];
+			var category_array = [], dishes = {}, flash_message = $("#notice"), taken_queue = [], map, modals = ["#suggestionsModal", "#takenItems","#availableItems","#readOnlySuggestionsModal","#otherGuests"];
 
 			function removeClickHandlerFor(elem){
 				elem.off("click");
@@ -223,7 +194,7 @@
 			$.each(modals, function(index, elem){
 				$(elem).on('hide',function(){
 					var id = $(this).prop("id");
-					if (id == "notAttendingGuests" || id == "attendingGuests" || id == "undecidedGuests")
+					if (id == "otherGuests")
 						removeClickHandlerFor($(this).find(".modal-body").find(".email_individual"));
 					$(this).find(".modal-body").html("");
 				});
@@ -246,7 +217,7 @@
 			});
 
 			function displayContent(id, targetId){
-				var idMap = {"attending_guests": "/attendees/going", "suggestions": "/suggestions/new","unattending_guests": "/attendees/not_going","undecided_guests":"/attendees/undecided", "taken_items":"/taken_items", "available_items":"/available_items", "readonly_suggestions":"/suggestions"};
+				var idMap = {"attending_guests": "/attendees/going", "suggestions": "/suggestions/new","unattending_guests": "/attendees/not_going","undecided_guests":"/attendees/undecided", "taken_items":"/taken_items", "available_items":"/available_items", "readonly_suggestions":"/suggestions","other_guests":"/attendees/other_guests"};
 
 				$.ajax({
 					url: document.location.pathname+idMap[id],
@@ -560,7 +531,7 @@
 		});
 
 		function bindEmailElement(id){
-			if (id == "attending_guests" || id == "unattending_guests" || id == "undecided_guests"){
+			if (id == "other_guests"){
 				$(".email_individual").click(function(){
 					var activeModal = $(".active").find("a").attr('data-target');
 					$(activeModal).modal("hide");

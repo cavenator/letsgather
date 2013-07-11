@@ -1,0 +1,52 @@
+<div class="row">
+	<ul class="nav nav-pills">
+		<li class="filter-button phoney-button" data-filter="going" style="margin-left:200px;"><span style="font-weight:bold;font-size:1em;width:120px;float:left;min-height:2px;color:white">Coming <span class="label"><%= @attending.count %></span></span></li>
+		<li class="filter-button phoney-button" data-filter="not-going"><span style="font-weight:bold;font-size:1em;width:120px;float:left;min-height:2px;color:white">Not coming <span class="label"><%= @not_going.count %></span></span></li>
+		<li class="filter-button phoney-button" data-filter="not-sure"><span style="font-weight:bold;font-size:1em;width:120px;float:left;min-height:2px;color:white">Not sure <span class="label"><%= @undecided.count %></span></span></li>
+	</ul>
+</div>
+<div class="row">
+	<div class="span4 offset1" style="margin-top:1.5em">
+		<span style="font-weight:bold;font-size:1em" id="guest_filtered_value"></span>
+	</div>
+</div>
+<div class="row attending_guests">
+	<%= render :partial => 'events/attending_attendee', :collection => @attending, :spacer_template => "events/spacer_hr" %>
+</div>
+<div class="row unattending_guests">
+	<%= render :partial => 'events/unattending_attendee', :collection => @not_going, :spacer_template => "events/spacer_hr" %>
+</div>
+<div class="row undecided_guests">
+	<%= render :partial => 'events/undecided_attendee', :collection => @undecided, :spacer_template => "events/spacer_hr" %>
+</div>
+<script>
+$(document).ready(function(){
+
+	function filter(dataKey){
+		var filterMap = {"going": ".attending_guests", "not-going":".unattending_guests", "not-sure":".undecided_guests"};
+		for (var key in filterMap){
+			if (key == dataKey)
+				$(filterMap[key]).show();
+			else
+				$(filterMap[key]).hide();
+		}
+	}
+
+	function filterByClass(filterElem){
+		var dataKey = filterElem.data("filter");
+		filter(dataKey);
+	}
+
+	function toggleActiveClass(activeElem){
+		$(".filter-button").removeClass("active-pill");
+		activeElem.addClass("active-pill");
+	}
+
+	$(".filter-button").click(function(){
+		toggleActiveClass($(this));
+		filterByClass($(this));
+	});
+
+	$(".filter-button").eq(0).click();
+});
+</script>

@@ -109,22 +109,12 @@ class AttendeesController < ApplicationController
     end
   end
 
-	def going
+	def other_guests
 		@event = Event.find(params[:event_id])
-		@collection = @event.attendees.where("rsvp = 'Going' and (user_id is null or user_id <> ?)", current_user.id)
-		render :layout=>false
-	end
-
-	def not_going
-		@event = Event.find(params[:event_id])
-		@collection = @event.attendees.where("rsvp = 'Not Going' and (user_id is null or user_id <> ?)", current_user.id)
-		render :layout=>false
-	end
-
-	def undecided
-		@event = Event.find(params[:event_id])
-		@collection = @event.attendees.where("rsvp = 'Undecided' and (user_id is null or user_id <> ?)", current_user.id)
-		render :layout=>false
+		@attending = @event.attendees.where("rsvp = 'Going' and (user_id is null or user_id <> ?)", current_user.id)
+		@not_going = @event.attendees.where("rsvp = 'Not Going' and (user_id is null or user_id <> ?)", current_user.id)
+		@undecided = @event.attendees.where("rsvp = 'Undecided' and (user_id is null or user_id <> ?)", current_user.id)
+		render :layout => false
 	end
 
 	def add_attendees

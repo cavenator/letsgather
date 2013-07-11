@@ -3,7 +3,7 @@ class EventsController < ApplicationController
 	before_filter :align_attendee_events, :only => [:index, :show]
 	before_filter :verify_access, :except => [:index, :new, :create, :faq]
 	before_filter :verify_privileges, :only => [:edit, :update, :destroy, :email_group, :send_group_email, :change_roles]
-	before_filter :get_current_user, :only => [:index, :new, :show, :edit, :update]
+	before_filter :get_current_user, :only => [:index, :new, :show, :edit, :update, :guests]
 
   # GET /events
   # GET /events.json
@@ -196,18 +196,11 @@ class EventsController < ApplicationController
 		render :layout=>false, :partial=> "available_items", :collection => @event.get_available_items_for_event
 	end
 
-	def attending_guests
+	def guests
 		@event = Event.find(params[:id])
-		render :layout => false
-	end
-
-	def unattending_guests
-		@event = Event.find(params[:id])
-		render :layout => false
-	end
-
-	def undecided_guests
-		@event = Event.find(params[:id])
+		@attending = @event.attendees.where("rsvp = 'Going'")
+		@not_going = @event.attendees.where("rsvp = 'Not Going'")
+		@undecided = @event.attendees.where("rsvp = 'Undecided'")
 		render :layout => false
 	end
 
