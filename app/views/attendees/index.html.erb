@@ -21,7 +21,7 @@
 		<td class="attendee_name"><%= attendee.full_name %></td>
 		<td class="attendee_email"><%= attendee.email %></td>
 		<td style="text-align:center"><%= attendee.rsvp %></td>
-		<td><% unless attendee.email.blank? %><span class="btn btn-info" style="margin-right:0.5em"><%= link_to ' ', {:controller => :attendees, :action => :send_individual_calendar, :event_id => @event.id, :id => attendee.id}, { :style => "color:white", :class=>"individualInvite icon-calendar"} %></span><% end %><span class="btn btn-success" style="margin-right:0.5em"><%= link_to ' ', edit_event_attendee_url(@event, attendee), { :style => "color:white", :class=>"editAttendee icon-edit"} %></span><span class="btn btn-danger"><%= link_to ' ', event_attendee_url(@event, attendee), { confirm: 'Are you sure?', method: :delete, :style=>"color:white", :class=>"removeAttendee icon-remove"} %></span></td>
+		<td><% unless attendee.email.blank? %><span class="btn btn-info" style="margin-right:0.5em"><%= link_to ' ', {:controller => :attendees, :action => :send_individual_calendar, :event_id => @event.id, :id => attendee.id}, { :style => "color:white", :class=>"individualInvite icon-calendar"} %></span><% end %><span class="btn btn-success" style="margin-right:0.5em"><%= link_to ' ', edit_event_attendee_url(@event, attendee), { :style => "color:white", :class=>"editAttendee icon-edit"} %></span><span class="btn btn-danger"><%= link_to ' ', event_attendee_url(@event, attendee), { :style=>"color:white", :class=>"removeAttendee icon-remove"} %></span></td>
   </tr>
 <% end %>
 	</tbody>
@@ -87,7 +87,6 @@
 		$(".removeAttendee").click(function(){
 			var url = $(this).attr('href');
 			var id = url.substr(url.lastIndexOf("/")+1);
-			var table_row_id = "guest_"+id;
 			$.ajax({
 				url: url,
 				dataType: "html",
@@ -220,13 +219,12 @@
 			}
 			else {
 				outputJSON["email"] = emailArray;
-				$("#email_invites").val(JSON.stringify(outputJSON));
-				var invite_guest_link = document.location.pathname+"/attendees/invite_guests", serialized_form = $(".form-horizontal").serialize();
+				var invite_guest_link = document.location.pathname+"/attendees/invite_guests";
 				$.ajax({
 					url: invite_guest_link,
 					type: 'POST',
-					data: serialized_form,
-					dataType: 'html',
+					data: 'email_invites='+JSON.stringify(outputJSON),
+					dataType: 'json',
 					async: false,
 					success: function(data){
 						$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
