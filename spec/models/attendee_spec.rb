@@ -102,7 +102,7 @@ describe Attendee do
 			expect(invites["successful"].count) == 2
 
 			first_person = Attendee.find_by_email("person@gmail.com")
-			first_person.rsvp.should eq "Undecided"
+			expect(first_person.rsvp) == "No Response")
 			expect(first_person.event_id) == event.id
 		end
 
@@ -141,7 +141,7 @@ describe Attendee do
 		end
 
 		it "should be able to fetch the rsvp for an attendee" do
-			expect(Attendee.find_rsvp_for(@user, @event)).to eql("Undecided")
+			expect(Attendee.find_rsvp_for(@user, @event)).to eql("You are currently Undecided")
 		end
 	end
 

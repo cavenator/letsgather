@@ -11,7 +11,7 @@ class Attendee < ActiveRecord::Base
 		validates :event_id, :rsvp, :presence => true
 		validates :email, :uniqueness => { :scope => :event_id, :message => "should be unique per event", :allow_blank => true }
 		validates :email, :email_format => { :message => 'is not looking good', :allow_blank => true }
-		validates :rsvp, :inclusion => { :in => ["Going", "Not Going", "Undecided"] , :message => "needs to be submitted with 'Going', 'Not Going', 'Undecided'" }
+		validates :rsvp, :inclusion => { :in => ["Going", "Not Going", "Undecided","No Response"] , :message => "needs to be submitted with 'Going', 'Not Going', 'Undecided'" }
 		validates :num_of_guests, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :message => "need to be specified with a number" }
 		validate  :verify_host_is_not_guest, :unless => Proc.new {|a| a.event.blank? }
 		validate  :verify_correctness_of_dishes, :unless => :is_dish_empty?
@@ -59,7 +59,7 @@ class Attendee < ActiveRecord::Base
 		def self.invite(email_list, event, inviter)
 			email_hash = {"successful" => [], "unsuccessful" => [], "duplicated" => []}
 			email_list.each do |email|
-				attendee = Attendee.new(:event_id => event.id, :email => email, :rsvp => "Undecided")
+				attendee = Attendee.new(:event_id => event.id, :email => email, :rsvp => "No Response")
 				if attendee.save
 					email_hash["successful"] << email
 					AttendeeMailer.delay.welcome_guest(attendee, inviter)
@@ -188,7 +188,14 @@ class Attendee < ActiveRecord::Base
 		end
 
 		def self.find_rsvp_for(user, event)
-			return self.find_attendee_for(user, event).rsvp
+			attendee = self.find_attendee_for(user,event)
+			if attendee.rsvp.eql?("No Response")
+				return "You have not yet responded"
+			elsif attendee.rsvp.eql?("Undecided")
+				return "You are currently a Maybe"
+			else
+				return "You are currently #{attendee.rsvp}"
+			end
 		end
 
 		def can_cohost?

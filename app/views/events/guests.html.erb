@@ -1,8 +1,9 @@
 <div class="row">
 	<ul class="nav nav-pills">
-		<li class="filter-button phoney-button" data-filter="going"><span style="font-weight:bold;font-size:1em;width:180px;float:left;min-height:2px;margin-left:10px;color:white">Coming <span class="label"><%= @attending.count %></span></span></li>
-		<li class="filter-button phoney-button" data-filter="not-going"><span style="font-weight:bold;font-size:1em;width:180px;float:left;min-height:2px;color:white">Not coming <span class="label"><%= @not_going.count %></span></span></li>
-		<li class="filter-button phoney-button" data-filter="not-sure"><span style="font-weight:bold;font-size:1em;width:180px;float:left;min-height:2px;color:white">Not sure <span class="label"><%= @undecided.count %></span></span></li>
+		<li class="filter-button phoney-button" data-filter="going" style="margin-left:100px"><span style="font-weight:bold;font-size:1em;width:120px;float:left;min-height:2px;margin-left:10px;color:white;">Coming <span class="label"><%= @attending.count %></span></span></li>
+		<li class="filter-button phoney-button" data-filter="not-going"><span style="font-weight:bold;font-size:1em;width:120px;float:left;min-height:2px;color:white">Not coming <span class="label"><%= @not_going.count %></span></span></li>
+		<li class="filter-button phoney-button" data-filter="not-sure"><span style="font-weight:bold;font-size:1em;width:120px;float:left;min-height:2px;color:white">Maybe <span class="label"><%= @undecided.count %></span></span></li>
+		<li class="filter-button phoney-button" data-filter="no-response"><span style="font-weight:bold;font-size:1em;width:120px;float:left;min-height:2px;color:white">No Response <span class="label"><%= @no_response.count %></span></span></li>
 	</ul>
 </div>
 <div class="row">
@@ -28,6 +29,12 @@
 	<% end %>
 	<%= render :partial => "undecided_attendee", :collection => @undecided, :spacer_template => "spacer_hr" %>
 </div>
+<div class="row nonresponsive_guests">
+	<% unless @no_response.map(&:email).compact.reject{|c| c.empty?}.blank? %>
+		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "No Response"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
+	<% end %>
+	<%= render :partial => "nonresponsive_attendee", :collection => @no_response, :spacer_template => "spacer_hr" %>
+</div>
 <script>
 	$(document).ready(function(){
 
@@ -49,7 +56,7 @@
 	}
 
 	function filter(dataKey){
-		var filterMap = {"going": ".attending_guests", "not-going":".unattending_guests", "not-sure":".undecided_guests"};
+		var filterMap = {"going": ".attending_guests", "not-going":".unattending_guests", "not-sure":".undecided_guests","no-response":".nonresponsive_guests"};
 		for (var key in filterMap){
 			if (key == dataKey)
 				$(filterMap[key]).show();

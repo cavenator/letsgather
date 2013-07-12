@@ -114,6 +114,7 @@ class AttendeesController < ApplicationController
 		@attending = @event.attendees.where("rsvp = 'Going' and (user_id is null or user_id <> ?)", current_user.id)
 		@not_going = @event.attendees.where("rsvp = 'Not Going' and (user_id is null or user_id <> ?)", current_user.id)
 		@undecided = @event.attendees.where("rsvp = 'Undecided' and (user_id is null or user_id <> ?)", current_user.id)
+		@no_response = @event.attendees.where("rsvp = 'No Response' and (user_id is null or user_id <> ?)", current_user.id)
 		render :layout => false
 	end
 

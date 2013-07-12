@@ -1,7 +1,6 @@
 class MessageMailer < ActionMailer::Base
 
-	def email_group(group, event, subject, body)
-		email_list = group.map(&:email).compact
+	def email_group(email_list, event, subject, body)
 		@event = event
 		@body = body
 		mail(to: email_list, subject: subject, from: @event.user.email)

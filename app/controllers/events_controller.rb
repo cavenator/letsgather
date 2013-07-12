@@ -2,7 +2,7 @@
 class EventsController < ApplicationController
 	before_filter :align_attendee_events, :only => [:index, :show]
 	before_filter :verify_access, :except => [:index, :new, :create, :faq]
-	before_filter :verify_privileges, :only => [:edit, :update, :destroy, :email_group, :send_group_email, :change_roles]
+	before_filter :verify_privileges, :only => [:edit, :update, :destroy, :group_email, :send_group_email, :change_roles]
 	before_filter :get_current_user, :only => [:index, :new, :show, :edit, :update, :guests]
 
   # GET /events
@@ -175,7 +175,8 @@ class EventsController < ApplicationController
 			else
 				attendees = @event.attendees.where('rsvp = ?',@rsvp_group)
 			end
-			MessageMailer.delay.email_group(attendees, @event, @subject, @body)
+			email_list = attendees.map(&:email).compact
+			MessageMailer.delay.email_group(email_list, @event, @subject, @body)
 			flash[:notice] = "Message to guests have been sent"
 			render :nothing=>true, :status => 200
 		end
@@ -201,6 +202,7 @@ class EventsController < ApplicationController
 		@attending = @event.attendees.where("rsvp = 'Going'")
 		@not_going = @event.attendees.where("rsvp = 'Not Going'")
 		@undecided = @event.attendees.where("rsvp = 'Undecided'")
+		@no_response = @event.attendees.where("rsvp = 'No Response'")
 		render :layout => false
 	end
 

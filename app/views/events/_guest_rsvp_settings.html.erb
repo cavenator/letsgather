@@ -1,4 +1,12 @@
-<p><span style='font-weight:bold;font-size:1em'>Your response: </span><%= attendee.rsvp %></p>
+<p><span style='font-weight:bold;font-size:1em'>
+<% if attendee.rsvp.eql?("No Response") %>
+	Your response: None
+<% elsif attendee.rsvp.eql?("Undecided") %>
+Your response: Maybe
+<% else %>
+Your response: <%= attendee.rsvp %>
+<% end %></span>
+</p>
 <p><span style='font-weight:bold;font-size:1em'>Your most recent comment: </span><%= attendee.comment %></p>
 <% if attendee.rsvp.eql?("Going") %>
 <p><span style='font-weight:bold;font-size:1em'>Additional guests: </span><%= attendee.num_of_guests %></p>
