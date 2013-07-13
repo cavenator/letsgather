@@ -3,7 +3,7 @@
 		<li class="filter-button phoney-button" data-filter="going" style="margin-left:100px;"><span style="font-weight:bold;font-size:1em;width:140px;float:left;min-height:2px;color:white;text-align:center">Coming <span class="label"><%= @attending.count %></span></span></li>
 		<li class="filter-button phoney-button" data-filter="not-going"><span style="font-weight:bold;font-size:1em;width:140px;float:left;min-height:2px;color:white;text-align:center">Not coming <span class="label"><%= @not_going.count %></span></span></li>
 		<li class="filter-button phoney-button" data-filter="not-sure"><span style="font-weight:bold;font-size:1em;width:140px;float:left;min-height:2px;color:white;text-align:center">Maybe <span class="label"><%= @undecided.count %></span></span></li>
-		<li class="filter-button phoney-button" data-filter="no-response"><span style="font-weight:bold;font-size:1em;width:140px;float:left;min-height:2px;color:white;text-align:center">No response <span class="label"><%= 15 %></span></span></li>
+		<li class="filter-button phoney-button" data-filter="no-response"><span style="font-weight:bold;font-size:1em;width:140px;float:left;min-height:2px;color:white;text-align:center">No response <span class="label"><%= @no_response.count %></span></span></li>
 	</ul>
 </div>
 <div class="row">
