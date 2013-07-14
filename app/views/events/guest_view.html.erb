@@ -33,7 +33,7 @@
 	<% if @event.get_remaining_items_for_guests.blank? %>
 			<div class="alert alert-success" style="text-align: center; margin:auto; width:100%">Host does not have any outstanding items left. Hooray! </div>
 	<% else %>
-			<div class="alert alert-error" style="margin: auto; width:100%">Host still needs the following items for this event: <% @event.get_remaining_items_for_guests.each do |category, category_count|  %>
+			<div class="alert alert-info" style="margin: auto; width:100%">Host still needs the following items for this event: <% @event.get_remaining_items_for_guests.each do |category, category_count|  %>
 					<span style="float:right"><%= category %> =&gt; <%= category_count %></span><br />
 				<% end %>
 			</div>
@@ -44,24 +44,24 @@
 	<div class="span3">
 		<ul class="nav nav-pills nav-stacked">
 		<li class="phoney-button" id="available_items">
-			<a style="color:white" href="#" data-target="#availableItems" data-toggle="modal">Available potluck items</a>
+			<a href="#" data-target="#availableItems" data-toggle="modal">Available potluck items</a>
 		</li>
 		<li class="phoney-button" id="taken_items">
-			<a style="color:white" href="#" data-target="#takenItems" data-toggle="modal">Items others are bringing</a>
+			<a href="#" data-target="#takenItems" data-toggle="modal">Items others are bringing</a>
 		</li>
 		<% unless @event.has_disabled_suggestions %>
 		<li class="phoney-button" id="readonly_suggestions">
-			<a style="color:white" href="#" data-target="#readOnlySuggestionsModal" data-toggle="modal">View suggestions from guests</a>
+			<a href="#" data-target="#readOnlySuggestionsModal" data-toggle="modal">View suggestions from guests</a>
 		</li>
 		<li class="phoney-button" id="suggestions">
-			<a style="color:white" href="#" data-target="#suggestionsModal" data-toggle="modal">Suggest items for event</a>
+			<a href="#" data-target="#suggestionsModal" data-toggle="modal">Suggest items for event</a>
 		</li>
 		<% end %>
 		<li class="phoney-button" id="other_guests">
-			<a style="color:white" href="#" data-target="#otherGuests" data-toggle="modal">Who is on the list?</a>
+			<a href="#" data-target="#otherGuests" data-toggle="modal">Who is on the list?</a>
 		</li>
 		<li class="phoney-button">
-			<%= link_to 'Back to my events', events_path, :style=>"color:white" %>
+			<%= link_to 'Back to my events', events_path, :style=>"color:black" %>
 		</li>
 		</ul>
 	</div>
