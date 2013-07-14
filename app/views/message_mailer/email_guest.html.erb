@@ -4,11 +4,7 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-		<% if @host.id == @sender.id %>
-    	<h2>A message from your host<%= @host.email %> regarding <%= @event.name %></h2>
-		<% else %>
 			<h2>A message from <%= @sender.full_name %>(<%= @sender.email %>) </h2>
-		<% end %>
     <p>
 			<%= simple_format @body %>
     </p>

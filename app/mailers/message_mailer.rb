@@ -10,7 +10,6 @@ class MessageMailer < ActionMailer::Base
 	def email_guest(guest, subject, body, sender)
 		@body = body
 		@event = guest.event
-		@host = @event.user
 		@sender = sender
 		mail(to: guest.email, subject: subject, from: @event.user.email)
 	end

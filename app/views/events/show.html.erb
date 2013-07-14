@@ -56,17 +56,14 @@
 		<li class="phoney-button">
 			<a id="potluck_list">Item list for party</a>
 		</li>
+		<li class="phoney-button">
+			<a id="guests">The guest list</a>
+		</li>
 		<% unless @event.has_disabled_suggestions %>
 		<li class="phoney-button">
 			<a id="pending_suggestions">Pending suggestions</a>
 		</li>
 		<% end %>
-		<li class="phoney-button">
-		<a id="guests">The guest list</a>
-		</li>
-		<li class="phoney-button">
-			<a id="rsvp_guest_info">RSVP Guest Info</a>
-		</li>
 		<li class="phoney-button">
 			<a id="supplemental_info">Additional info for guests</a>
 		</li>
@@ -263,7 +260,7 @@
 		});
 
 		function displayContent(id){
-			var idMap = {"guests": "/attendees", "supplemental_info": "/supplemental_info","potluck_list":"/potluck_items", "potluck_statistics": "/potluck_statistics", "pending_suggestions":"/suggestions","rsvp_guest_info":"/guests" };
+			var idMap = {"guests": "/attendees", "supplemental_info": "/supplemental_info","potluck_list":"/potluck_items", "potluck_statistics": "/potluck_statistics", "pending_suggestions":"/suggestions" };
 
 			$.ajax({
 				url: document.location.pathname+idMap[id],

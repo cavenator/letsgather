@@ -1,2 +1,14 @@
-
-		<%= render :partial=>"potluck_statistics", :locals => {:event => @event} %>
+<%= render :partial=>"potluck_statistics", :locals => {:event => @event} %>
+<div id="guest-info" style="margin-top:2em">
+</div>
+<script>
+	$(document).ready(function(){
+			$.ajax({
+				url: document.location.pathname+"/guests",
+				dataType: "html",
+				success: function(data){
+					$("#guest-info").html(data);
+				}
+			});
+	});
+</script>

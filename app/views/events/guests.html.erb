@@ -6,14 +6,9 @@
 		<li class="filter-button phoney-button" data-filter="no-response"><span style="font-weight:bold;font-size:1em;width:140px;float:left;min-height:2px;text-align:center">No Response <span class="label"><%= @no_response.count %></span></span></li>
 	</ul>
 </div>
-<div class="row">
-	<div class="span4 offset1" style="margin-top:1.5em">
-		<span style="font-weight:bold;font-size:1em" id="guest_filtered_value"></span>
-	</div>
-</div>
 <div class="row attending_guests">
 	<% unless @attending.map(&:email).compact.blank? %>
-		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Going"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
+		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Going"}, {:style=>"margin-bottom: 1em;color:blue;float:right", :class => "btn btn-link email_group"} %>
 		<% end %>
 	<%= render :partial => "attending_attendee", :collection => @attending, :spacer_template => "spacer_hr" %>
 </div>
