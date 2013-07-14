@@ -1,5 +1,11 @@
+<h3>List info</h3>
 <%= render :partial=>"potluck_statistics", :locals => {:event => @event} %>
-<div id="guest-info" style="margin-top:2em">
+
+<div style="margin-top:2em;margin-bottom:2em">
+		<h3>Guest info</h3>
+		<div class="label label-success">Total number of guest attending: <%= @event.attending_guest_count %></div>
+</div>
+<div id="guest-info">
 </div>
 <script>
 	$(document).ready(function(){
