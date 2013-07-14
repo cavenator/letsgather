@@ -3,6 +3,7 @@
 <p></p>
 <hr/>
 <h3>The Guest list</h3>
+<div id="flash-notice"></div>
 <table class="table table-condensed">
 	<thead>
 		<tr>
@@ -36,6 +37,22 @@
 <script>
 	$(document).ready(function(){
 
+		function clearMainDiv(){
+			$("#notice").removeClass("alert alert-error alert-success");
+			$("#notice").empty();
+		}
+
+		function populateMainDiv(cssClasses, msg){
+			$("#notice").removeClass("alert alert-error alert-success").addClass(cssClasses);
+			$("#notice").html(msg);
+		}
+
+		function populateFlashDiv(cssClasses, msg){
+			$("#flash-notice").removeClass("alert alert-error alert-success").addClass(cssClasses);
+			$("#flash-notice").html(msg);
+			clearMainDiv();
+		}
+
 		$("#newAttendeeButton").click(function(){
 			var url = document.location.pathname+"/attendees/new", newAttendeeModal = $("#newAttendeeModal");
 			$.ajax({
@@ -56,31 +73,30 @@
 				url: $(this).attr('href'),
 				method: "PUT",
 				success: function(){
-					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
-					$("#notice").html("Permissions have been changed successfully");
+					populateMainDiv("alert alert-success","Permissions have been changed successfully");
 					$("#guests").click();
 				},
 				error: function(){
-					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
-					$("#notice").html("Guest cannot be promoted to co-host. Please contact your administrator");
+					populateMainDiv("alert alert-error","Guest cannot be promoted to co-host. Please contact your administrator");
 				}
 			});
 			return false;
 		});
 
 		$(".individualInvite").click(function(){
-			$.ajax({
-				url: $(this).attr('href'),
-				success: function(){
-					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
-					$("#notice").html("Calendar invite for guest has been sent");
-					$("#guests").click();
-				},
-				error: function(){
-					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
-					$("#notice").html("Calendar invite could not be processed correctly. Please contact your administrator");
-				}
-			});
+			var confirmation = confirm("This will send an invite. Do you still want to proceed?");
+			if (confirmation){
+				$.ajax({
+					url: $(this).attr('href'),
+					success: function(){
+						populateFlashDiv("alert alert-success","Calendar invite for guest has been sent");
+					},
+					error: function(){
+						populateFlashDiv("alert alert-error","Calendar invite could not be processed correctly. Please contact your administrator");
+					}
+				});
+			}
+			clearMainDiv();
 			return false;
 		});
 
@@ -94,13 +110,11 @@
 				type: "DELETE",
 				async: false,
 				success: function(){
-					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
-					$("#notice").html("Guest has been removed from your event");
+					populateMainDiv("alert alert-success","Guest has been successfully removed from event");
 					$("#guests").click();
 				},
 				error: function(){
-					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
-					$("#notice").html("Guest cannot be removed from the event");
+					populateFlashDiv("alert alert-error","Guest cannot be removed from the event. Please contact your administrator");
 				}
 			});
 			return false;
@@ -164,19 +178,20 @@
 
 	$("#sendUpdatedCalendars").click(function(){
 		var url = document.location.pathname;
-		$.ajax({
-			url: url+"/attendees/send_updated_calendar",
-			type: "GET", 
-			async: true,
-			success: function(){
-					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
-					$("#notice").html("Calendar events have been sent to your guests");
-			},
-			error: function(){
-					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");
-					$("#notice").html("Error trying to send guest updated calendars. Please contact your adminstrator.");
-			}
-		});
+		var confirmation = confirm("This will send an updated calendar to all guests. Do you still want to proceed?");
+		if (confirmation){
+			$.ajax({
+				url: url+"/attendees/send_updated_calendar",
+				type: "GET", 
+				async: true,
+				success: function(){
+					populateFlashDiv("alert alert-success","Calendar events have been sent to your guests");
+				},
+				error: function(){
+					populateFlashDiv("alert alert-error","Error trying to send guest updated calendars. Please contact your adminstrator");
+				}
+			});
+		}
 	});
 
 		$("#add-distribution-group").click(function(){
@@ -227,8 +242,7 @@
 					dataType: 'json',
 					async: false,
 					success: function(data){
-						$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
-						$("#notice").html("Invitations have been processed and emails will be sent out to those added to your guest list.");
+						populateMainDiv("alert alert-success", "Invitations have been processed and emails will be sent out to those added to your guest list");
 						$("#guests").click();
 					},
 					error: function() {
