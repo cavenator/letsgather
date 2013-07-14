@@ -178,7 +178,7 @@
 
 	$("#sendUpdatedCalendars").click(function(){
 		var url = document.location.pathname;
-		var confirmation = confirm("This will send an updated calendar to all guests. Do you still want to proceed?");
+		var confirmation = confirm("This will send updated event info to all guests. Do you still want to proceed?");
 		if (confirmation){
 			$.ajax({
 				url: url+"/attendees/send_updated_calendar",

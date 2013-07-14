@@ -6,7 +6,7 @@
 		$("#add_more_items").click(function(){
 			var item_list = $("#list_items");
 			var additionalDiv = $("<div></div>");
-			var itemText = $("<input type='text' class='input-large' placeholder='List item here ....'>");
+			var itemText = $("<input type='text' class='input-large' placeholder='Enter list item here (1 max)'>");
 			var removeButton = $("<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em'><i class='icon-remove-sign'></i></button>");
 			removeButton.click(function(){
 				additionalDiv.remove();

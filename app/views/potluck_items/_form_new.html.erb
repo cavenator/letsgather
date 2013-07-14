@@ -20,32 +20,39 @@
 
 	<p>
 		<%= f.label :host_quantity, 'Desired number of items' %>
-		<%= f.text_field :host_quantity %>
+		<%= f.text_field :host_quantity, :placeholder => 0 %>
 	</p>
 
 	<p>
 		<%= f.hidden_field :dishes %>
 	</p>
 
-	<% if @potluck_item.dishes.blank? %>
-		<div id="list_items">
-			<label>Items: </label>
-			<input type="text" class="input-large" id="first_item" placeholder="List item here ...">
-	</div>
-  <% else %>
+	<% if @potluck_item.id.blank? %>
+		<label>Items: </label>
+		<textarea id="list_area" rows="5" style="width:100%" placeholder="Create your list via comma-delimited items(ex: rice, beans, chips + salsa)" />
+	<% else %>
+		<% if @potluck_item.dishes.blank? %>
 			<div id="list_items">
-			<label>Items: </label>
-		<% @potluck_item.dishes.each_with_index do |dish, index| %>
-				<div id="dish_<%= index %>">
-					<input type='text' class='input-large' value="<%= dish %>">
+				<label>Items: </label>
+				<input type="text" class="input-large" id="first_item" placeholder="Enter list item here (1 max)">
+			</div>
+		<% else %>
+			<div id="list_items">
+				<label>Items: </label>
+				<% @potluck_item.dishes.each_with_index do |dish, index| %>
+					<div id="dish_<%= index %>">
+						<input type='text' class='input-large' value="<%= dish %>">
 						<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em' onclick="$('#dish_<%= index %>').remove();"><i class="icon-remove"></i></button>
-				</div>
+					</div>
+				<% end %>
+			</div>
 		<% end %>
-		</div>
-	<% end %>
+	<%end %>
 
   <div>
 		<button id="submit_button" class="btn btn-primary">Save</button>
-		<button id="add_more_items" class="btn btn-success">Add more items</button>
+		<% unless @potluck_item.id.blank? %>
+			<button id="add_more_items" class="btn btn-success">Add more items</button>
+		<% end %>
   </div>
 <% end %>

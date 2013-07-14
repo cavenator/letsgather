@@ -3,31 +3,19 @@
 <script>
 
 	$(document).ready(function(){
-		$("#add_more_items").click(function(){
-			var item_list = $("#list_items");
-			var additionalDiv = $("<div></div>");
-			var itemText = $("<input type='text' class='input-large' placeholder='List item here ....'>");
-			var removeButton = $("<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em'><i class='icon-remove-sign'></i></button>");
-			removeButton.click(function(){
-				additionalDiv.remove();
-			});
-			additionalDiv.appendTo(item_list);
-			itemText.appendTo(additionalDiv);
-			removeButton.appendTo(additionalDiv);
-			return false;
-		});
 
 		$("#submit_button").click(function(){
 			var dish_array = [];
+			var list_items = $("#list_area").val();
 			var url = $("#potluckItemsForm").attr('action');
 			var serialized_form;
 
 			$("#flash_notice").removeClass("alert alert-error");
 			$("#flash_notice").html("");
 
-			$(".input-large").each(function(index, input){
-				if ($.trim($(input).val()) != "")
-					dish_array.push($(input).val());
+			dish_array = $.map(list_items.split(","), function(item, index){
+				if ($.trim(item).length > 0)
+					return $.trim(item);
 			});
 
 			$("#potluck_item_dishes").val(JSON.stringify(dish_array));
