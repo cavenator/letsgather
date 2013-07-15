@@ -5,10 +5,10 @@
 	<div class="span1 guest-info-body"><%= guest_info.rsvp %></div>
 </div>
 <div class="row">
-	<div class="span2 offset1"><% unless guest_info.email.blank? %><%= link_to ' Send invitation', {:controller => :attendees, :action => :send_individual_calendar, :event_id => event.id, :id => guest_info.id}, { :style => "color:blue;font-size:1.1em", :class=>"individualInvite icon-calendar"} %><% end %>
+	<div class="span2 offset1"><% unless guest_info.email.blank? %><%= link_to ' Send invitation', {:controller => :attendees, :action => :send_individual_calendar, :event_id => event.id, :id => guest_info.id}, { :style => "color:blue;font-size:1.1em", :class=>"individualInvite icon-calendar guest-options"} %><% end %>
 	</div>
-	<div class="span1"><%= link_to ' Edit', edit_event_attendee_url(event, guest_info), { :style => "color:blue;font-size:1.1em", :class=>"editAttendee icon-edit"} %>
+	<div class="span1"><%= link_to ' Edit', edit_event_attendee_url(event, guest_info), { :style => "color:blue;font-size:1.1em", :class=>"editAttendee icon-edit guest-options"} %>
 	</div>
-	<div class="span2"><%= link_to ' Remove', event_attendee_url(event, guest_info), { :style=>"color:blue;font-size:1.1em", :class=>"removeAttendee icon-remove"} %>
+	<div class="span2"><%= link_to ' Remove', event_attendee_url(event, guest_info), { :style=>"color:blue;font-size:1.1em", :class=>"removeAttendee icon-remove guest-options"} %>
 	</div>
 </div>
