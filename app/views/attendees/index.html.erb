@@ -4,36 +4,20 @@
 <hr/>
 <h3>The Guest list</h3>
 <div id="flash-notice"></div>
-<table class="table table-condensed">
-	<thead>
-		<tr>
-			<th></th>
-			<th>Name</th>
-			<th>Email address</th>
-			<th>RSVP</th>
-			<th>Options</th>
-		</tr>
-	</thead>
-
-	<tbody>
-<% @event.attendees.each do |attendee| %>
-  <tr id="guest_<%= attendee.id %>">
-		<td><% if current_user.id == @event.user.id && !attendee.email.blank? %><% if attendee.can_cohost? %><%= link_to "Host", {:controller => :events, :action => :change_roles, :id => @event.id, :attendee_id => attendee.id}, :class=>"btn btn-link promotion" %><% else %><%= link_to "Guest", {:controller => :events, :action => :change_roles, :id => @event.id, :attendee_id => attendee.id}, :class=>"btn btn-link promotion" %><% end %><% elsif attendee.can_cohost? %><span class="label">Host</span><% end %></td>
-		<td class="attendee_name"><%= attendee.full_name %></td>
-		<td class="attendee_email"><%= attendee.email %></td>
-		<td style="text-align:center"><%= attendee.rsvp %></td>
-		<td><% unless attendee.email.blank? %><span class="btn btn-info" style="margin-right:0.5em"><%= link_to ' ', {:controller => :attendees, :action => :send_individual_calendar, :event_id => @event.id, :id => attendee.id}, { :style => "color:white", :class=>"individualInvite icon-calendar"} %></span><% end %><span class="btn btn-success" style="margin-right:0.5em"><%= link_to ' ', edit_event_attendee_url(@event, attendee), { :style => "color:white", :class=>"editAttendee icon-edit"} %></span><span class="btn btn-danger"><%= link_to ' ', event_attendee_url(@event, attendee), { :style=>"color:white", :class=>"removeAttendee icon-remove"} %></span></td>
-  </tr>
-<% end %>
-	</tbody>
-</table>
-
-<br />
-<button href="#newAttendeeModal" id="newAttendeeButton" class="btn btn-primary" data-toggle="modal">Add Guest</button>
+<div class="row" style="margin-bottom:2em">
+	<span class="span1 headers"></span>
+	<span class="span2 headers">Name</span>
+	<span class="span3 headers">Email address</span>
+	<span class="span1 headers">RSVP</span>
+</div>
+	<%= render :partial => "guest_info", :collection => @event.attendees, :locals => {:event => @event, :user => current_user }, :spacer_template => "events/spacer_hr" %>
+<div class="row" style="margin-top:2.5em">
+	<button style="margin-left:50px" href="#newAttendeeModal" id="newAttendeeButton" class="btn btn-primary" data-toggle="modal">Add Guest</button>
 <% unless @event.get_unique_guest_email_list.blank? %>
-	<button id="sendUpdatedCalendars" class="btn btn-info">Send <i class="icon-calendar"></i></button>
+	<button id="sendUpdatedCalendars" class="btn btn-info"><i class="icon-calendar"></i> Send to all</button>
 	<div style="float:right" id="emailAllGuestDiv"><%= link_to 'Email all guests',{:controller => :events, :action => :group_email, :id => @event.id }, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link", :id=>"emailAllGuests"} %></div>
 <% end %>
+</div>
 <script>
 	$(document).ready(function(){
 

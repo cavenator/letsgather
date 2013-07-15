@@ -1,0 +1,14 @@
+<div class="row">
+	<div class="span1 guest-info-body"><% if user.id == event.user.id && !guest_info.email.blank? %><% if guest_info.can_cohost? %><%= link_to "Host", {:controller => :events, :action => :change_roles, :id => event.id, :attendee_id => guest_info.id}, :class=>"btn btn-link promotion" %><% else %><%= link_to "Guest", {:controller => :events, :action => :change_roles, :id => event.id, :attendee_id => guest_info.id}, :class=>"btn btn-link promotion" %><% end %><% elsif guest_info.can_cohost? %><span class="label">Host</span><% end %></div>
+	<div class="span2 attendee_name guest-info-body"><%= guest_info.full_name %></div>
+	<div class="span3 attendee_email guest-info-body"><%= guest_info.email %></div>
+	<div class="span1 guest-info-body"><%= guest_info.rsvp %></div>
+</div>
+<div class="row">
+	<div class="span2 offset1"><% unless guest_info.email.blank? %><%= link_to ' Send invitation', {:controller => :attendees, :action => :send_individual_calendar, :event_id => event.id, :id => guest_info.id}, { :style => "color:blue;font-size:1.1em", :class=>"individualInvite icon-calendar"} %><% end %>
+	</div>
+	<div class="span1"><%= link_to ' Edit', edit_event_attendee_url(event, guest_info), { :style => "color:blue;font-size:1.1em", :class=>"editAttendee icon-edit"} %>
+	</div>
+	<div class="span2"><%= link_to ' Remove', event_attendee_url(event, guest_info), { :style=>"color:blue;font-size:1.1em", :class=>"removeAttendee icon-remove"} %>
+	</div>
+</div>
