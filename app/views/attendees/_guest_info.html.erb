@@ -8,7 +8,7 @@
 	<div class="span2 offset1">
 		<% if user.id == event.user.id && !guest_info.email.blank? %><% if guest_info.can_cohost? %><%= link_to "Demote to guest", {:controller => :events, :action => :change_roles, :id => event.id, :attendee_id => guest_info.id}, :class=>"guest-options icon-user promotion" %><% else %><%= link_to "Promote to cohost", {:controller => :events, :action => :change_roles, :id => event.id, :attendee_id => guest_info.id}, :class=>"guest-options icon-user promotion" %><% end %><% end %>
 	</div>
-	<div class="span2"><% unless guest_info.email.blank? %><%= link_to ' Send invitation', {:controller => :attendees, :action => :send_individual_calendar, :event_id => event.id, :id => guest_info.id}, { :class=>"individualInvite icon-calendar guest-options"} %><% end %>
+	<div class="span2"><% unless guest_info.email.blank? || guest_info.invite_sent %><%= link_to ' Send invitation', {:controller => :attendees, :action => :send_individual_calendar, :event_id => event.id, :id => guest_info.id}, { :class=>"individualInvite icon-calendar guest-options"} %><% end %>
 	</div>
 	<div class="span1"><%= link_to ' Edit', edit_event_attendee_url(event, guest_info), { :class=>"editAttendee icon-edit guest-options"} %>
 	</div>

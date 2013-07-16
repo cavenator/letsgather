@@ -152,6 +152,8 @@ class AttendeesController < ApplicationController
 	def send_individual_calendar
 		@attendee = Attendee.find(params[:id])
 		AttendeeMailer.delay.welcome_guest(@attendee, current_user)
+		@attendee.invite_sent = true
+		@attendee.save
 		render :nothing => true, :status => 200
 	end
 

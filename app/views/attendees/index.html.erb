@@ -74,6 +74,7 @@
 					url: $(this).attr('href'),
 					success: function(){
 						populateFlashDiv("alert alert-success","Calendar invite for guest has been sent");
+						$("#guests").click();
 					},
 					error: function(){
 						populateFlashDiv("alert alert-error","Calendar invite could not be processed correctly. Please contact your administrator");

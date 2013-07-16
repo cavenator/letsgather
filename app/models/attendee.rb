@@ -1,7 +1,7 @@
 class Attendee < ActiveRecord::Base
 		belongs_to :event
   # attr_accessible :title, :body
-		attr_accessible :event_id, :user_id, :invitation_id, :full_name, :email, :rsvp, :num_of_guests, :comment, :dish, :is_host
+		attr_accessible :event_id, :user_id, :invitation_id, :full_name, :email, :rsvp, :num_of_guests, :comment, :dish, :is_host, :invite_sent
 		serialize :dish
 
 		before_validation do |attendee|
@@ -59,7 +59,7 @@ class Attendee < ActiveRecord::Base
 		def self.invite(email_list, event, inviter)
 			email_hash = {"successful" => [], "unsuccessful" => [], "duplicated" => []}
 			email_list.each do |email|
-				attendee = Attendee.new(:event_id => event.id, :email => email, :rsvp => "No Response")
+				attendee = Attendee.new(:event_id => event.id, :email => email, :rsvp => "No Response", :invite_sent => true)
 				if attendee.save
 					email_hash["successful"] << email
 					AttendeeMailer.delay.welcome_guest(attendee, inviter)
