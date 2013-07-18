@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="span4">
+	<div class="span6 offset1">
 		<h3>New</h3>
 		<% if @event.suggestions.select{|suggestion| suggestion.new_or_existing.eql?("New") }.count == 0 %>
 			None at the moment
@@ -11,7 +11,7 @@
 	</div>
 </div>
 <div class="row">
-	<div class="span4">
+	<div class="span6 offset1">
 		<h3>Existing</h3>
 		<% if @event.suggestions.select{|suggestion| suggestion.new_or_existing.eql?("Existing") }.count == 0 %>
 			None at the moment

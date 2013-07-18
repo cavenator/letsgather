@@ -31,12 +31,9 @@ MaximusSamurai::Application.routes.draw do
 	resources :events do
 		get 'attendees/add_attendees', :to => 'attendees#add_attendees'
 		post 'attendees/invite_guests', :to => 'attendees#invite_guests'
-#		get 'attendees/going', :to => 'attendees#going'
-#		get 'attendees/not_going', :to => 'attendees#not_going'
-#		get 'attendees/undecided', :to => 'attendees#undecided'
 		get 'attendees/other_guests', :to => 'attendees#other_guests'
 		get 'attendees/send_updated_calendar', :to => 'attendees#send_updated_calendar'
-		post 'attendees/:id/rsvp', :to => 'attendees#rsvp'
+		get 'attendees/rsvp', :to => 'attendees#rsvp'
 		get 'attendees/:id/send_calendar', :to => 'attendees#send_individual_calendar'
 		get 'attendees/:id/email_guest', :to => "attendees#email_guest"
 		get 'attendees/:id/send_guest_email', :to => "attendees#send_guest_email"

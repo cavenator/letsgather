@@ -26,6 +26,23 @@
 <script>
 $(document).ready(function(){
 
+	function loadEmailTemplate(emailObject){
+		var url = $(emailObject).attr('href'), emailModal = $("#emailModal");
+
+		emailModal.attr('data-remote',url);
+		$.ajax({
+			url: url,
+			dataType: "html",
+			success: function(data){
+				emailModal.find(".modal-body").html(data);
+				emailModal.modal("show");
+			},
+			error: function(xhr, errorText, errorObject){
+				emailModal.find(".modal-body").html("<div class='alert alert-error'>"+errorText+": Cannot retrieve template for emailing guest. Please contact the administrator about this</div>");
+			}
+		});
+	}
+
 	function filter(dataKey){
 		var filterMap = {"going": ".attending_guests", "not-going":".unattending_guests", "not-sure":".undecided_guests","no-response":".nonresponsive_guests"};
 		for (var key in filterMap){
@@ -50,6 +67,11 @@ $(document).ready(function(){
 		toggleActiveClass($(this));
 		filterByClass($(this));
 	});
+
+		$(".email_individual").click(function(){
+			loadEmailTemplate($(this));
+			return false;
+		});
 
 	$(".filter-button").eq(0).click();
 });

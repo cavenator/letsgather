@@ -2,7 +2,8 @@
 class AttendeesController < ApplicationController
 	before_filter :verify_access
 	before_filter :verify_host_privileges, :only => [:new, :create, :add_attendees, :invite_guests, :send_updated_calendar, :send_individual_calendar ]
-	before_filter :verify_correct_attendee, :only => [:rsvp, :show, :edit, :update, :destroy ]
+	before_filter :verify_correct_attendee, :only => [:show, :edit, :update, :destroy ]
+	before_filter :verify_correct_rsvp, :only => [:rsvp]
 
   # GET /attendees
   # GET /attendees.json
@@ -16,17 +17,9 @@ class AttendeesController < ApplicationController
   end
 
 	def rsvp
-		@attendee = Attendee.find(params[:id])
-		@attendee.rsvp = params[:rsvp]
-		if @attendee.save
-			respond_to do |format|
-				format.json { render json: @attendee.to_json }
-			end
-		else 
-			respond_to do |format|
-				format.json { render json: @attendee.errors, status: :unprocessable_entity }
-			end
-		end
+		@event = Event.find(params[:event_id])
+		@attendee = Attendee.find_attendee_for(current_user, @event)
+		render :layout => false
 	end
 
   # GET /attendees/1
@@ -209,4 +202,13 @@ class AttendeesController < ApplicationController
 			render file: "public/422.html", status: :unprocessable_entity
 		end
 	end
+
+	def verify_correct_rsvp
+		event = Event.find(params[:event_id])
+		attendee = Attendee.find_attendee_for(current_user, event)
+		unless attendee
+			render file: "public/422.html", status: :unprocessable_entity
+		end
+	end
+	
 end

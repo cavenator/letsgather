@@ -1,14 +1,14 @@
 <div class="row">
-	<div class="span4">
+	<div>
 		<span style="font-weight:bold">Category: </span>
 			<%= select_tag("existing-category", options_for_select(event.potluck_items.map{|items| [items.category, items.category]})) %>
 	</div>
 </div>
 <div class="row">
-	<div id="existing-list" class="span4">
+	<div id="existing-list">
 		<span style="font-weight:bold">Item: </span><%= text_field_tag nil, nil, {:class=>"input-large", :placeholder => "Enter list item here"} %>
 	</div>
-	<div id="existing-actions" class="span4">
+	<div id="existing-actions">
 		<button id="new-existing-button" class="btn btn-success">Add items</button>
 		<button id="submit-existing-list" class="btn btn-primary">Submit</button>
 	</div>
