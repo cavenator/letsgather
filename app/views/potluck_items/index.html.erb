@@ -1,33 +1,9 @@
-<table class="table table-condensed">
-	<thead>
-  	<tr>
-    	<th>Category</th>
-    	<th>Available Items</th>
-			<th>Taken Items</th>
-    	<th>Options</th>
-  	</tr>
-	</thead>
-	<tbody>
-<% @potluck_items.each do |potluck_item| %>
-  <tr style="text-align:center" id="items_<%= potluck_item.id %>">
-	<td>
-		<%= potluck_item.category %>
-	</td>
-	<td>
-		<%= potluck_item.dishes.join(",") %>
-	</td>
-	<td>
-		<%= potluck_item.taken_items.map{|i| i["item"] }.join(",") %>
-	</td>
-		<td><div>
-		<div>
-    <span class="btn btn-success"><%= link_to ' ', edit_event_potluck_item_path(@event, potluck_item), {:style=>"color:white", :class=>"editPotluckItems icon-edit" } %></span>
-    <span class="btn btn-danger"><%= link_to ' ', event_potluck_item_path(@event, potluck_item), {confirm: 'Are you sure?', method: :delete, :style=>"color:white", :class=>"removePotluckItems icon-remove"} %></span></div></td>
-  </tr>
-<% end %>
-	</tbody>
-</table>
-
+<div class="row" style="margin-bottom:2em">
+	<span class="span2 headers">Category</span>
+	<span class="span2 headers">Available Items</span>
+	<span class="span2 headers">Taken Items</span>
+</div>
+<%= render :partial => "list_info", :collection => @event.potluck_items, :locals => {:event => @event, :user => current_user }, :spacer_template => "events/spacer_hr" %>
 <br />
 <button href="#newPotluckItemModal" id="newPotluckItems" class="btn btn-primary" data-toggle="modal">New Items</button>
 <script>

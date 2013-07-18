@@ -1,0 +1,11 @@
+<div class="row">
+	<div class="span2 guest-info-body"><%= list_info.category %></div>
+	<div class="span2 guest-info-body"><%= list_info.dishes.join(",") %></div>
+	<div class="span2 guest-info-body"><%= list_info.taken_items.map{|i| i["item"] }.join(",") %></div>
+</div>
+<div class="row">
+	<div class="span1 offset1"><%= link_to ' Edit', edit_event_potluck_item_path(event, list_info), { :class=>"editPotluckItems icon-edit" } %>
+	</div>
+	<div class="span2"><%= link_to ' Remove', event_potluck_item_path(event, list_info), {confirm: 'Are you sure?', method: :delete, :class=>"removePotluckItems icon-remove"} %>
+	</div>
+</div>
