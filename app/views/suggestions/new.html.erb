@@ -1,9 +1,9 @@
 <div id="flash_notice"><%= flash[:notice] %></div>
 <div class="row">
-	<div class="span7 offset1">I want to....</div>
+	<div class="span7">I want to....</div>
 </div>
 <div class="row">
-	<div class="span7 offset1">
+	<div class="span7">
 		<input type="radio" name="type" value="new"><span style="margin-left:1em">Create a new list</span><br/>
 		<% if @event.potluck_items.count > 0 %>
 			<input type="radio" name="type" value="existing"><span style="margin-left:1em">Add items to an existing list</span>
@@ -12,13 +12,13 @@
 </div>
 
 <div class="row" style="margin: 1.5em 0 1.5em 0">
-	<div id="new_suggestion" class="span7 offset1">
+	<div id="new_suggestion" class="span7">
 		<%= render 'new_suggestion' %>
 	</div>
 </div>
 
 <div class="row" style="margin: 1.5em 0 1.5em 0">
-	<div id="existing_list" class="span7 offset1">
+	<div id="existing_list" class="span7">
 		<%= render :partial => 'existing_template', :locals=>{:event => @event} %>
 	</div>
 </div>

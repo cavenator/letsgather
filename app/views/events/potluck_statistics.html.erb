@@ -1,11 +1,27 @@
-<h3>List info</h3>
-<%= render :partial=>"potluck_statistics", :locals => {:event => @event} %>
+<div class="row">
+	<div class="span5 offset1">
+		<input type="radio" name="type" value="list"><span style="margin-left:1em">View List statistics</span>
+		<input type="radio" name="type" value="guest"><span style="margin-left:1em">View Guest statistics</span>
+	</div>
+</div>
+<div id="list-statistics">
+	<div style="padding:1em">
+		<h3>List info</h3>
+		<%= render :partial=>"potluck_statistics", :locals => {:event => @event} %>
+	</div>
+	<div style="padding:1em">
+		<h3>Items guests are bringing</h3>
+		<%= render :partial=>"taken_items", :collection => @event.get_items_guests_are_bringing %>
+	</div>
+</div>
 
-<div style="margin-top:2em;margin-bottom:2em">
+<div id="guest-statistics">
+	<div style="margin-top:2em;margin-bottom:2em">
 		<h3>Guest info</h3>
 		<div class="label label-success">Total number of guest attending: <%= @event.attending_guest_count %></div>
-</div>
-<div id="guest-info">
+	</div>
+	<div id="guest-info">
+	</div>
 </div>
 <script>
 	$(document).ready(function(){
@@ -16,5 +32,22 @@
 					$("#guest-info").html(data);
 				}
 			});
+
+		function toggle(listView){
+			if (listView == "list"){
+				$("#list-statistics").show();
+				$("#guest-statistics").hide();
+			} else {
+				$("#list-statistics").hide();
+				$("#guest-statistics").show();
+			}
+		}
+
+		$("input[type=radio]").change(function(){
+			var typeChosen = $(this).val();
+			toggle(typeChosen);
+		});
+
+		$("input[type=radio]").eq(0).prop("checked",true).change();
 	});
 </script>
