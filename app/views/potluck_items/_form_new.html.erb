@@ -15,7 +15,7 @@
 
 	<p>
 	<%= f.label :category %>
-	<%= f.text_field :category, :placeholder => "E.g. Appetizers, Board Games" %>
+	<%= f.text_field :category, :placeholder => "E.g. Appetizers, Games, Misc" %>
 	</p>
 
 	<p>
@@ -34,7 +34,7 @@
 		<% if @potluck_item.dishes.blank? %>
 			<div id="list_items">
 				<label>Items: </label>
-				<input type="text" class="input-large" id="first_item" placeholder="Enter list item here (1 max)">
+				<input type="text" class="input-large" id="first_item" placeholder="Twinkies">
 			</div>
 		<% else %>
 			<div id="list_items">

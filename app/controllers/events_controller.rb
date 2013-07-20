@@ -23,7 +23,7 @@ class EventsController < ApplicationController
   def show
     @event = Event.find(params[:id])
 		view = 'show'
-		unless current_user.is_host_for?(@event)
+		unless current_user.is_host_for?(@event) #update to be unless current_user && current_user.is_host_for?(@event)
 			view = 'guest_view'
 			@attendee = Attendee.find_attendee_for(current_user, @event)
 		end

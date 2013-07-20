@@ -8,26 +8,34 @@
 </div>
 <div class="row attending_guests">
 	<% unless @attending.map(&:email).compact.blank? %>
-		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Going"}, {:style=>"margin-bottom: 1em;color:blue;float:right", :class => "btn btn-link email_group"} %>
+		<div class="row">
+		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Going"}, {:style=>"margin-bottom: 1em;color:blue;", :class => "btn btn-link email_group"} %>
 		<% end %>
+		</div>
 	<%= render :partial => "attending_attendee", :collection => @attending, :spacer_template => "spacer_hr" %>
 </div>
 <div class="row unattending_guests">
+	<div class="row">
 	<% unless @not_going.map(&:email).compact.reject{ |c| c.empty? }.blank? %>
 		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Not Going"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
 	<% end %>
+	</div>
 	<%= render :partial => "unattending_attendee", :collection => @not_going, :spacer_template => "spacer_hr" %>
 </div>
 <div class="row undecided_guests">
+	<div class="row">
 	<% unless @undecided.map(&:email).compact.reject{|c| c.empty?}.blank? %>
 		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Undecided"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
 	<% end %>
+	</div>
 	<%= render :partial => "undecided_attendee", :collection => @undecided, :spacer_template => "spacer_hr" %>
 </div>
 <div class="row nonresponsive_guests">
+	<div class="row">
 	<% unless @no_response.map(&:email).compact.reject{|c| c.empty?}.blank? %>
 		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "No Response"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
 	<% end %>
+	</div>
 	<%= render :partial => "nonresponsive_attendee", :collection => @no_response, :spacer_template => "spacer_hr" %>
 </div>
 <script>
