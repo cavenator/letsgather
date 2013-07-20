@@ -12,16 +12,16 @@
 	</div>
 </div>
 <div class="row attending_guests">
-	<%= render :partial => 'events/attending_attendee', :collection => @attending, :spacer_template => "events/spacer_hr" %>
+	<%= render :partial => 'attending_attendee', :collection => @attending, :spacer_template => "events/spacer_hr" %>
 </div>
 <div class="row unattending_guests">
-	<%= render :partial => 'events/unattending_attendee', :collection => @not_going, :spacer_template => "events/spacer_hr" %>
+	<%= render :partial => 'unattending_attendee', :collection => @not_going, :spacer_template => "events/spacer_hr" %>
 </div>
 <div class="row undecided_guests">
-	<%= render :partial => 'events/undecided_attendee', :collection => @undecided, :spacer_template => "events/spacer_hr" %>
+	<%= render :partial => 'undecided_attendee', :collection => @undecided, :spacer_template => "events/spacer_hr" %>
 </div>
 <div class="row nonresponsive_guests">
-	<%= render :partial => 'events/nonresponsive_attendee', :collection => @no_response, :spacer_template => "events/spacer_hr" %>
+	<%= render :partial => 'nonresponsive_attendee', :collection => @no_response, :spacer_template => "events/spacer_hr" %>
 </div>
 <script>
 $(document).ready(function(){

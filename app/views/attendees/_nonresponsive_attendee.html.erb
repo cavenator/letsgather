@@ -1,0 +1,11 @@
+<div class="row" style="vertical-align:-webkit-baseline-middle;text-align:center">
+	<div class="span3">
+		<% if nonresponsive_attendee.full_name.blank? %><%= nonresponsive_attendee.email %><% else %><%= nonresponsive_attendee.full_name %><% end %>
+	</div>
+	<div class="span6">
+		<p>Comment(s): <% if nonresponsive_attendee.comment.blank? %>None<% else %><%= nonresponsive_attendee.comment %><% end %></p>
+	</div>
+	<div class="span3">
+		<% unless nonresponsive_attendee.email.blank? %><span style="float:right"><%= link_to "Email guest", nonresponsive_attendee.event.id.to_s+'/attendees/'+nonresponsive_attendee.id.to_s+'/email_guest', {:style=>"color:blue", :class => "btn btn-link email_individual"} %></span><% end %>
+	</div>
+</div>

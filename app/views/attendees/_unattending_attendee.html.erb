@@ -1,0 +1,11 @@
+<div class="row" style="vertical-align:-webkit-baseline-middle;text-align:center">
+	<div class="span3">
+		<% if unattending_attendee.full_name.blank? %> <%= unattending_attendee.email %> <% else %> <%= unattending_attendee.full_name %><% end %>
+	</div>
+	<div class="span6">
+		<p>Comment(s): <% if unattending_attendee.comment.blank? %>None<% else %><%= unattending_attendee.comment %><% end %></p>
+	</div>
+	<div class="span3">
+		<% unless unattending_attendee.email.blank? %><span style="float:right"><%= link_to "Email guest", unattending_attendee.event.id.to_s+'/attendees/'+unattending_attendee.id.to_s+'/email_guest', {:style=>"color:blue", :class => "btn btn-link email_individual"} %></span><% end %>
+	</div>
+</div>
