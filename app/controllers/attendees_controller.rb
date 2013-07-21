@@ -19,7 +19,11 @@ class AttendeesController < ApplicationController
 	def rsvp
 		@event = Event.find(params[:event_id])
 		@attendee = Attendee.find_attendee_for(current_user, @event)
-		render :layout => false
+		view = "rsvp"
+		if @attendee.rsvp.eql?("No Response")
+			view = "initial_rsvp"
+		end
+		render view, :layout => false
 	end
 
   # GET /attendees/1
