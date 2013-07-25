@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lets Gather (a party app)</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+	<%= csrf_meta_tags %>
+</head>
+<body style="padding:1em 5em 5em 5em;">
+<div class="container-fluid">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="nav" style="float:right">
+				<span>Hello, <%= current_attendee.email %></span>
+				<div class="btn-group">
+					<button class="btn dropdown-toggle" data-toggle="dropdown">Options<span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<li><%= link_to 'Sign out', {:controller => "devise/sessions", :action => "destroy" }, {:method => :delete} %></li>
+					</ul>
+					<button class="btn" id="faqButton">FAQ</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<%= yield %>
+</div>
+</body>
+<script>
+	$(document).ready(function(){
+		$("#faqButton").click(function(){
+			window.open("/faq.html", "Maximus Samuria FAQ", "toolbar=0,location=0,scrollbars=1,menubar=0,height=600,width=900");
+		});
+	});
+</script>
+</html>

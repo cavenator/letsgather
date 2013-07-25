@@ -98,14 +98,23 @@ class PotluckItemsController < ApplicationController
 	end
 
 	def verify_privileges
-		unless current_user.is_host_for?(@event)
-			render file: "public/422.html", :formats => [:html], status: :unprocessable_entity and return
+		unless current_user && current_user.is_host_for?(@event)
+			session[:attendee_id] = nil
+			render file: "public/422.html", :layout=>false, :formats => [:html], status: :unprocessable_entity and return
 		end
 	end
 
 	def verify_access
-		unless current_user.is_host_for?(@event) || current_user.belongs_to_event?(@event)
-			render file: "public/401.html" , :formats => [:html], status: :unauthorized and return
+		if current_user
+			unless current_user.is_host_for?(@event) || current_user.belongs_to_event?(@event)
+				session[:attendee_id] = nil
+				render file: "public/401.html", :layout=>false, :formats => [:html], status: :unauthorized and return
+			end
+		else
+			unless current_attendee.event_id == @event.id
+				session[:attendee_id] = nil
+				render file: "public/401.html", :layout=>false, :formats => [:html], status: :unauthorized and return
+			end
 		end
 	end
 

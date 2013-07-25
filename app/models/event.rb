@@ -193,9 +193,12 @@ class Event < ActiveRecord::Base
 	end
 
 	def send_rsvp_reminders_for_all_attendees
-		email_list = self.get_unique_guest_email_list
-		unless email_list.blank?
-			ReminderMailer.send_rsvp_emails(email_list, self).deliver
+		attendees_with_email = self.attendees.where("email is not null")
+		attendees_with_email.each do |attendee|
+			unless !attendee.authentication_token.blank?
+				attendee.ensure_authentication_token!
+			end
+			ReminderMailer.delay.send_rsvp_emails(attendee)
 		end
 	end
 
@@ -204,10 +207,12 @@ class Event < ActiveRecord::Base
 	end
 
 	def send_event_reminders_for_attending_guests
-		guests = self.attendees.where("rsvp = 'Going'")
-		unless guests.blank?
-			email_list = guests.map(&:email).compact.reject{|email| email.empty? }
-			ReminderMailer.send_event_reminders(email_list, self).deliver
+		guests = self.attendees.where("rsvp = 'Going' and email is not null")
+		guests.each do |guest|
+			unless !guest.authentication_token.blank?
+				guest.ensure_authentication_token!
+			end
+			ReminderMailer.delay.send_event_reminders(guest)
 		end
 	end
 

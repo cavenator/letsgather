@@ -1,6 +1,6 @@
 
 class AttendeesController < ApplicationController
-	before_filter :verify_access
+	before_filter :verify_access, :except => [:thank_you]
 	before_filter :verify_host_privileges, :only => [:new, :create, :add_attendees, :invite_guests, :send_updated_calendar, :send_individual_calendar ]
 	before_filter :verify_correct_attendee, :only => [:show, :edit, :update, :destroy ]
 	before_filter :verify_correct_rsvp, :only => [:rsvp]
@@ -17,8 +17,13 @@ class AttendeesController < ApplicationController
   end
 
 	def rsvp
+		logger.debug "Inside RSVP"
 		@event = Event.find(params[:event_id])
-		@attendee = Attendee.find_attendee_for(current_user, @event)
+		if current_user
+			@attendee = Attendee.find_attendee_for(current_user, @event)
+		else
+			@attendee = get_current_guest
+		end
 		view = "rsvp"
 		if @attendee.rsvp.eql?("No Response")
 			view = "initial_rsvp"
@@ -85,10 +90,14 @@ class AttendeesController < ApplicationController
 
     respond_to do |format|
       if @attendee.update_attributes(params[:attendee])
-				if current_user.is_host_for?(@event)
-					format.html { render :nothing => true, :status => 204 }
+				if current_user
+					if current_user.is_host_for?(@event)
+						format.html { render :nothing => true, :status => 204 }
+					else
+						format.html { redirect_to event_url(@event), notice: 'RSVP was successfully updated.' }
+					end
 				else
-					format.html { redirect_to event_url(@event), notice: 'RSVP was successfully updated.' }
+					format.html { redirect_to thank_you_url, notice: 'Thank you for responding!'}
 				end
         format.json { head :no_content }
       else
@@ -108,10 +117,17 @@ class AttendeesController < ApplicationController
 
 	def other_guests
 		@event = Event.find(params[:event_id])
-		@attending = @event.attendees.where("rsvp = 'Going' and (user_id is null or user_id <> ?)", current_user.id)
-		@not_going = @event.attendees.where("rsvp = 'Not Going' and (user_id is null or user_id <> ?)", current_user.id)
-		@undecided = @event.attendees.where("rsvp = 'Undecided' and (user_id is null or user_id <> ?)", current_user.id)
-		@no_response = @event.attendees.where("rsvp = 'No Response' and (user_id is null or user_id <> ?)", current_user.id)
+		if current_user
+			@attending = @event.attendees.where("rsvp = 'Going' and (user_id is null or user_id <> ?)", current_user.id)
+			@not_going = @event.attendees.where("rsvp = 'Not Going' and (user_id is null or user_id <> ?)", current_user.id)
+			@undecided = @event.attendees.where("rsvp = 'Undecided' and (user_id is null or user_id <> ?)", current_user.id)
+			@no_response = @event.attendees.where("rsvp = 'No Response' and (user_id is null or user_id <> ?)", current_user.id)
+		else
+			@attending = @event.attendees.where("rsvp = 'Going' and id <> ?", get_current_guest.id)
+			@not_going = @event.attendees.where("rsvp = 'Not Going' and id <> ?", get_current_guest.id)
+			@undecided = @event.attendees.where("rsvp = 'Undecided' and id <> ?", get_current_guest.id)
+			@no_response = @event.attendees.where("rsvp = 'No Response' and id <> ?", get_current_guest.id)
+		end
 		render :layout => false
 	end
 
@@ -126,16 +142,26 @@ class AttendeesController < ApplicationController
 		render :layout => false
 	end
 
+	def thank_you
+		session[:attendee_id] = nil
+		render :layout => "application"
+	end
+
   def send_guest_email
 		@event = Event.find(params[:event_id])
 		@subject = params[:subject]
 		@body = params[:body]
 		@attendee = Attendee.find(params[:id])
+		if current_user
+			@sender = current_user
+		else
+			@sender = get_current_guest
+		end
 		if @subject.blank? || @body.blank?
 			flash[:notice] = "You must include both a subject and body"
 			render :action => :email_guest, :status => :not_acceptable
 		else
-			MessageMailer.delay.email_guest(@attendee, @subject, @body, current_user)
+			MessageMailer.delay.email_guest(@attendee, @subject, @body, @sender)
 			render :action => :email_guest, :status => 200
 		end
 	end
@@ -148,9 +174,9 @@ class AttendeesController < ApplicationController
 
 	def send_individual_calendar
 		@attendee = Attendee.find(params[:id])
-		AttendeeMailer.delay.welcome_guest(@attendee, current_user)
 		@attendee.invite_sent = true
-		@attendee.save
+		@attendee.ensure_authentication_token!
+		AttendeeMailer.delay.welcome_guest(@attendee, current_user)
 		render :nothing => true, :status => 200
 	end
 
@@ -181,8 +207,17 @@ class AttendeesController < ApplicationController
 
 	def verify_access
 		event = Event.find(params[:event_id])
-		unless current_user.is_host_for?(event) || current_user.belongs_to_event?(event)
-			render file: "public/401.html" ,status: :unauthorized
+		logger.debug "session is #{session[:attendee_id]}"
+		logger.debug "current_attendee = #{current_attendee}"
+		if current_user
+			unless current_user.is_host_for?(event) || current_user.belongs_to_event?(event)
+				render file: "public/401.html",layout: false, status: :unauthorized
+			end
+		else
+			unless get_current_guest.event_id == event.id
+				session[:attendee_id] = nil
+				render file: "public/401.html" ,layout: false, status: :unauthorized
+			end
 		end
 	end
 
@@ -194,24 +229,37 @@ class AttendeesController < ApplicationController
 
 	def verify_host_privileges
 		event = Event.find(params[:event_id])
-		unless current_user.is_host_for?(event)
-			render file: "public/422.html", status: :unprocessable_entity
+		unless current_user && current_user.is_host_for?(event)
+			render file: "public/422.html", layout: false, status: :unprocessable_entity
 		end
 	end
 
 	def verify_correct_attendee
 		event = Event.find(params[:event_id])
 		attendee = Attendee.find(params[:id])
-		unless current_user.is_host_for?(event) || attendee.user_id == current_user.id
-			render file: "public/422.html", status: :unprocessable_entity
+		if current_user
+			unless current_user.is_host_for?(event) || attendee.user_id == current_user.id
+				render file: "public/422.html", layout: false, status: :unprocessable_entity
+			end
+		else
+			unless get_current_guest.id == attendee.id
+				session[:attendee_id] = nil
+				render file: "public/422.html", layout: false, status: :unprocessable_entity
+			end
 		end
 	end
 
 	def verify_correct_rsvp
 		event = Event.find(params[:event_id])
-		attendee = Attendee.find_attendee_for(current_user, event)
+		if current_user
+			attendee = Attendee.find_attendee_for(current_user, event)
+		else
+			logger.debug "WTF is going on"
+			attendee = get_current_guest
+		end
 		unless attendee
-			render file: "public/422.html", status: :unprocessable_entity
+			session[:attendee_id] = nil
+			render file: "public/422.html", layout:false, status: :unprocessable_entity
 		end
 	end
 	

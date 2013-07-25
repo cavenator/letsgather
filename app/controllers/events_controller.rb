@@ -1,17 +1,23 @@
 
 class EventsController < ApplicationController
+	before_filter :get_current_attendee
 	before_filter :align_attendee_events, :only => [:index, :show]
 	before_filter :verify_access, :except => [:index, :new, :create, :faq]
 	before_filter :verify_privileges, :only => [:edit, :update, :destroy, :group_email, :send_group_email, :change_roles]
+	before_filter :verify_registered_user, :only => [:index, :new, :create]
 	before_filter :get_current_user, :only => [:index, :new, :show, :edit, :update, :guests]
 
   # GET /events
   # GET /events.json
   def index
-		attendee_event_ids = Attendee.where("user_id=?",current_user.id).map{|attendee| attendee.event_id }
-		attendee_events = Event.where('id in (?) and end_date > ?', attendee_event_ids, Time.now.utc)
-		@events = current_user.events.where('end_date > ?', Time.now.utc) | attendee_events
-	
+		if current_user
+			attendee_event_ids = Attendee.where("user_id=?",current_user.id).map{|attendee| attendee.event_id }
+			attendee_events = Event.where('id in (?) and end_date > ?', attendee_event_ids, Time.now.utc)
+			@events = current_user.events.where('end_date > ?', Time.now.utc) | attendee_events
+		elsif current_attendee
+			@events = [] << current_attendee.event
+		end
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @events }
@@ -23,13 +29,19 @@ class EventsController < ApplicationController
   def show
     @event = Event.find(params[:id])
 		view = 'show'
-		unless current_user.is_host_for?(@event) #update to be unless current_user && current_user.is_host_for?(@event)
+		appropriate_layout = "events"
+		unless current_user && current_user.is_host_for?(@event) 
 			view = 'guest_view'
-			@attendee = Attendee.find_attendee_for(current_user, @event)
+			if current_user
+				@attendee = Attendee.find_attendee_for(current_user, @event)
+			else
+				appropriate_layout = "guests"
+				@attendee = current_attendee
+			end
 		end
 
     respond_to do |format|
-      format.html { render view }# show.html.erb
+      format.html { render view, :layout=>appropriate_layout }# show.html.erb
       format.json { render json: @event }
     end
   end
@@ -153,10 +165,15 @@ class EventsController < ApplicationController
 		@hosts = @event.get_hosts
 		@subject = params[:subject]
 		@body = params[:body]
+		if current_user
+			@sender = current_user
+		else
+			@sender = get_current_guest
+		end
 		if @subject.blank? || @body.blank?
 			render :action => :email_host, :status => :not_acceptable
 		else
-			MessageMailer.delay.email_host(@hosts, @event, @subject, @body, current_user)
+			MessageMailer.delay.email_host(@hosts, @event, @subject, @body, @sender)
 			render :nothing=>true, :status => 200
 		end
 	end
@@ -235,34 +252,55 @@ class EventsController < ApplicationController
 	protected
 
 	def align_attendee_events
-		user_attendee_event = Attendee.where("user_id is null and email=?",current_user.email)
-		user_attendee_event.each do |attendee_user|
-			attendee_user.user_id = current_user.id
-			attendee_user.full_name = current_user.full_name
-			if attendee_user.is_host
-				Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => Role.HOST)
-			else
-				Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => Role.GUEST)
+		unless @attendee
+			user_attendee_event = Attendee.where("user_id is null and email=?",current_user.email)
+			user_attendee_event.each do |attendee_user|
+				attendee_user.user_id = current_user.id
+				attendee_user.full_name = current_user.full_name
+				if attendee_user.is_host
+					Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => Role.HOST)
+				else
+					Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => Role.GUEST)
+				end
+				attendee_user.save
 			end
-			attendee_user.save
 		end
 	end
 
 	def verify_access
 		event = Event.find(params[:id])
-		unless current_user.is_host_for?(event)|| current_user.belongs_to_event?(event)
-			render file: "public/401.html" , :formats => [:html], status: :unauthorized and return
+		if current_user
+			unless current_user.is_host_for?(event)|| current_user.belongs_to_event?(event)
+				render file: "public/401.html" , :formats => [:html], status: :unauthorized and return
+			end
+		elsif @attendee
+			unless @attendee.event_id == event.id
+				render file: "public/401.html" , :layout=>false, :formats => [:html], status: :unauthorized and return
+			end
+		end
+	end
+
+	def verify_registered_user
+		unless current_user
+			session[:attendee_id] = nil
+			render file: "public/401.html", :layout=>false, :formats => [:html], status: :unauthorized and return
 		end
 	end
 
 	def verify_privileges
 		event = Event.find(params[:id])
-		unless current_user.is_host_for?(event)
-			render file: "public/422.html", :formats => [:html], status: :unprocessable_entity and return
+		unless current_user && current_user.is_host_for?(event)
+			session[:attendee_id] = nil
+			render file: "public/422.html", :layout=>false, :formats => [:html], status: :unprocessable_entity and return
 		end
 	end
 
 	def get_current_user
 		@user = current_user
 	end
+
+	def get_current_attendee
+		@attendee = get_current_guest
+	end
+
 end

@@ -6,7 +6,7 @@
   <body>
     <h2>RSVP Reminder for the upcoming event: <%= @event.name %></h2>
     <p>
-			This is a friendly reminder that the RSVP date for the event is <%= @event.display_rsvp_time %>. Please login to <%= link_to 'Lets Gather', root_url %> and update your RSVP response if you have not yet confirmed or need to change your response.  You may also contact your host at <%= @event.user.email %> for any further inquiries.
+			This is a friendly reminder that the RSVP date for the event is <%= @event.display_rsvp_time %>.  If you have an account, please login to <%= link_to 'Lets Gather', root_url %> and update your RSVP response if you have not yet confirmed or need to change your response. Otherwise, please click <%= link_to 'here', event_url(@event, :auth_token => @attendee.authentication_token) %> to RSVP. You may also contact your host at <%= @event.user.email %> for any further inquiries.
     </p>
     <p>Thanks and have a great day!</p>
   </body>

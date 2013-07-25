@@ -10,7 +10,7 @@
 			Start Date: <%= @event.display_start_time %>.<br/>
 			RSVP: <%= @event.display_rsvp_time %>.
 		</p>
-		<p style="margin-bottom:1em">If you do not have an account with us, please <%= link_to 'create one', new_user_registration_url %> with the following email address: <%= @attendee.email %>.</p><p>If you do decide to create an account using a different email address, notify <%= @host.full_name %> at <%= @host.email %> and inform them which email you would prefer to use.  Otherwise, please <%= link_to 'sign in', root_url %><br /><br/>
+		<p style="margin-bottom:1em">If you do not have an account with us, you may view the event details, message other guests and let your host know of your decision by clicking <%= link_to 'here', event_url(@event, :auth_token => @attendee.authentication_token) %>.  However, if you do want an account, you may <%= link_to 'create one here', new_user_registration_url %> with the following email address: <%= @attendee.email %>.  Creating an account allows you do so much more and only takes a few seconds to do.</p><p>If you do decide to create an account using a different email address, notify <%= @host.full_name %> at <%= @host.email %> and inform them which email you would prefer to use.  If you do have account with the following email address (<%= @attendee.email %>), please <%= link_to 'sign in', root_url %><br /><br/>
     </p>
     <p>Thanks and have a great day!</p>
 

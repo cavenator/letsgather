@@ -27,6 +27,7 @@ MaximusSamurai::Application.routes.draw do
 	put 'events/:id/change_roles/:attendee_id(.:format)', :to => 'events#change_roles'
 	get 'users/:user_id/event_settings(.:format)', :to => 'event_settings#get_settings'
 	put 'users/:user_id/event_settings/:id(.:format)', :to => 'event_settings#update_event_settings'
+	get '/thank_you', :to => 'attendees#thank_you'
 
 	resources :events do
 		get 'attendees/add_attendees', :to => 'attendees#add_attendees'
@@ -45,6 +46,7 @@ MaximusSamurai::Application.routes.draw do
   end
 
   devise_for :users
+	devise_for :attendees
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

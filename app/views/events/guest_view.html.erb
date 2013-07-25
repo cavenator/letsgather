@@ -52,7 +52,7 @@
 		<li class="phoney-button" id="taken_items">
 			<a>Items others are bringing</a>
 		</li>
-		<% unless @event.has_disabled_suggestions %>
+		<% unless session[:attendee_id] || @event.has_disabled_suggestions %>
 		<li class="phoney-button" id="readonly_suggestions">
 			<a>View suggestions from guests</a>
 		</li>
@@ -63,9 +63,11 @@
 		<li class="phoney-button" id="other_guests">
 			<a>Who is on the list?</a>
 		</li>
+		<% unless session[:attendee_id] %>
 		<li class="phoney-button">
 			<%= link_to 'Back to my events', events_path, :style=>"color:black" %>
 		</li>
+		<% end %>
 		</ul>
 	</div>
 	<div id="contentContainer" class="span8 offset1">
@@ -132,6 +134,7 @@
 			var url = $(emailObject).attr('href'), emailModal = $("#emailModal");
 			$.ajax({
 				url: url,
+				beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));},
 				dataType: "html",
 				success: function(data){
 					emailModal.find(".modal-body").html(data);
