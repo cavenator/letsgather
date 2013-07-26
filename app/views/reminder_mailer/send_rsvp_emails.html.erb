@@ -6,9 +6,20 @@
   <body>
 		<div style="font-size:20px;font-style:italic;font-weight:bold">Please do not reply to this email!</div>
     <h4>RSVP Reminder for the upcoming event: <%= @event.name %></h4>
+		
     <p>
-			This is a friendly reminder that the RSVP date for the event is <%= @event.display_rsvp_time %>.  If you have an account, please login to <%= link_to 'Lets Gather', root_url %> and update your RSVP response if you have not yet confirmed or need to change your response. Otherwise, please click <%= link_to 'here', event_url(@event, :auth_token => @attendee.authentication_token) %> to RSVP. You may also contact your host at <%= @event.user.email %> for any further inquiries.
-    </p>
+			This is a friendly reminder that the RSVP date for the event is <%= @event.display_rsvp_time %>.  Please click <%= link_to 'here', event_url(@event, :auth_token => @attendee.authentication_token) %> to RSVP or change your response.
+    </p><p style="font-weight:bold;font-size:1em">
+			<% if @attendee.rsvp.eql?("No Response") %>
+				 You have not yet responded
+			<% elsif @attendee.rsvp.eql?("Undecided") %>
+				 You are currently a Maybe
+			<% else %>
+				You are currently <%= @attendee.rsvp %>
+			<% end %>
+		</p>
+		<p>If you do not have an account and would like to create one, <%= link_to 'sign up here', new_user_registration_url %>. Otherwise, please <%= link_to 'Sign In', root_url %></p>
+		<p>You may also contact your host at <%= @event.user.email %> for any further inquiries.</p>
     <p>Thanks and have a great day!</p>
   </body>
 </html>
