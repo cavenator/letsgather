@@ -72,6 +72,14 @@ class Attendee < ActiveRecord::Base
 			return email_hash
 		end
 
+		def full_name_or_email
+			if self.full_name.blank?
+				return self.email
+			else
+				return self.full_name
+			end
+		end
+
 		def is_dish_empty?
 			return self.dish.blank?
 		end

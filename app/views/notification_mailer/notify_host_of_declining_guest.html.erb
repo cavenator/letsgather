@@ -5,8 +5,9 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
+		<h3>Please do not reply to this email!</h3>
     <p>
-			<%= @attendee.full_name %> has confirmed that they are not coming to your event: <%= @event.name %><br />
+			<%= @attendee.full_name_or_email %> has confirmed that they are not coming to your event: <%= @event.name %><br />
 			<b>Their reason:</b>  <% if @attendee.comment.blank? %>"None"<% else %> <%= @attendee.comment %><% end %>
     </p>
   </body>

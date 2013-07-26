@@ -4,8 +4,9 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
+		<h3>Please do not reply to this email!</h3>
     <p>
-			<%= @attendee.full_name %> has confirmed that they are coming to your event: <%= @event.name %></p>
+			<%= @attendee.full_name_or_email %> has confirmed that they are coming to your event: <%= @event.name %></p>
 			<p><b>Number of additional guests:</b> <%= @attendee.num_of_guests %> </p>
 			<p><b>Their comment:</b>  <%= @attendee.comment %></p>
 			<p><% unless @attendee.dish.empty? %>

@@ -4,7 +4,8 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h2>A message from <%= @sender.full_name %> (<%= @sender.email %>) regarding <%= @event.name %></h2>
+		<div style="font-size:20px;font-style:italic;font-weight:bold">Please do not reply to this email! Your recipient will not receive it. You can find the appropriate email address below.</div>
+    <h4>A message from <%= @sender.full_name_or_email %> <% "<#{@sender.email}>" if @sender.full_name.blank? %> regarding <%= @event.name %></h4>
     <p>
 			<%= simple_format @body %>
     </p>

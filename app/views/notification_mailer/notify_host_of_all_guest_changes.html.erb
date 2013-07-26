@@ -4,8 +4,9 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
+		<h3>Please do not reply to this email!</h3>
     <p>
-			<%= @attendee.full_name %> has made some changes to their response regarding <%= @event.name %></p>
+			<%= @attendee.full_name_or_email %> has made some changes to their response regarding <%= @event.name %></p>
 			<% @differences_hash.each do |k, v| %>
 				<% if k.eql?("rsvp") %>
 					<p><b>Updated rsvp:</b> <%= v %></p>
