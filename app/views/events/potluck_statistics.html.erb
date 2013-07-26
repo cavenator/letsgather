@@ -9,6 +9,9 @@
 		<h3>List info</h3>
 		<%= render :partial=>"potluck_statistics", :locals => {:event => @event} %>
 	</div>
+	<div style="padding:1em;float:right">
+		<span class="btn btn-primary"><%= link_to "Export Remaining Items",{:action => :export_remaining_items, :id => @event.id}, :style=>"color:white" %></span>
+	</div>
 	<div style="padding:1em">
 		<h3>Items guests are bringing</h3>
 		<%= render :partial=>"taken_items", :collection => @event.get_items_guests_are_bringing %>

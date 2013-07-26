@@ -1,3 +1,4 @@
+require 'csv'
 class PotluckItem < ActiveRecord::Base
 	belongs_to :event
 
@@ -28,6 +29,19 @@ class PotluckItem < ActiveRecord::Base
 		self.dishes << dish
 		self.taken_items.delete_at(taken_item_index)
 		self.save
+	end
+
+	def self.export_remaining_lists_from(potluck_items)
+		available_items = potluck_items.select{|item| item.dishes.count > 0}.map{|item| [item.category, item.dishes] }
+		CSV.generate do |csv|
+			csv << ["Category","Item"]
+			available_items.each do |category_item|
+				category = category_item[0]
+				category_item[1].each do |item|
+					csv << [category, item]
+				end
+			end
+		end
 	end
 
 	def verify_no_duplicates_dishes

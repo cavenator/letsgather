@@ -3,7 +3,7 @@ class EventsController < ApplicationController
 	before_filter :get_current_attendee
 	before_filter :align_attendee_events, :only => [:index, :show]
 	before_filter :verify_access, :except => [:index, :new, :create, :faq]
-	before_filter :verify_privileges, :only => [:edit, :update, :destroy, :group_email, :send_group_email, :change_roles]
+	before_filter :verify_privileges, :only => [:edit, :update, :destroy, :group_email, :send_group_email, :change_roles, :export_remaining_items]
 	before_filter :verify_registered_user, :only => [:index, :new, :create]
 	before_filter :get_current_user, :only => [:index, :new, :show, :edit, :update, :guests]
 
@@ -128,6 +128,11 @@ class EventsController < ApplicationController
 			message = "Unsuccessful attempt of removing yourself from the event #{@event.name}. Please contact your administrator!"
 		end
 		redirect_to events_url, notice: message
+	end
+
+	def export_remaining_items
+		potluck_items = Event.find(params[:id]).potluck_items
+		send_data PotluckItem.export_remaining_lists_from(potluck_items), :type => 'text/csv; charset=utf-8; header=present', :disposition => "attachment; filename=remaining_items_for_my_event.csv"
 	end
 
 	def supplemental_info
