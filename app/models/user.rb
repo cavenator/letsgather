@@ -29,6 +29,14 @@ class User < ActiveRecord::Base
 		return self.id == event.user.id || Role.where('user_id = ? and event_id = ? and privilege = ?',self.id, event.id, Role.HOST).count == 1
 	end
 
+		def full_name_or_email
+			if self.full_name.blank?
+				return self.email
+			else
+				return self.full_name
+			end
+		end
+
 	def belongs_to_event?(event)
 		return self.roles.where("event_id = ?", event.id).count > 0
 	end
