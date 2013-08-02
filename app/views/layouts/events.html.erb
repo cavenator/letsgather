@@ -10,6 +10,7 @@
 <div class="container-fluid">
 	<div class="navbar">
 		<div class="navbar-inner">
+			<button id="home_button" class="btn">Home <i class="icon-home"></i></button>
 			<div class="nav" style="float:right">
 				<div class="btn-group">
 					<button class="btn dropdown-toggle" data-toggle="dropdown">Options<span class="caret"></span></button>
@@ -31,6 +32,10 @@
 	$(document).ready(function(){
 		$("#faqButton").click(function(){
 			window.open("/faq.html", "Maximus Samuria FAQ", "toolbar=0,location=0,scrollbars=1,menubar=0,height=600,width=900");
+		});
+		$("#home_button").click(function(){
+			var host = window.location.host;
+			window.location.href = window.location.protocol+"//"+host;
 		});
 	});
 </script>
