@@ -188,6 +188,7 @@ class EventsController < ApplicationController
 		@subject = params[:subject]
 		@body = params[:body]
 		@rsvp_group = params[:rsvp_group]
+		@sender = current_user
 		if @subject.blank? || @body.blank?
 			flash[:notice] = "You must include both a subject and body"
 			render :nothing => true, status: :not_acceptable
@@ -198,7 +199,7 @@ class EventsController < ApplicationController
 				attendees = @event.attendees.where('rsvp = ?',@rsvp_group)
 			end
 			email_list = attendees.map(&:email).compact
-			MessageMailer.delay.email_group(email_list, @event, @subject, @body)
+			MessageMailer.delay.email_group(email_list, @event, @subject, @body, @sender)
 			flash[:notice] = "Message to guests have been sent"
 			render :nothing=>true, :status => 200
 		end

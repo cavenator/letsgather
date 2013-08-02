@@ -1,8 +1,9 @@
 class MessageMailer < ActionMailer::Base
 
-	def email_group(email_list, event, subject, body)
+	def email_group(email_list, event, subject, body, sender)
 		@event = event
 		@body = body
+		@sender = sender
 		mail(to: email_list, subject: subject, from: @event.user.email)
 	end
 
