@@ -4,7 +4,7 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-		<div style="font-size:20px;font-style:italic;font-weight:bold">This is a message sent on behalf of your host <%= "<#{@event.user.email}>" unless @sender.full_name.blank? %> regarding <%= @event.name %>. Please do not reply to this email! </div>
+		<div style="font-size:20px;font-style:italic;font-weight:bold">This is a message sent on behalf of <%= @sender.full_name %><%= "<#{@sender.email}>" unless @sender.full_name.blank? %> regarding <%= @event.name %>. Please do not reply to this email! </div>
     <p>
 			<%= simple_format @body %>
     </p>
