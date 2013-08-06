@@ -9,7 +9,7 @@
     <p style="text-align:center;margin:2em 0 2em 0">
 			<%= @host.full_name %> has invited you to their event: <%= @event.name%>. <br/>
 			Start Date: <%= @event.display_start_time %>.<br/>
-			RSVP: <%= @event.display_rsvp_time %>.
+			RSVP: <%= @event.display_rsvp_time %>.<br/>
 			<% if @event.location %>
 				<span style="font-weight:bold">Location:</span>  <%= @event.location1 + ","+@event.location2 %><br/>
 			<% else %>
