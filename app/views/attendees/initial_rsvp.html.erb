@@ -13,9 +13,19 @@
 		<div id="guestcount_div">
 			<%= f.label :num_of_guests, "Number of guests you are bringing (excluding yourself):" %>
 			<%= f.text_field :num_of_guests %>
+			<div style="margin:1em 0 2em 0">
+				<span style="font-size:1em;font-weight:bold;padding-right:0.5em">Are you going to bring something?</span><input id="item_checkbox" type="checkbox" />
+			</div>
 			<div id="items_box">
-				<label>I am bringing </label>
-				<div id="items">
+				<div id="items" style="display:none">
+				<div class="row">
+					<div class="span4" style="margin-left:2em;font-size:1.15em;font-weight:bold">
+						Category
+					</div>
+					<div class="span2" style="font-size:1.15em;font-weight:bold">
+						Item
+					</div>
+				</div>
 				</div>
 			</div>
 		</div>
@@ -66,6 +76,14 @@
 
 			$("#attendee_comment").keyup(function(){
 				updateCharLimit();
+			});
+
+			$("#item_checkbox").change(function(){
+				if ($(this).prop("checked")){
+					$("#items").show();
+				} else {
+					$("#items").hide();
+				}
 			});
 
 			$(".initial-rsvp-buttons").click(function(){
@@ -292,13 +310,15 @@
 					$("#attendee_dish").val("");
 					$("#attendee_bringing_custom").removeAttr('checked');
 				} else {
-					$.each(items_collection, function(index, item){
-						var hash_object, category = $(item).find("#attendee_category").val(), dish_item = $(item).find("#attendee_dish").val(), is_custom = $(item).find("#is_custom").is(":checked");
-						if ($.trim(category) != "" && $.trim(dish_item) != ""){
-							hash_object = {"category": category, "item": dish_item, "is_custom":is_custom};
-							rsvp_item_array.push(hash_object);
-						}
-					});
+					if ($("#item_checkbox").prop("checked")){
+						$.each(items_collection, function(index, item){
+							var hash_object, category = $(item).find("#attendee_category").val(), dish_item = $(item).find("#attendee_dish").val(), is_custom = $(item).find("#is_custom").is(":checked");
+							if ($.trim(category) != "" && $.trim(dish_item) != ""){
+								hash_object = {"category": category, "item": dish_item, "is_custom":is_custom};
+								rsvp_item_array.push(hash_object);
+							}
+						});
+					}
 				}
 				$("form").append("<input type='hidden' name='attendee[dish]' value='"+JSON.stringify(rsvp_item_array)+"' />");
 			});
