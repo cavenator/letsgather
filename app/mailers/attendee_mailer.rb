@@ -23,10 +23,11 @@ class AttendeeMailer < ActionMailer::Base
 
 	end
 
-	def send_event_cancellation(email_list, event)
-		@event= event
-		subject = "Cancelled: #{event.name} hosted by #{event.user.full_name}"
-		mail(to: email_list, subject: subject, from: @event.user.email )
+	def send_event_cancellation(email_list, event_name, host_name, email)
+		@host_name = host_name
+		@name = event_name
+		subject = "Cancelled: #{event_name} hosted by #{host_name}"
+		mail(to: email_list, subject: subject, from: email )
 	end
 
 	def send_host_guest_acknowledgement(email_hash, event)
