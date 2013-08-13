@@ -61,7 +61,8 @@ class Attendee < ActiveRecord::Base
 			email_hash = {"successful" => [], "unsuccessful" => [], "duplicated" => []}
 			email_list.each do |email|
 				attendee = Attendee.new(:event_id => event.id, :email => email, :rsvp => "No Response", :invite_sent => true)
-				if attendee.ensure_authentication_token!
+				if attendee.valid? 
+					attendee.ensure_authentication_token!
 					email_hash["successful"] << email
 					AttendeeMailer.delay.welcome_guest(attendee, inviter)
 				else
