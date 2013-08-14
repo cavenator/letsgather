@@ -28,6 +28,14 @@ describe Event do
 			expect(event).to have(1).error_on(:end_date)
 		end
 
+		it "should always have a contact number" do
+			event = FactoryGirl.build(:event, :contact_number => nil)
+			expect(event).to_not be_valid
+			expect(event).to have(2).errors_on(:contact_number)
+			event.contact_number = "(555) 555-5555"
+			expect(event).to be_valid
+		end
+
 		it "should always start in the future" do
 			event = FactoryGirl.build(:event, :start_date => (Date.today - 1.day))
 			expect(event).to_not be_valid
@@ -127,10 +135,11 @@ describe Event do
 			Event.destroy_all
 			@user = FactoryGirl.create(:user)
 			@bob = FactoryGirl.create(:bob)
-			@event1 = Event.create(:user_id => @user.id, :name => "event 1", :rsvp_date =>  2.days.from_now, :start_date => 4.days.from_now, :end_date => (4.days.from_now + 3.hours))
-			@event2 = Event.create(:user_id => @bob.id, :name => "event 2", :rsvp_date => 1.day.from_now, :start_date => 2.days.from_now, :end_date => (2.days.from_now + 1.hour))
-			@event3 = Event.create(:user_id => @user.id, :name => "event 3", :rsvp_date =>  2.days.from_now, :start_date => 3.days.from_now, :end_date => (3.days.from_now + 2.hours))
-			@event4 = Event.create(:user_id => @bob.id, :name => "event 4", :rsvp_date => 1.day.from_now, :start_date => 2.days.from_now, :end_date => (2.days.from_now + 4.hours))
+			contact_number = "(555) 555-5555"
+			@event1 = Event.create(:user_id => @user.id, :name => "event 1", :rsvp_date =>  2.days.from_now, :start_date => 4.days.from_now, :end_date => (4.days.from_now + 3.hours), :contact_number => contact_number)
+			@event2 = Event.create(:user_id => @bob.id, :name => "event 2", :rsvp_date => 1.day.from_now, :start_date => 2.days.from_now, :end_date => (2.days.from_now + 1.hour), :contact_number => contact_number)
+			@event3 = Event.create(:user_id => @user.id, :name => "event 3", :rsvp_date =>  2.days.from_now, :start_date => 3.days.from_now, :end_date => (3.days.from_now + 2.hours), :contact_number => contact_number)
+			@event4 = Event.create(:user_id => @bob.id, :name => "event 4", :rsvp_date => 1.day.from_now, :start_date => 2.days.from_now, :end_date => (2.days.from_now + 4.hours), :contact_number => contact_number)
 			@event1.settings.days_rsvp_reminders = 2
 			@event4.settings.days_rsvp_reminders = 1
 			@event2.settings.days_event_reminders = 2

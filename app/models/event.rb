@@ -5,8 +5,9 @@ class Event < ActiveRecord::Base
 		has_one :settings, :dependent => :destroy
 		belongs_to :user
 
-		validates :name,:user_id, :start_date, :end_date, :rsvp_date, :presence => true
+		validates :name,:user_id, :start_date, :end_date, :rsvp_date, :contact_number, :presence => true
 		validates :description, :length => { :maximum => 1500, :too_long => "%{count} characters is the maximum allowed" }
+		validates :contact_number, :format => { :with => /\([0-9]{3}\)\s[0-9]{3}-[0-9]{4}$/, :message => "has to be (XXX) XXX-XXXX" }
 		validate :start_date_must_be_in_right_format
 		validate :end_date_must_be_in_right_format
 		validate :rsvp_date_must_be_in_right_format
@@ -15,7 +16,7 @@ class Event < ActiveRecord::Base
 		validate :rsvp_date_should_be_less_than_start_date
 		validate :start_date_should_be_less_than_end_date
 
-   attr_accessible :name, :start_date, :end_date, :user_id, :rsvp_date, :supplemental_info, :address1, :address2, :city, :state, :zip_code, :description, :theme
+   attr_accessible :name, :start_date, :end_date, :user_id, :rsvp_date, :supplemental_info, :contact_number, :address1, :address2, :city, :state, :zip_code, :description, :theme
 
 	before_destroy do |event|
 		unless event.end_date == nil || Time.now > event.end_date

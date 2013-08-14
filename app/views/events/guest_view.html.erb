@@ -10,6 +10,10 @@
 			<%= link_to 'Email host(s)', @event.id.to_s+'/email_host', { :id => "emailHostLink", :style=>"color:blue" } %>
 		</div>
 		<div>
+			<span style="font-weight:bold;font-size:1em">Contact Number: </span>
+			<span style="font-size:1em"><%= @event.contact_number %></span>
+		</div>
+		<div>
 			<span style="font-weight:bold;font-size:1em">Start Date: </span>
 			<span style="font-size:1em"><%= @event.display_start_time %></span>
 		</div>
