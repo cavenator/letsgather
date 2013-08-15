@@ -15,11 +15,11 @@
 				<span style="font-weight:bold;font-size:1em">Organizer's email: </span>
 				<span style="font-size:1em"><%= @event.user.email %></span>
 			</div>
+			<% end %>
 			<div>
-				<span style="font-weight:bold;font-size:1em">Contact number: </span>
+				<span style="font-weight:bold;font-size:1em">Contact Number: </span>
 				<span style="font-size:1em"><%= @event.contact_number %></span>
 			</div>
-			<% end %>
 			<div>
 			<span style="font-weight:bold;font-size:1em">Start Date: </span>
 			<span style="font-size:1em"><%= @event.display_start_time %></span></div>
@@ -29,10 +29,6 @@
 			<div>
 				<span style="font-weight:bold;font-size:1em">RSVP Date: </span>
 				<span style="font-size:1em"><%= @event.display_rsvp_time %></span>
-			</div>
-			<div>
-				<span style="font-weight:bold;font-size:1em">Contact Number: </span>
-				<span style="font-size:1em"><%= @event.contact_number %></span>
 			</div>
 			<div style="margin-top:1em">
 				<%= link_to 'Edit', edit_event_path(@event), :class=>"btn btn-primary", :style=>"color:white" %> </div>
