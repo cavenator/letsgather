@@ -1,18 +1,18 @@
-<div class="row" style="vertical-align:-webkit-baseline-middle;text-align:center">
-	<div class="span2">
+<div class="row" style="vertical-align:-webkit-baseline-middle;text-align:left">
+	<div class="span3">
 		<% if attending_attendee.full_name.blank? %> <%= attending_attendee.email %> <% else %> <%= attending_attendee.full_name %> <% end %>
+		<% unless attending_attendee.email.blank? %><%= link_to "", attending_attendee.event.id.to_s+'/attendees/'+attending_attendee.id.to_s+'/email_guest', {:style=>"color:blue", :class => "btn btn-link email_individual icon-envelope"} %><% end %>
 	</div>
-	<div class="span4">
+	<div class="span5">
 		<p>Additional guests:  <%= attending_attendee.num_of_guests %></p>
 		<p>Comment(s): <% if attending_attendee.comment.blank? %>None<% else %><%= attending_attendee.comment %><% end %></p>
 		<p>Dish(es):  <% if attending_attendee.dish.blank? %> Undecided <% else %>
-				<% attending_attendee.dish.each do |dish_item| %><div>
-				<span class="label"><%= dish_item["category"] %></span>&nbsp;&nbsp;&nbsp;<span style="font-weight:bold"><%= dish_item["item"] %></span></div>
+				<% attending_attendee.dish.each do |dish_item| %>
+					<div>
+						<span class="label"><%= dish_item["category"] %></span>&nbsp;&nbsp;&nbsp;<span style="font-weight:bold"><%= dish_item["item"] %></span>
+					</div>
 				<% end %>
 			<% end %>
 		</p>
-	</div>
-	<div class="span2">
-		<% unless attending_attendee.email.blank? %><span style="float:right"><%= link_to "Email guest", attending_attendee.event.id.to_s+'/attendees/'+attending_attendee.id.to_s+'/email_guest', {:style=>"color:blue", :class => "btn btn-link email_individual"} %></span><% end %>
 	</div>
 </div>
