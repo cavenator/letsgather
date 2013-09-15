@@ -26,13 +26,13 @@ class Attendee < ActiveRecord::Base
 					potluck_item.taken_items = []
 				end
 				unless item["is_custom"] 
-					potluck_item.remove_dish_from_list(potluck_item.dishes.find_index(item["item"]), {"id"=>attendee.id, "item"=>item["item"]})
+					potluck_item.remove_dish_from_list(item["item"], attendee.id)
 				end
 			end
 		end
 
 		before_save do |attendee|
-			if attendee.id
+			unless attendee.id.blank?
 			#only perform this block once the attendee has actually been created and has an id
 				attendee.filter_out_potluck_lists
 				if attendee.event.has_notification_settings_on?
@@ -51,7 +51,7 @@ class Attendee < ActiveRecord::Base
 			attendee.dish.each do |item|
 				potluck_item = attendee.event.get_potluck_list_per_category(item["category"])
 				unless item["is_custom"]
-					potluck_item.make_item_available(item["item"], potluck_item.taken_items.find_index({"id"=>attendee.id, "item" => item["item"]}))
+					potluck_item.make_item_available(item["item"], attendee.id)
 				end
 			end
 		end
@@ -125,56 +125,29 @@ class Attendee < ActiveRecord::Base
 			errors.add(:email, " should not be the same as host. Please provide an email or none at all.") if self.event.user.email.eql?(self.email)
 		end
 
-		#TODO:  Refactor this ugly-as-sin method!!
 		def filter_out_potluck_lists
-				if self.rsvp == "Going"
-					unless self.dish.blank? #execute the block if attendee has items. Mark available items as taken
-						#find the delta (previous state versus what we have now) and run the loop
-						#should create a comprehensive map so that the deltas could be tracked. a map with each of the categories
-						previous_state = Attendee.find(self.id)
-						previous_list = previous_state.dish
-						self.dish.each do |item|
-							potluck_item = self.event.get_potluck_list_per_category(item["category"])
-							if potluck_item.taken_items.blank?
-								potluck_item.taken_items = []
-							end
-							unless item["is_custom"] 
-								if previous_list.blank? || previous_list.find_index(item).nil?
-									potluck_item.remove_dish_from_list(potluck_item.dishes.find_index(item["item"]), {"id"=>self.id, "item"=>item["item"]})
-								elsif previous_list.find_index(item)
-									previous_list.delete_at(previous_list.find_index(item))
-								end
-							end
-						end
-						unless previous_list.blank?
-							previous_list.each do |remove_item|
-								unless remove_item["is_custom"]
-									potluck_item = self.event.get_potluck_list_per_category(remove_item["category"])
-									potluck_item.make_item_available(remove_item["item"], potluck_item.taken_items.find_index({"id"=> self.id, "item" => remove_item["item"]}))
-								end
-							end
-						end
-					else #updated attendee dish selection is empty while previous state has items defined. Make items available for selection again
-						if self.id
-							previous_state = Attendee.find(self.id)
-							previous_state.dish.each do |dish|
-								unless dish["is_custom"]
-									potluck_item = self.event.get_potluck_list_per_category(dish["category"])
-									potluck_item.make_item_available(dish["item"], potluck_item.taken_items.find_index({"id"=> self.id, "item"=>dish["item"]}))
-								end
-							end
-						end
+			previous_state = Attendee.find(self.id)
+			previous_list = previous_state.dish
+			event = self.event
+
+			if self.rsvp == "Going"
+					#execute the block if attendee has items. Mark available items as taken
+					#find the delta (previous state versus what we have now) and run the loop 
+					#returns the delta as a comprehensive map 
+				unless self.dish.blank?
+					leftover_taken_items = PotluckItem.return_taken_list_delta(self, event, previous_list)
+					unless leftover_taken_items.blank?
+						PotluckItem.make_items_available(previous_state, event, leftover_taken_items)
 					end
-				else
-				#Attendee is not going. Make sure to return taken items to available column again
-					previous_state = Attendee.find(self.id)
-					previous_state.dish.each do |item|
-						potluck_item = self.event.get_potluck_list_per_category(item["category"])
-						unless item["is_custom"]
-							potluck_item.make_item_available(item["item"], potluck_item.taken_items.find_index({"id"=> self.id, "item"=>item["item"]}))
-						end
+				else #updated attendee dish selection is empty while previous state has items defined. Make items available for selection again
+					unless self.id.blank?
+						PotluckItem.make_items_available(previous_state, event, nil)
 					end
 				end
+			else
+			#Attendee is not going. Make sure to return taken items to available column again
+				PotluckItem.make_items_available(previous_state, event, nil)
+			end
 		end
 
 		def verify_items_are_available
