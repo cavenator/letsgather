@@ -17,7 +17,6 @@
 					<ul class="dropdown-menu">
 						<li><%= link_to 'Edit profile', edit_user_registration_url %></li>
 						<li><%= link_to 'My groups', { :controller => "groups", :action => :index, :user_id => @user.id } %></li>
-						<li><%= link_to 'Settings', { :controller => "event_settings", :action => :get_settings, :user_id => @user.id } %></li>
 						<li><%= link_to 'Sign out', {:controller => "devise/sessions", :action => "destroy" }, {:method => :delete} %></li>
 					</ul>
 					<button class="btn" id="faqButton">FAQ</button>

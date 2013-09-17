@@ -1,3 +1,5 @@
+<div class="row-fluid">
+	<div class="span6">
 <%= form_for(@event) do |f| %>
   <% if @event.errors.any? %>
     <div id="error_explanation">
@@ -45,7 +47,35 @@
 	<%= f.label :contact_number %>
 	<%= f.text_field :contact_number, :placeholder => "(555) 555-5555" %>
 </p>
-  <div class="actions">
-		<button class="btn btn-primary" id="event_submit">Save</button>
-  </div>
+		</div>
+		<div class="span6">
+			<h4>Notifications</h4>
+			<%= f.fields_for :settings do |settings_form| %>
+				<p>
+					<%= settings_form.check_box :notify_on_guest_accept %><span style="padding-left:10px;font-weight:bold;font-size:1em">Notify me when guests accept</span>
+				</p>
+				<p>
+					<%= settings_form.check_box :notify_on_guest_decline %><span style="padding-left:10px;font-weight:bold;font-size:1em">Notify me when guests decline</span>
+				</p>
+				<p>
+					<%= settings_form.check_box :notify_on_guest_response %><span style="padding-left:10px;font-weight:bold;font-size:1em">Notify me of all guest changes to rsvp</span>
+				</p>
+				<p>
+					<%= settings_form.check_box :disable_suggestions %><span style="padding-left:10px;font-weight:bold;font-size:1em">Disable suggestions</span>
+				</p>
+				<h4>Reminders</h4>
+				<p>
+					<label>Send out rsvp reminders <input style="width:1.25em" type="text" id="event_settings_days_rsvp_reminders" name="event[settings_attributes][days_rsvp_reminders]" value="<% if @event.settings.blank? %>0<% else %><%= @event.settings.days_rsvp_reminders %><% end %>" maxlength="2"/> days from rsvp date</label>
+				</p>
+				<p>
+					<label>Send out event reminders <input style="width:1.25em" type="text" id="event_settings_days_event_reminders" name="event[settings_attributes][days_event_reminders]" value="<% if @event.settings.blank? %>0<% else %><%= @event.settings.days_event_reminders %><% end %>" size="2" maxlength="2"/> days from event date</label>
+				</p>
+			<% end %>
+		</div>
+</div>
+	<div class="row">
+		<div class="actions">
+			<button class="btn btn-primary" id="event_submit">Save</button>
+		</div>
+	</div>
 <% end %>

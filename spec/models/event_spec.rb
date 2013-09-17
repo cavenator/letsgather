@@ -140,10 +140,16 @@ describe Event do
 			@event2 = Event.create(:user_id => @bob.id, :name => "event 2", :rsvp_date => 1.day.from_now, :start_date => 2.days.from_now, :end_date => (2.days.from_now + 1.hour), :contact_number => contact_number)
 			@event3 = Event.create(:user_id => @user.id, :name => "event 3", :rsvp_date =>  2.days.from_now, :start_date => 3.days.from_now, :end_date => (3.days.from_now + 2.hours), :contact_number => contact_number)
 			@event4 = Event.create(:user_id => @bob.id, :name => "event 4", :rsvp_date => 1.day.from_now, :start_date => 2.days.from_now, :end_date => (2.days.from_now + 4.hours), :contact_number => contact_number)
+			@event1.settings = Settings.new
+			@event2.settings = Settings.new
+			@event3.settings = Settings.new
+			@event4.settings = Settings.new
+
 			@event1.settings.days_rsvp_reminders = 2
 			@event4.settings.days_rsvp_reminders = 1
 			@event2.settings.days_event_reminders = 2
 			@event3.settings.days_event_reminders = 3
+
 			@event1.settings.save
 			@event2.settings.save
 			@event3.settings.save
@@ -166,35 +172,12 @@ describe Event do
 	end
 
 	describe "User future settings applied to created events" do
-		before(:each) do
-			User.destroy_all
-			Event.destroy_all
-		end
+#		before(:each) do
+#			User.destroy_all
+#			Event.destroy_all
+#		end
 
-		it "should use default settings if future_options is nil" do
-			@event = FactoryGirl.create(:event)
-			expect(@event.settings.notify_on_guest_accept) == false
-			expect(@event.settings.notify_on_guest_decline) == false
-			expect(@event.settings.notify_on_guest_response) == false
-			expect(@event.settings.days_rsvp_reminders) == 0
-			expect(@event.settings.days_event_reminders) == 0
-		end
+		it "should copy over users default settings into created event"
 
-		it "should copy over users default settings into created event" do
-			@user = FactoryGirl.create(:user)
-			expected_settings = {"notify_on_guest_accept" => true, "notify_on_guest_decline" => true, "days_rsvp_reminders" => 2, "days_event_reminders" => 1}
-			@user.future_options = Settings.DEFAULT_SETTINGS.merge(expected_settings)
-			@user.future_options = @user.future_options.merge(Settings.AdditionalHashInfoForUser)
-			@user.save
-
-			@event = FactoryGirl.create(:event, :user_id => @user.id)
-			@settings = Settings.find_by_event_id(@event.id)
-			expect(@settings.notify_on_guest_accept) == @user.future_options["notify_on_guest_accept"]
-			expect(@settings.notify_on_guest_decline) == @user.future_options["notify_on_guest_decline"]
-			expect(@settings.notify_on_guest_response) == @user.future_options["notify_on_guest_response"]
-			expect(@settings.days_rsvp_reminders) == @user.future_options["days_rsvp_reminders"]
-			expect(@settings.days_event_reminders) == @user.future_options["days_event_reminders"]
-		end
 	end
-
 end

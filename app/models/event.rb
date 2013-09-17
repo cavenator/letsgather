@@ -16,7 +16,9 @@ class Event < ActiveRecord::Base
 		validate :rsvp_date_should_be_less_than_start_date
 		validate :start_date_should_be_less_than_end_date
 
-   attr_accessible :name, :start_date, :end_date, :user_id, :rsvp_date, :supplemental_info, :contact_number, :address1, :address2, :city, :state, :zip_code, :description, :theme
+   attr_accessible :name, :start_date, :end_date, :user_id, :rsvp_date, :supplemental_info, :contact_number, :address1, :address2, :city, :state, :zip_code, :description, :theme, :settings_attributes
+
+	accepts_nested_attributes_for :settings
 
 	before_destroy do |event|
 		unless event.end_date == nil || Time.now > event.end_date
@@ -25,13 +27,6 @@ class Event < ActiveRecord::Base
 			AttendeeMailer.delay.send_event_cancellation(email_list, event.name, host.full_name, host.email)
 		end
 		event.attendees.destroy_all
-	end
-
-	after_create do |event|
-		Settings.create(:event_id => event.id)
-		unless event.user.future_options.blank?
-			event.user.transfer_settings_for_event(event)
-		end
 	end
 
 	def start_date_must_be_in_the_future

@@ -86,7 +86,15 @@
 
 		loadClientDatesFromServer();
 
+		function resetReminderValueIfInvalid(reminderElem){
+			var reminderValue = reminderElem.val();
+			if (!$.isNumeric(reminderValue) || reminderValue < 0)
+				reminderElem.val(0);
+		}
+
 		$("#event_submit").click(function(){
+			resetReminderValueIfInvalid($("#event_settings_days_rsvp_reminders"));
+			resetReminderValueIfInvalid($("#event_settings_days_event_reminders"));
 			convertDatesForServer($("#readable_start_date").val(), $("#start_date"));
 			convertDatesForServer($("#readable_rsvp_date").val(), $("#rsvp_date"));
 			convertDatesForServer($("#readable_end_date").val(), $("#end_date"));
