@@ -23,7 +23,7 @@
 
 	<p>
 		<%= f.label :rsvp %>
-		<%= f.select(:rsvp, options_for_select([['Undecided','Undecided'],['Going','Going'],['Not Going','Not Going']]), {}, :onchange => "rsvp();") %>
+		<%= f.select(:rsvp, options_for_select([['No Response','No Response'],['Undecided','Undecided'],['Going','Going'],['Not Going','Not Going']]), {}, :onchange => "rsvp();") %>
 	</p>
 	<div>
 			<div><span style="font-weight:bold">Comments? </span><span id="count-down-limit"></span></div>

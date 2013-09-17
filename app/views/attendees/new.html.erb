@@ -20,7 +20,7 @@
 			if (flash_message.text().length > 0)
 				flash_message.addClass("alert alert-info");
 			$("#guestcount_div").hide();
-			$("#attendee_rsvp").val("Undecided").change();
+			$("#attendee_rsvp").val("No Response").change();
 
 			function updateCharLimit(){
 				var limit = 255, num_of_chars = $("#attendee_comment").val().length, countDownSpan = $("#count-down-limit");
