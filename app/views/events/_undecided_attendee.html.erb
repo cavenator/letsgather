@@ -1,9 +1,9 @@
-<div class="row" style="vertical-align:-webkit-baseline-middle;text-align:left">
-	<div class="span3">
+<div class="row-fluid" style="vertical-align:-webkit-baseline-middle;text-align:left">
+	<div class="span5">
 		<% if undecided_attendee.full_name.blank? %><%= undecided_attendee.email %> <% else %><%= undecided_attendee.full_name %> <% end %>
 		<% unless undecided_attendee.email.blank? %><%= link_to "", undecided_attendee.event.id.to_s+'/attendees/'+undecided_attendee.id.to_s+'/email_guest', {:style=>"color:blue", :class => "btn btn-link email_individual icon-envelope"} %><% end %>
 	</div>
-	<div class="span5">
+	<div class="span7">
 		<p>Comment(s): <% if undecided_attendee.comment.blank? %>None<% else %><%= undecided_attendee.comment %><% end %></p>
 	</div>
 </div>

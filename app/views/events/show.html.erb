@@ -3,8 +3,8 @@
 <% else %>
 	<div id="notice"></div>
 <% end %>
-<div class="row">
-	<div class="span3">
+<div class="row-fluid">
+	<div class="span4">
 		<div>
 			<span style="font-weight:bold;font-size:1em">Name: </span>
 			<span style="font-size:1em"><%= @event.name %></span>
@@ -34,7 +34,7 @@
 				<%= link_to 'Edit', edit_event_path(@event), :class=>"btn btn-primary", :style=>"color:white" %> </div>
 		</div>
 	</div>
-	<div id="description_div" class="span4">
+	<div id="description_div" class="span5">
 		<div id="description_block_div">
 			<%= render :partial =>"description", :locals => {:event => @event} %>
 		</div>
@@ -51,9 +51,9 @@
 		</div>
 	</div>
 </div>
-<div class="row">
+<div class="row-fluid">
 	<hr/>
-	<div class="span3">
+	<div class="span2">
 	<ul class="nav nav-pills nav-stacked">
 		<li class="phoney-button">
 			<a id="potluck_statistics">Event statistics</a>
@@ -74,7 +74,7 @@
 		</li>
 	</ul>
 	</div>
-	<div id="contentContainer" class="span8"> 
+	<div id="contentContainer" class="span9"> 
 	</div>
 
 	<div id="locationModal" class="modal hide" data-remote="">

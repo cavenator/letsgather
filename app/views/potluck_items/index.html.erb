@@ -1,7 +1,7 @@
-<div class="row" style="margin-bottom:2em">
-	<span class="span2 headers">Category</span>
-	<span class="span2 headers">Available Items</span>
-	<span class="span2 headers">Taken Items</span>
+<div class="row-fluid" style="margin-bottom:2em">
+	<span class="span3 headers">Category</span>
+	<span class="span4 headers">Available Items</span>
+	<span class="span4 headers">Taken Items</span>
 </div>
 <%= render :partial => "list_info", :collection => @event.potluck_items, :locals => {:event => @event, :user => current_user }, :spacer_template => "events/spacer_hr" %>
 <br />

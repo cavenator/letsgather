@@ -1,17 +1,17 @@
-<div class="row">
+<div class="row-fluid">
 	<div class="span1 guest-info-body"><% if guest_info.can_cohost? %><span class="label">Cohost</span><% else %><span class="label">Guest</span><% end %></div>
-	<div class="span2 attendee_name guest-info-body"><%= guest_info.full_name %></div>
-	<div class="span3 attendee_email guest-info-body"><%= guest_info.email %></div>
-	<div class="span1 guest-info-body"><%= guest_info.rsvp %></div>
+	<div class="span4 attendee_name guest-info-body"><%= guest_info.full_name %></div>
+	<div class="span4 attendee_email guest-info-body"><%= guest_info.email %></div>
+	<div class="span2 guest-info-body"><%= guest_info.rsvp %></div>
 </div>
-<div class="row">
+<div class="row-fluid">
 	<div class="span1 offset1"><%= link_to ' Edit', edit_event_attendee_url(event, guest_info), { :class=>"editAttendee icon-edit guest-options"} %>
 	</div>
 	<div class="span2"><%= link_to ' Remove', event_attendee_url(event, guest_info), { :class=>"removeAttendee icon-remove guest-options"} %>
 	</div>
-	<div class="span2">
+	<div class="span3">
 		<% if user.id == event.user.id && !guest_info.email.blank? %><% if guest_info.can_cohost? %><%= link_to "Demote to guest", {:controller => :events, :action => :change_roles, :id => event.id, :attendee_id => guest_info.id}, :class=>"guest-options icon-user promotion" %><% else %><%= link_to "Promote to cohost", {:controller => :events, :action => :change_roles, :id => event.id, :attendee_id => guest_info.id}, :class=>"guest-options icon-user promotion" %><% end %><% end %>
 	</div>
-	<div class="span2"><% unless guest_info.email.blank? || guest_info.invite_sent %><%= link_to ' Send invitation', {:controller => :attendees, :action => :send_individual_calendar, :event_id => event.id, :id => guest_info.id}, { :class=>"individualInvite icon-calendar guest-options"} %><% end %>
+	<div class="span3"><% unless guest_info.email.blank? || guest_info.invite_sent %><%= link_to ' Send invitation', {:controller => :attendees, :action => :send_individual_calendar, :event_id => event.id, :id => guest_info.id}, { :class=>"individualInvite icon-calendar guest-options"} %><% end %>
 	</div>
 </div>

@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row-fluid">
 	<ul class="nav nav-pills">
 		<li class="filter-button phoney-button" data-filter="going" style="margin-left:100px"><span style="font-weight:bold;font-size:1em;width:140px;float:left;min-height:2px;margin-left:10px;text-align:center">Coming <span class="label"><%= @attending.count %></span></span></li>
 		<li class="filter-button phoney-button" data-filter="not-going"><span style="font-weight:bold;font-size:1em;width:140px;float:left;min-height:2px;text-align:center">Not coming <span class="label"><%= @not_going.count %></span></span></li>
@@ -6,32 +6,32 @@
 		<li class="filter-button phoney-button" data-filter="no-response"><span style="font-weight:bold;font-size:1em;width:140px;float:left;min-height:2px;text-align:center">No Response <span class="label"><%= @no_response.count %></span></span></li>
 	</ul>
 </div>
-<div class="row attending_guests">
+<div class="row-fluid attending_guests">
 	<% unless @attending.map(&:email).compact.blank? %>
-		<div class="row">
+		<div class="row-fluid">
 		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Going"}, {:style=>"margin-bottom: 1em;color:blue;", :class => "btn btn-link email_group"} %>
 		<% end %>
 		</div>
 	<%= render :partial => "attending_attendee", :collection => @attending, :spacer_template => "spacer_hr" %>
 </div>
-<div class="row unattending_guests">
-	<div class="row">
+<div class="row-fluid unattending_guests">
+	<div class="row-fluid">
 	<% unless @not_going.map(&:email).compact.reject{ |c| c.empty? }.blank? %>
 		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Not Going"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
 	<% end %>
 	</div>
 	<%= render :partial => "unattending_attendee", :collection => @not_going, :spacer_template => "spacer_hr" %>
 </div>
-<div class="row undecided_guests">
-	<div class="row">
+<div class="row-fluid undecided_guests">
+	<div class="row-fluid">
 	<% unless @undecided.map(&:email).compact.reject{|c| c.empty?}.blank? %>
 		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "Undecided"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
 	<% end %>
 	</div>
 	<%= render :partial => "undecided_attendee", :collection => @undecided, :spacer_template => "spacer_hr" %>
 </div>
-<div class="row nonresponsive_guests">
-	<div class="row">
+<div class="row-fluid nonresponsive_guests">
+	<div class="row-fluid">
 	<% unless @no_response.map(&:email).compact.reject{|c| c.empty?}.blank? %>
 		<%= link_to "Email group",{:controller => :events, :action => :group_email, :id => @event.id, :rsvp_group => "No Response"}, {:style=>"margin-bottom: 1em;color:blue", :class => "btn btn-link email_group"} %>
 	<% end %>

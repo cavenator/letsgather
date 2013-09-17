@@ -4,11 +4,11 @@
 <hr/>
 <h3>The Guest list</h3>
 <div id="flash-notice"></div>
-<div class="row" style="margin-bottom:2em">
+<div class="row-fluid" style="margin-bottom:2em">
 	<span class="span1 headers"></span>
-	<span class="span2 headers">Name</span>
-	<span class="span3 headers">Email address</span>
-	<span class="span1 headers">RSVP</span>
+	<span class="span4 headers">Name</span>
+	<span class="span4 headers">Email address</span>
+	<span class="span2 headers">RSVP</span>
 </div>
 	<%= render :partial => "guest_info", :collection => @event.attendees, :locals => {:event => @event, :user => current_user }, :spacer_template => "events/spacer_hr" %>
 <div class="row" style="margin-top:2.5em">

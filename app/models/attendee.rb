@@ -34,7 +34,7 @@ class Attendee < ActiveRecord::Base
 		before_save do |attendee|
 			unless attendee.id.blank?
 			#only perform this block once the attendee has actually been created and has an id
-				attendee.filter_out_potluck_lists
+				attendee.sort_out_taken_items
 				if attendee.event.has_notification_settings_on?
 					NotificationDelegator.send_notifications_to_host_from(attendee)
 				end
@@ -125,7 +125,7 @@ class Attendee < ActiveRecord::Base
 			errors.add(:email, " should not be the same as host. Please provide an email or none at all.") if self.event.user.email.eql?(self.email)
 		end
 
-		def filter_out_potluck_lists
+		def sort_out_taken_items
 			previous_state = Attendee.find(self.id)
 			previous_list = previous_state.dish
 			event = self.event
