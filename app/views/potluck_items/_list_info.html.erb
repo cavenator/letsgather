@@ -3,7 +3,7 @@
 	<div class="span4 guest-info-body">
 		<ul>
 			<% list_info.dishes.each do |dish| %>
-				<li><%= dish %></li>
+				<li><%= dish["item"] %> x <%= dish["quantity"] %></li>
 			<% end %>
 		</ul>
 	</div>

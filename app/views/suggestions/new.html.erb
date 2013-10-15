@@ -51,7 +51,7 @@
 				success: function(data, successText){
 					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
 					$("#notice").html("Suggestion has been submitted for this event");
-					$("#suggestionsModal").modal("hide");
+					$("#readonly_suggestions").click();
 				},
 				error: function(xhr){
 					$("#flash_notice").addClass("alert alert-error");

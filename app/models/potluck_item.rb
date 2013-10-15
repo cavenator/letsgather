@@ -84,9 +84,8 @@ class PotluckItem < ActiveRecord::Base
 	end
 
 	def verify_no_duplicates_dishes
-		errors.add(:dishes, "No duplicates allowed in list") unless self.dishes.uniq.length == self.dishes.length
-		taken_items = self.taken_items.map{|i| i["item"] }
-		errors.add(:dishes, "Item cannot be added since it's already taken by guest") unless taken_items.blank? || (taken_items & self.dishes).count == 0
+		available_items = self.dishes.map{|a| a["item"]}
+		errors.add(:dishes, "No duplicates allowed in list") unless available_items.uniq.length == available_items.length
 	end
 
 	def self.build_from_suggestion(suggestion)
