@@ -28,7 +28,6 @@
 		$(".removePotluckItems").click(function(){
 			var url = $(this).attr('href');
 			var id = url.substr(url.lastIndexOf("/")+1);
-			var table_row_id = "items_"+id;
 			$.ajax({
 				url: url,
 				dataType: "html",
@@ -38,7 +37,7 @@
 				success: function(){
 					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
 					$("#notice").html("Items have been removed from your list");
-					$("#"+table_row_id).remove();
+					$("#potluck_list").click();
 				},
 				error: function(){
 					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-error");

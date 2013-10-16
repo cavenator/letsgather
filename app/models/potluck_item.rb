@@ -14,6 +14,7 @@ class PotluckItem < ActiveRecord::Base
 	validates :host_quantity, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0 }
 	validates :category, :uniqueness => { :scope => :event_id, :message => "should be unique per event" }
 	validate :verify_no_duplicates_dishes
+	validate :verify_taken_item_still_present_in_available_list
 
 	attr_accessible :event_id, :category, :dishes, :host_quantity, :taken_items
 	serialize :dishes
@@ -86,6 +87,12 @@ class PotluckItem < ActiveRecord::Base
 	def verify_no_duplicates_dishes
 		available_items = self.dishes.map{|a| a["item"]}
 		errors.add(:dishes, "No duplicates allowed in list") unless available_items.uniq.length == available_items.length
+	end
+
+	def verify_taken_item_still_present_in_available_list
+		self.taken_items.each do |item|
+			errors.add(:dishes, "Cannot remove item from available selection since someone has RSVPed with it. You must remove it from that guest first before you can remove it") unless taken_items.blank? || !self.dishes.index{|x| x["item"].eql?(item["item"])}.blank?
+		end
 	end
 
 	def self.build_from_suggestion(suggestion)

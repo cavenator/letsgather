@@ -5,17 +5,7 @@
 	$(document).ready(function(){
 
 		function createPotluckItemObject(item){
-			var multiplierIndex = item.indexOf("*");
-			if (multiplierIndex != -1){
-				var dish = item.substr(0, multiplierIndex);
-				var quantity = item.substr(multiplierIndex + 1);
-				if ($.isNumeric($.trim(quantity)))
-					return { "item": $.trim(dish), "quantity": parseInt($.trim(quantity), 10) };
-				else
-					return { "item": $.trim(dish), "quantity": 1 }
-			} else {
-				return {"item": $.trim(item), "quantity": 1 };
-			}
+			return {"item": $.trim(item), "quantity": 1 };
 		}
 
 		$("#submit_button").click(function(){

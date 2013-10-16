@@ -20,12 +20,12 @@ describe PotluckItem do
 		end
 
 		it "should allow a potluck list to be created if no items specified with category" do
-			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Boardgames", :host_quantity => 2, :dishes => [])
+			@potluck_item = PotluckItem.new(:event_id => @event.id, :category => "Boardgames", :host_quantity => 2, :dishes => [])
 			expect(@potluck_item).to be_valid
 		end
 
 		it "should allow empty dishes after initial create" do
-			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Desserts", :host_quantity => 2, :dishes => [{ "item" => "Brownies", "quantity" => 1 },{ "item" => "Cookies", "quantity" => 6 }])
+			@potluck_item = PotluckItem.new(:event_id => @event.id, :category => "Desserts", :host_quantity => 2, :dishes => [{ "item" => "Brownies", "quantity" => 1 },{ "item" => "Cookies", "quantity" => 6 }])
 			expect(@potluck_item).to be_valid
 
 			@potluck_item.dishes.clear
@@ -38,7 +38,7 @@ describe PotluckItem do
 		end
 
 		it "should not allow duplicate dishes within the same category upon update" do
-			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Desserts", :host_quantity => 2, :dishes => [{ "item" => "Brownies", "quantity" => 3 },{"item" => "Cookies", "quantity" => 10}])
+			@potluck_item = PotluckItem.new(:event_id => @event.id, :category => "Desserts", :host_quantity => 2, :dishes => [{ "item" => "Brownies", "quantity" => 3 },{"item" => "Cookies", "quantity" => 10}])
 			expect(@potluck_item).to be_valid
 
 			@potluck_item.dishes << {"item" => "Brownies", "quantity" => 1 }
@@ -54,7 +54,7 @@ describe PotluckItem do
 
 			attendee = FactoryGirl.create(:attendee, :event_id => @event.id, :rsvp => "Going")
 			@potluck_item.taken_items << {"id" => attendee.id, "item" => "Brownies", "quantity" => 3 }
-			@potluck_item.dishes.find{|a| a["item"].eql?("Brownies")}["quantity"] = 0
+			@potluck_item.dishes.find{|a| a["item"] == "Brownies" }["quantity"] = 0
 			@potluck_item.save
 
 			@potluck_item = PotluckItem.find(@potluck_item.id)
@@ -63,8 +63,27 @@ describe PotluckItem do
 			expect(PotluckItem.where("event_id = ?",@event.id).count).to eql(3)
 		end
 
-		it "should not be allowed to remove any dishes if they are rsvped (taken) by guest"
+		it "should not be allowed to remove any dishes if they are rsvped (taken) by guest" do
+			@potluck_item = PotluckItem.find_by_category("Beer")
+			
+			attendee = FactoryGirl.create(:attendee, :event_id => @event.id, :rsvp => "Going")
+			@potluck_item.taken_items << {"id" => attendee.id, "item" => "IPA", "quantity" => 1 }
+			@potluck_item.dishes.delete_if { |a| a["item"].eql?("IPA") }
+			expect(@potluck_item).to_not be_valid
+		end
 
-		it "should be allowed to update the quantity number if guests rsvp with a portion of it"
+		it "should be allowed to update the quantity number if guests rsvp with a portion of it" do
+			@potluck_item = PotluckItem.find_by_category("Beer")
+			
+			#simulate guest rsvping with an item; refactor to do via a method call
+			attendee = FactoryGirl.create(:attendee, :event_id => @event.id, :rsvp => "Going")
+			@potluck_item.taken_items << {"id" => attendee.id, "item" => "IPA", "quantity" => 1 }
+			@potluck_item.dishes.find{|a| a["item"] == "IPA" }["quantity"] = 1
+			@potluck_item.save
+
+			#edit the quantity for IPA
+			@potluck_item.dishes.find{ |a| a["item"] == "IPA" }["quantity"] = 3
+			expect(@potluck_item).to be_valid
+		end
 	end
 end

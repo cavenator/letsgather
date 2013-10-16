@@ -29,20 +29,22 @@
 
 	<% if @potluck_item.id.blank? %>
 		<label>Items: </label>
-		<textarea id="list_area" rows="5" style="width:100%" placeholder="Create your list via comma-delimited items(ex: bag of chips, container of salsa * 2, bags of toritas * 3). Not specifying the quantity (e.g. * 9) defaults the quantity to 1." />
+		<textarea id="list_area" rows="5" style="width:100%" placeholder="Create your list via comma-delimited values (ex: bag of chips, jar of salsa, bags of tortillas)" />
 	<% else %>
 		<% if @potluck_item.dishes.blank? %>
 			<div id="list_items">
 				<label>Items: </label>
-				<input type="text" class="input-large" id="first_item" placeholder="Twinkies">
+					<div class="list_item">
+						<input type="text" class="input-large" id="first_item" placeholder="Box of Twinkies"><input type='text' style="margin-left:1em" class='input-mini' placeholder="2">
+					</div>
 			</div>
 		<% else %>
 			<div id="list_items">
 				<label>Items: </label>
 				<% @potluck_item.dishes.each_with_index do |dish, index| %>
-					<div id="dish_<%= index %>">
-						<input type='text' class='input-large' value="<%= dish %>">
-						<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em' onclick="$('#dish_<%= index %>').remove();"><i class="icon-remove"></i></button>
+					<div class="list_item">
+						<input type='text' class='input-large' value="<%= dish["item"] %>"><input style='margin-left:1em' type='text' class='input-mini' value="<%= dish["quantity"] %>">
+						<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em' onclick="$(this.parentElement).remove();"><i class="icon-remove-sign"></i></button>
 					</div>
 				<% end %>
 			</div>

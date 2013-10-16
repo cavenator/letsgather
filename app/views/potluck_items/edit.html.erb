@@ -5,17 +5,30 @@
 	$(document).ready(function(){
 		$("#add_more_items").click(function(){
 			var item_list = $("#list_items");
-			var additionalDiv = $("<div></div>");
-			var itemText = $("<input type='text' class='input-large' placeholder='Twinkies'>");
+			var additionalDiv = $("<div class='list_item'></div>");
+			var itemText = $("<input type='text' class='input-large' placeholder='Box of Twinkies'>");
+			var quantityInput = $("<input type='text' style='margin-left:1em' class='input-mini' placeholder='2'>");
 			var removeButton = $("<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em'><i class='icon-remove-sign'></i></button>");
 			removeButton.click(function(){
 				additionalDiv.remove();
 			});
 			additionalDiv.appendTo(item_list);
 			itemText.appendTo(additionalDiv);
+			quantityInput.appendTo(additionalDiv);
 			removeButton.appendTo(additionalDiv);
 			return false;
 		});
+
+		function createPotluckItemObjectFromDiv(itemDiv){
+			var item = $.trim($(itemDiv).find(".input-large").val());
+			var quantity = $.trim($(itemDiv).find(".input-mini").val());
+			if (item.length > 0){
+				if ($.isNumeric(quantity) && quantity >= 0)
+					return { "item": item, "quantity": parseInt(quantity, 10) };
+				else
+					return { "item": item, "quantity": 1 };
+			}
+		}
 
 		$("#submit_button").click(function(){
 			var dish_array = [];
@@ -24,9 +37,8 @@
 
 			$("#flash_notice").removeClass("alert alert-error");
 			$("#flash_notice").html("");
-			$(".input-large").each(function(index, input){
-				if ($.trim($(input).val()) != "")
-					dish_array.push($(input).val());
+			dish_array = $.map($(".list_item"), function(itemDiv, index){
+					return createPotluckItemObjectFromDiv(itemDiv);
 			});
 
 			$("#potluck_item_dishes").val(JSON.stringify(dish_array));
