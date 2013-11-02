@@ -145,14 +145,101 @@ describe Attendee do
 		end
 	end
 
+	describe "Deltas between attendee state" do
+		before(:all) do
+			User.destroy_all
+			Event.destroy_all
+			Attendee.destroy_all
+			@settings = FactoryGirl.create(:setting)
+			@event = @settings.event
+			@attendee = Attendee.new(:event_id => @event.id, :full_name => "Rick", :email => "somedude@dude.com", :rsvp => "Going")
+		end
+
+		it "deltas when list is nil and attendee.dish has items" do
+			@attendee.dish = [{"category" => "Dessert", "item" => "Chocolate Cookies", "is_custom" => false, "quantity" => 2}]
+			deltas = @attendee.get_deltas_from_list([])
+			expect(deltas) == ([{"category" => "Dessert", "item" => "Chocolate Cookies", "is_custom" => false, "quantity" => 2}])
+		end
+
+		it "deltas between same number of items between list - different quantities" do
+			previous_items = [{"category" => "Beer", "item" => "IPA", "quantity" => 3, "is_custom" => false}]
+
+			@attendee.dish = [{"category" => "Beer", "item" => "IPA", "quantity" => 5, "is_custom" => false }]
+			deltas = @attendee.get_deltas_from_list(previous_items)
+			expect(deltas[0]).to eq({"category" => "Beer", "item" => "IPA", "quantity" => 2, "is_custom" => false })
+		end
+
+		it "deltas when list has greater items than the guest and reduction of quantity" do
+			previous_items = [{"category" => "Beer", "item" => "IPA", "quantity" => 5, "is_custom" => false}, {"category" => "Appetizers", "item"=>"Nachos", "quantity" => 1, "is_custom" => false}]
+
+			@attendee.dish = [{"category" => "Beer", "item" => "IPA", "quantity" => 3, "is_custom" => false }]
+			deltas = @attendee.get_deltas_from_list(previous_items)
+			expect(deltas.count).to  eq(2)
+			expect(deltas[0]).to eq({"category" => "Beer", "item" => "IPA", "quantity" => -2, "is_custom" => false })
+			expect(deltas[1]).to eq({"category" => "Appetizers", "item" => "Nachos", "quantity" => -1, "is_custom" => false, "removed" => true })
+		end
+
+		it "deltas when list has custom items" do
+			previous_items = [{"category" => "Beer", "item" => "IPA", "quantity" => 5, "is_custom" => true}, {"category" => "Appetizers", "item"=>"Nachos", "quantity" => 1, "is_custom" => false}]
+
+			@attendee.dish = [{"category" => "Beer", "item" => "IPA", "quantity" => 3, "is_custom" => true }]
+			deltas = @attendee.get_deltas_from_list(previous_items)
+			expect(deltas.count).to  eq(1)
+			expect(deltas[0]).to eq({"category" => "Appetizers", "item" => "Nachos", "quantity" => -1, "is_custom" => false, "removed" => true })
+		end
+
+		it "deltas when list has all custom items and new list has assigned item" do
+			previous_items = [{"category" => "Beer", "item" => "IPA", "quantity" => 5, "is_custom" => true}, {"category" => "Appetizers", "item"=>"Nachos", "quantity" => 1, "is_custom" => true }]
+
+			@attendee.dish = [{"category" => "Beer", "item" => "Amber Ale", "quantity" => 3, "is_custom" => false }]
+			deltas = @attendee.get_deltas_from_list(previous_items)
+			expect(deltas.count).to  eq(1)
+			expect(deltas[0]).to eq({"category" => "Beer", "item" => "Amber Ale", "quantity" => 3, "is_custom" => false })
+		end
+
+		it "deltas when list has all rsvp items and new list has custom item" do
+			previous_items = [{"category" => "Beer", "item" => "IPA", "quantity" => 5, "is_custom" => false}, {"category" => "Appetizers", "item"=>"Nachos", "quantity" => 1, "is_custom" => false }]
+
+			@attendee.dish = [{"category" => "Beer", "item" => "Amber Ale", "quantity" => 3, "is_custom" => true }]
+			deltas = @attendee.get_deltas_from_list(previous_items)
+			expect(deltas.count).to  eq(2)
+			expect(deltas[0]).to eq({"category" => "Beer", "item" => "IPA", "quantity" => -5, "is_custom" => false, "removed" => true})
+			expect(deltas[1]).to eq({"category" => "Appetizers", "item"=>"Nachos", "quantity" => -1, "is_custom" => false, "removed" => true })
+		end
+	end
+
+	describe "Unapplying deltas" do
+		before(:each) do
+			User.destroy_all
+			Event.destroy_all
+			@attendee = FactoryGirl.create(:attendee)
+		end
+
+		it "should be able to unapply a delta" do
+			@attendee.dish = [{"category" => "Beer", "item" => "IPA", "quantity" => 3, "is_custom" => false},{"category" => "Beer", "item" => "Red Ale", "quantity" => 1, "is_custom" => false}]
+
+			@attendee.unapply_delta({"category" => "Beer", "item" => "IPA", "quantity" => 1, "is_custom" => false })
+			expect(@attendee.dish.count).to eq(2)
+			expect(@attendee.dish[0]).to eq({"category" => "Beer", "item" => "IPA", "quantity" => 2, "is_custom" => false})
+		end
+
+		it "should be able to remove a delta if necessary (quantity is 0)" do
+			@attendee.dish = [{"category" => "Beer", "item" => "IPA", "quantity" => 3, "is_custom" => false},{"category" => "Beer", "item" => "Red Ale", "quantity" => 1, "is_custom" => false}]
+
+			@attendee.unapply_delta({"category" => "Beer", "item" => "Red Ale", "quantity" => 1, "is_custom" => false })
+			expect(@attendee.dish.count).to eq(1)
+			expect(@attendee.dish[0]).to eq({"category" => "Beer", "item" => "IPA", "quantity" => 3, "is_custom" => false})
+		end
+	end
+
 	describe "Attendee RSVP" do
 
 		before(:each) do
 			User.destroy_all
 			Event.destroy_all
-
-			@attendee = FactoryGirl.build(:attendee)
-			@event = @attendee.event
+			@setting = FactoryGirl.create(:setting)
+			@event = @setting.event
+			@attendee = FactoryGirl.build(:attendee, :event_id => @event.id)
 			@rico_suave = FactoryGirl.create(:rico)
 			@bob = FactoryGirl.create(:bob)
 			@potluck_items = FactoryGirl.create(:potluck_item, :event_id => @event.id)
@@ -179,139 +266,126 @@ describe Attendee do
 
 		describe "Item re-arrangement" do
 			it "should verify if an item is available for the taking, mark it as taken" do
-				@rico_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}]
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "quantity"=> 1,"is_custom" => false}]
 				@rico_attendee.save
 
 				refreshed_list = PotluckItem.find(@potluck_items.id)
 		
-				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id,"item" => "Brown Ale"}])
-				expect(refreshed_list.dishes).to eql(["Stout", "IPA", "Pale Ale"])
+				expect(refreshed_list.taken_items).to eql([{"guests"=>[@rico_attendee.id],"item" => "Brown Ale"}])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity"=> 1}, {"item" => "IPA", "quantity" => 2}, {"item" => "Pale Ale", "quantity" => 2}, {"item" => "Brown Ale", "quantity" => 0}])
 
 				@rico_attendee.dish = []
 				@rico_attendee.save
 
 				refreshed_list = PotluckItem.find(@potluck_items.id)
-				expect(refreshed_list.dishes).to eql(["Stout","IPA","Pale Ale","Brown Ale"])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity"=> 1}, {"item" => "IPA", "quantity" => 2}, {"item" => "Pale Ale", "quantity" => 2}, {"item" => "Brown Ale", "quantity" => 1}])
 				expect(refreshed_list.taken_items).to be_blank
 			end
 
 			it "should reset the available items back if attendee does not attend or is undecided" do
-				@rico_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false},{"category" => "Beer", "item" => "Pliny the Younger", "is_custom" => true }]
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "quantity" => 1, "is_custom" => false},{"category" => "Beer", "item" => "Pliny the Younger", "is_custom" => true }]
 				@rico_attendee.save
 
 				refreshed_list = PotluckItem.find(@potluck_items.id)
 		
-				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id,"item" => "Brown Ale"}])
-				expect(refreshed_list.dishes).to eql(["Stout", "IPA", "Pale Ale"])
+				expect(refreshed_list.taken_items).to eql([{"item" => "Brown Ale", "guests"=>[@rico_attendee.id]}])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity"=> 1}, {"item" => "IPA", "quantity" => 2}, {"item" => "Pale Ale", "quantity" => 2}, {"item" => "Brown Ale", "quantity" => 0}])
 
 				@rico_attendee.rsvp = "Not Going"
+				@rico_attendee.dish = []
 				@rico_attendee.save
 
 				refreshed_list = PotluckItem.find(@potluck_items.id)
 				expect(@rico_attendee.rsvp).to eql("Not Going")
-				expect(refreshed_list.dishes).to eql(["Stout","IPA","Pale Ale","Brown Ale"])
+				expect(@rico_attendee.dish).to eq([])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity"=> 1}, {"item" => "IPA", "quantity" => 2}, {"item" => "Pale Ale", "quantity" => 2}, {"item" => "Brown Ale", "quantity" => 1}])
 				expect(refreshed_list.taken_items).to eql([])
 			end
 		end
 
 		describe "Taken items validation" do
 			it "should not be valid if you are choosing an item that has been selected" do
-				@rico_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}]
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "quantity" => 1, "is_custom" => false}]
 				@rico_attendee.save
 
-				@bob_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}]
-				expect(@bob_attendee).to_not be_valid
+				@bob_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "quantity" => 1, "is_custom" => false}]
+				@bob_attendee.save
+
+				refreshed_list = PotluckItem.find(@potluck_items.id)
+				expect(@bob_attendee.dish).to eq([])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity"=> 1}, {"item" => "IPA", "quantity" => 2}, {"item" => "Pale Ale", "quantity" => 2}, {"item" => "Brown Ale", "quantity" => 0}])
+				expect(refreshed_list.taken_items).to eql([{"item" => "Brown Ale", "guests" => [@rico_attendee.id]}])
 			end
 
 			it "should not be valid if guest rsvped with duplicate item that is not present in available items (or taken)" do
-				@rico_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false},{"category"=>"Beer","item"=>"Brown Ale", "is_custom" => false}]
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "Brown Ale", "quantity" => 1, "is_custom" => false},{"category"=>"Beer","item"=>"Brown Ale", "quantity" => 1, "is_custom" => false}]
 				expect(@rico_attendee).to_not be_valid
 			end
-
 		end
 		
 		describe "Differences in RSVP items" do
 			it "should be able to add one more item without a problem" do
-				@rico_attendee.dish = [{"category" => "Beer", "item" => "IPA", "is_custom" => false},{"category" => "Beer", "item" => "12-12-12", "is_custom" => true}]
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "IPA", "quantity" => 1, "is_custom" => false},{"category" => "Beer", "item" => "12-12-12", "quantity" => 1, "is_custom" => true}]
 				@rico_attendee.save
 				refreshed_list = PotluckItem.find(@potluck_items.id)
-				expect(refreshed_list.dishes).to eql(["Stout","Pale Ale","Brown Ale"])
-				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id, "item"=>"IPA"}])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity" => 1}, {"item" => "IPA", "quantity" => 1}, {"item" => "Pale Ale", "quantity" => 2},{"item" => "Brown Ale", "quantity" => 1}])
+				expect(refreshed_list.taken_items).to eql([{"guests"=>[@rico_attendee.id], "item"=>"IPA"}])
 
-				@rico_attendee.dish << {"category"=>"Beer", "item" => "Pale Ale", "is_custom" => false}
-				@rico_attendee.dish << {"category"=>"Beer", "item" => "Brown Ale", "is_custom" => false}
-				@rico_attendee.dish << {"category"=>"Beer", "item" => "Stout", "is_custom" => false}
+				@rico_attendee.dish << {"category"=>"Beer", "item" => "Pale Ale", "quantity" => 1, "is_custom" => false}
+				@rico_attendee.dish << {"category"=>"Beer", "item" => "Brown Ale", "quantity" => 1, "is_custom" => false}
+				@rico_attendee.dish << {"category"=>"Beer", "item" => "Stout", "quantity" => 1, "is_custom" => false}
 				@rico_attendee.save
 				refreshed_list = PotluckItem.find(@potluck_items.id)
-				expect(refreshed_list.dishes).to eql([])
-				expect(refreshed_list.taken_items).to eql([{"id" => @rico_attendee.id, "item" => "IPA"},{"id" => @rico_attendee.id, "item" => "Pale Ale"},{"id"=>@rico_attendee.id, "item"=>"Brown Ale"},{"id"=>@rico_attendee.id,"item"=>"Stout"}])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity" => 0}, {"item" => "IPA", "quantity" => 1}, {"item" => "Pale Ale", "quantity" => 1},{"item" => "Brown Ale", "quantity" => 0}])
+				expect(refreshed_list.taken_items).to eql([{"guests" => [@rico_attendee.id], "item" => "IPA"},{"guests" => [@rico_attendee.id], "item" => "Pale Ale"},{"guests"=>[@rico_attendee.id], "item"=>"Brown Ale"},{"guests"=>[@rico_attendee.id],"item"=>"Stout"}])
 			end
 
 			it "should be able to detect removals without a problem" do
-				@rico_attendee.dish = [{"category" => "Beer", "item" => "IPA", "is_custom" => false},{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}]
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "IPA", "quantity" => 2, "is_custom" => false},{"category" => "Beer", "item" => "Brown Ale", "quantity" => 1, "is_custom" => false}]
 				@rico_attendee.save
 				refreshed_list = PotluckItem.find(@potluck_items.id)
-				expect(refreshed_list.dishes).to eql(["Stout","Pale Ale"])
-				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id, "item"=>"IPA"},{"id"=>@rico_attendee.id, "item"=>"Brown Ale"}])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity" => 1}, {"item" => "IPA", "quantity" => 0}, {"item" => "Pale Ale", "quantity" => 2},{"item" => "Brown Ale", "quantity" => 0}])
+				expect(refreshed_list.taken_items).to eql([{"guests"=>[@rico_attendee.id], "item"=>"IPA"},{"guests"=> [@rico_attendee.id], "item"=>"Brown Ale"}])
 
 				@rico_attendee.dish.delete_at(1)
-				expect(@rico_attendee.dish).to eql([{"category" => "Beer", "item" => "IPA", "is_custom" => false}])
+				expect(@rico_attendee.dish).to eql([{"category" => "Beer", "item" => "IPA", "quantity" => 2, "is_custom" => false}])
 				@rico_attendee.save
 				refreshed_list = PotluckItem.find(@potluck_items.id)
-				expect(refreshed_list.dishes).to eql(["Stout","Pale Ale","Brown Ale"])
-				expect(refreshed_list.taken_items).to eql([{"id" => @rico_attendee.id, "item" => "IPA"}])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity" => 1}, {"item" => "IPA", "quantity" => 0}, {"item" => "Pale Ale", "quantity" => 2},{"item" => "Brown Ale", "quantity" => 1}])
+				expect(refreshed_list.taken_items).to eql([{"guests" => [@rico_attendee.id], "item" => "IPA"}])
 			end
 			
 			it "should still okay if no changes have been detected" do
-				@rico_attendee.dish = [{"category" => "Beer", "item" => "IPA", "is_custom" => false},{"category" => "Beer", "item" => "Brown Ale", "is_custom" => false}]
+				@rico_attendee.dish = [{"category" => "Beer", "item" => "IPA", "quantity" => 2, "is_custom" => false},{"category" => "Beer", "item" => "Brown Ale", "quantity" => 1, "is_custom" => false}]
 				@rico_attendee.save
 				refreshed_list = PotluckItem.find(@potluck_items.id)
-				expect(refreshed_list.dishes).to eql(["Stout","Pale Ale"])
-				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id, "item"=>"IPA"},{"id"=>@rico_attendee.id, "item"=>"Brown Ale"}])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity" => 1}, {"item" => "IPA", "quantity" => 0}, {"item" => "Pale Ale", "quantity" => 2},{"item" => "Brown Ale", "quantity" => 0 }])
+				expect(refreshed_list.taken_items).to eql([{"guests"=>[@rico_attendee.id], "item"=>"IPA"},{"guests"=>[@rico_attendee.id], "item"=>"Brown Ale"}])
 
 				@rico_attendee.num_of_guests = 2
 				@rico_attendee.save
 
 				refreshed_list = PotluckItem.find(@potluck_items.id)
-				expect(refreshed_list.dishes).to eql(["Stout","Pale Ale"])
-				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id, "item"=>"IPA"},{"id"=>@rico_attendee.id, "item"=>"Brown Ale"}])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity" => 1}, {"item" => "IPA", "quantity" => 0}, {"item" => "Pale Ale", "quantity" => 2},{"item" => "Brown Ale", "quantity" => 0 }])
+				expect(refreshed_list.taken_items).to eql([{"guests" => [@rico_attendee.id], "item"=>"IPA"},{"guests"=>[@rico_attendee.id], "item"=>"Brown Ale"}])
 			end
 
 			it "should be able to detect additions and removals at various times" do
-				@rico_attendee.dish = [{"category"=>"Beer","item"=>"IPA","is_custom"=>false},{"category"=>"Beer","item"=>"Pale Ale","is_custom"=>false},{"category"=>"Beer","item"=>"12-12-12","is_custom"=>true}]
+				@rico_attendee.dish = [{"category"=>"Beer","item"=>"IPA","quantity"=>1,"is_custom"=>false},{"category"=>"Beer","item"=>"Pale Ale","quantity"=>1,"is_custom"=>false},{"category"=>"Beer","item"=>"12-12-12","is_custom"=>true}]
 				@rico_attendee.save
 
 				refreshed_list = PotluckItem.find(@potluck_items.id)
-				expect(refreshed_list.dishes).to eql(["Stout","Brown Ale"])
-				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id,"item"=>"IPA"},{"id"=>@rico_attendee.id,"item"=>"Pale Ale"}])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity" => 1}, {"item" => "IPA", "quantity" => 1}, {"item" => "Pale Ale", "quantity" => 1},{"item" => "Brown Ale", "quantity" => 1 }])
+				expect(refreshed_list.taken_items).to eql([{"guests" => [@rico_attendee.id], "item"=>"IPA"},{"guests" => [@rico_attendee.id],"item"=>"Pale Ale"}])
 
 
-				@rico_attendee.dish = [{"category"=>"Beer","item"=>"IPA","is_custom"=>false},{"category"=>"Beer","item"=>"Lukcy Basterd","is_custom"=>true},{"category"=>"Beer","item"=>"Stout","is_custom"=>false}]
+				@rico_attendee.dish = [{"category"=>"Beer","item"=>"IPA","quantity" => 2, "is_custom"=>false},{"category"=>"Beer","item"=>"Lukcy Basterd","quantity" => 1, "is_custom"=>true},{"category"=>"Beer","item"=>"Stout", "quantity"=>1, "is_custom"=>false}]
 				@rico_attendee.save
 
 				refreshed_list = PotluckItem.find(@potluck_items.id)
-				expect(refreshed_list.dishes).to eql(["Brown Ale","Pale Ale"])
-				expect(refreshed_list.taken_items).to eql([{"id"=>@rico_attendee.id,"item"=>"IPA"},{"id"=>@rico_attendee.id,"item"=>"Stout"}])
+				expect(refreshed_list.dishes).to eql([{"item" => "Stout", "quantity" => 0}, {"item" => "IPA", "quantity" => 0}, {"item" => "Pale Ale", "quantity" => 2},{"item" => "Brown Ale", "quantity" => 1 }])
+				expect(refreshed_list.taken_items).to eql([{"guests" => [@rico_attendee.id],"item"=>"IPA"},{"guests"=> [@rico_attendee.id], "item"=>"Stout"}])
 			end
-		end
-	end
-
-	describe "Adding Manual RSVP with items" do
-		before(:all) do
-			User.destroy_all
-			Event.destroy_all
-			@event = FactoryGirl.create(:event)
-			@potluck_items1 = FactoryGirl.create(:potluck_item, :event_id => @event.id, :host_quantity => 2, :category => "Beer", :dishes => ["IPA","Pale Ale","Belgium Ale","Stout"])
-			@potluck_items2 = FactoryGirl.create(:potluck_item, :event_id => @event.id, :host_quantity => 2, :category => "Snacks", :dishes => ["Doritos Nacho Cheese","Pretzels"])
-		end
-
-		it "should be able to create a new attendee with rsvp items" do
-			attendee = FactoryGirl.create(:attendee, :event_id => @event.id, :email => nil, :rsvp => "Going", :dish => [{"category" => "Beer", "item" => "Belgium Ale", "is_custom" => false},{"category" => "Snacks", "item" => "Cheese tray", "is_custom" => true}])
-			revised_list1 = PotluckItem.find(@potluck_items1.id)
-			revised_list2 = PotluckItem.find(@potluck_items2.id)
-			expect(revised_list1.dishes).to eql(["IPA","Pale Ale","Stout"])
-			expect(revised_list1.taken_items).to eql([{"id" => attendee.id, "item" => "Belgium Ale"}])
-			expect(revised_list2.dishes).to eql(["Doritos Nacho Cheese","Pretzels"])
 		end
 	end
 
@@ -319,10 +393,11 @@ describe Attendee do
 		before(:each) do
 			User.destroy_all
 			Event.destroy_all
+			@settings = FactoryGirl.create(:setting)
+			@event = @settings.event
 		end
 
 		it "should remove the role(s) from the event" do
-			@event = FactoryGirl.create(:event)
 			@bob = FactoryGirl.create(:bob)
 			@attendee = Attendee.create(:event_id => @event.id, :user_id => @bob.id, :rsvp => "Going", :email => @bob.email)
 			Role.create(:user_id => @bob.id, :event_id => @event.id, :privilege => Role.GUEST)
@@ -332,30 +407,30 @@ describe Attendee do
 		end
 
 		it "should reclaim the rsvped items upon delete" do
-			@attendee = FactoryGirl.create(:attendee, :rsvp=>"Going")
-			event = @attendee.event
-			@potluck_list1 = FactoryGirl.create(:potluck_item, :event_id => event.id, :host_quantity => 3, :category => "Beer", :dishes => ["IPA","Pale Ale","Stout","Trippels"])
-			@potluck_list2 = FactoryGirl.create(:potluck_item, :event_id => event.id, :host_quantity => 2, :category => "Snacks", :dishes => ["Doritos","Pretzel"])
+			@attendee = FactoryGirl.create(:attendee, :event_id => @event.id, :rsvp=>"Going")
+			event = @event
+			@potluck_list1 = FactoryGirl.create(:potluck_item, :event_id => event.id, :host_quantity => 3, :category => "Beer", :dishes => [{"item" => "IPA", "quantity" => 1},{"item" => "Pale Ale", "quantity" => 1},{"item" => "Stout", "quantity" => 1},{"item" => "Trippels", "quantity" => 1}])
+			@potluck_list2 = FactoryGirl.create(:potluck_item, :event_id => event.id, :host_quantity => 2, :category => "Snacks", :dishes => [{"item" => "Doritos","quantity" => 1},{"item"=>"Pretzel","quantity" => 1}])
 
-			@attendee.dish = [{"category" => "Beer","item"=>"IPA","is_custom" => false},{"category"=>"Snacks","item"=>"Pretzel", "is_custom" => false}]
+			@attendee.dish = [{"category" => "Beer","item"=>"IPA","quantity"=>1,"is_custom" => false},{"category"=>"Snacks","item"=>"Pretzel", "quantity"=>1, "is_custom" => false}]
 			@attendee.save
 
 			refreshed_list1 = PotluckItem.find(@potluck_list1)
 			refreshed_list2 = PotluckItem.find(@potluck_list2)
 
-			expect(refreshed_list1.dishes).to eql(["Pale Ale","Stout","Trippels"])
-			expect(refreshed_list1.taken_items).to eql([{"id" => @attendee.id, "item" => "IPA"}])
-			expect(refreshed_list2.dishes).to eql(["Doritos"])
-			expect(refreshed_list2.taken_items).to eql([{"id" => @attendee.id, "item" => "Pretzel"}])
+			expect(refreshed_list1.dishes).to eql([{"item" => "IPA", "quantity" => 0},{"item" => "Pale Ale", "quantity" => 1},{"item" => "Stout", "quantity" => 1},{"item" => "Trippels", "quantity" => 1}])
+			expect(refreshed_list1.taken_items).to eql([{"guests" => [@attendee.id], "item" => "IPA"}])
+			expect(refreshed_list2.dishes).to eql([{"item" => "Doritos","quantity" => 1},{"item"=>"Pretzel","quantity" => 0}])
+			expect(refreshed_list2.taken_items).to eql([{"guests" => [@attendee.id], "item" => "Pretzel"}])
 
 			@attendee.destroy
 
 			refreshed_list1 = PotluckItem.find(@potluck_list1)
 			refreshed_list2 = PotluckItem.find(@potluck_list2)
 
-			expect(refreshed_list1.dishes).to eql(["Pale Ale","Stout","Trippels","IPA"])
+			expect(refreshed_list1.dishes).to eql([{"item" => "IPA", "quantity" => 1},{"item" => "Pale Ale", "quantity" => 1},{"item" => "Stout", "quantity" => 1},{"item" => "Trippels", "quantity" => 1}])
 			expect(refreshed_list1.taken_items).to eql([])
-			expect(refreshed_list2.dishes).to eql(["Doritos","Pretzel"])
+			expect(refreshed_list2.dishes).to eql([{"item" => "Doritos","quantity" => 1},{"item"=>"Pretzel","quantity" => 1}])
 			expect(refreshed_list2.taken_items).to eql([])
 		end
 	end

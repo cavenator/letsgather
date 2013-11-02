@@ -1,6 +1,5 @@
 class Attendee < ActiveRecord::Base
 		belongs_to :event
-  # attr_accessible :title, :body
 		devise :token_authenticatable
 		attr_accessible :event_id, :user_id, :invitation_id, :full_name, :email, :rsvp, :num_of_guests, :comment, :dish, :is_host, :invite_sent
 		serialize :dish
@@ -18,23 +17,14 @@ class Attendee < ActiveRecord::Base
 		validate  :verify_correctness_of_dishes, :unless => :is_dish_empty?
 		validate  :verify_items_are_available, :unless => Proc.new { |a| a.is_dish_empty? || a.id.blank? }
 
-		after_create do |attendee|
-			#Now gotta make sure that manual attendee creation with rsvp works with items
-			attendee.dish.each do |item|
-				potluck_item = attendee.event.get_potluck_list_per_category(item["category"])
-				if potluck_item.taken_items.blank?
-					potluck_item.taken_items = []
-				end
-				unless item["is_custom"] 
-					potluck_item.remove_dish_from_list(item["item"], attendee.id)
-				end
-			end
-		end
+		#deleted after_create callback since no longer able to add potlick_items to new attendee. New constraints
+			#TODO:  Remove the JS functions from the attendees/new.html.erb
 
 		before_save do |attendee|
 			unless attendee.id.blank?
 			#only perform this block once the attendee has actually been created and has an id
-				attendee.sort_out_taken_items
+			# obsolete -> attendee.sort_out_taken_items
+				Attendee.compareWithPreviousStateAndUpdateDeltas(attendee)
 				if attendee.event.has_notification_settings_on?
 					NotificationDelegator.send_notifications_to_host_from(attendee)
 				end
@@ -48,12 +38,13 @@ class Attendee < ActiveRecord::Base
 
 			Role.destroy(role) unless role.blank?
 
-			attendee.dish.each do |item|
-				potluck_item = attendee.event.get_potluck_list_per_category(item["category"])
-				unless item["is_custom"]
-					potluck_item.make_item_available(item["item"], attendee.id)
-				end
-			end
+			PotluckItem.make_items_available(attendee, attendee.event)
+		#	attendee.dish.each do |item|
+		#		potluck_item = attendee.event.get_potluck_list_per_category(item["category"])
+		#		unless item["is_custom"]
+		#			potluck_item.make_item_available(item["item"], attendee.id)
+		#		end
+		#	end
 		end
 
 		#accepts an email list in the form of an Array and the event object
@@ -125,29 +116,86 @@ class Attendee < ActiveRecord::Base
 			errors.add(:email, " should not be the same as host. Please provide an email or none at all.") if self.event.user.email.eql?(self.email)
 		end
 
-		def sort_out_taken_items
-			previous_state = Attendee.find(self.id)
-			previous_list = previous_state.dish
-			event = self.event
+		def unapply_delta(delta)
+			item_index = self.dish.index{ |x| x["category"].eql?(delta["category"]) && x["item"].eql?(delta["item"]) }
+			item = self.dish.at(item_index)
+			quantity_difference = item["quantity"] - delta["quantity"]
+			if quantity_difference > 0
+				item["quantity"] = item["quantity"] - delta["quantity"]
+			else
+				self.dish.delete_at(item_index)
+			end
+		end
 
-			if self.rsvp == "Going"
-					#execute the block if attendee has items. Mark available items as taken
-					#find the delta (previous state versus what we have now) and run the loop 
-					#returns the delta as a comprehensive map 
-				unless self.dish.blank?
-					leftover_taken_items = PotluckItem.return_taken_list_delta(self, event, previous_list)
-					unless leftover_taken_items.blank?
-						PotluckItem.make_items_available(previous_state, event, leftover_taken_items)
-					end
-				else #updated attendee dish selection is empty while previous state has items defined. Make items available for selection again
-					unless self.id.blank?
-						PotluckItem.make_items_available(previous_state, event, nil)
-					end
+#		def sort_out_taken_items
+#			previous_state = Attendee.find(self.id)
+#			previous_list = previous_state.dish
+#			event = self.event
+#
+#			if self.rsvp == "Going"
+#					#execute the block if attendee has items. Mark available items as taken
+#					#find the delta (previous state versus what we have now) and run the loop 
+#					#returns the delta as a comprehensive map 
+#				unless self.dish.blank?
+#					leftover_taken_items = PotluckItem.return_taken_list_delta(self, event, previous_list)
+#					unless leftover_taken_items.blank?
+#						PotluckItem.make_items_available(previous_state, event, leftover_taken_items)
+#					end
+#				else #updated attendee dish selection is empty while previous state has items defined. Make items available for selection again
+#					unless self.id.blank?
+#						PotluckItem.make_items_available(previous_state, event, nil)
+#					end
+#				end
+#			else
+#			#Attendee is not going. Make sure to return taken items to available column again
+#				PotluckItem.make_items_available(previous_state, event, nil)
+#			end
+#		end
+
+		def self.compareWithPreviousStateAndUpdateDeltas(attendee)
+			previous_state = Attendee.find(attendee.id)
+			previous_list = previous_state.dish
+			event = attendee.event
+
+			if attendee.rsvp == "Going"
+				#get deltas per list
+				deltas = attendee.get_deltas_from_list(previous_list)
+				#unless no deltas exist, merge and update with the potluck list
+				unless deltas.blank?
+					PotluckItem.mergeDeltasAndUpdateIfNecessary(deltas, attendee)
 				end
 			else
 			#Attendee is not going. Make sure to return taken items to available column again
-				PotluckItem.make_items_available(previous_state, event, nil)
+				#PotluckItem.make_items_available(previous_state, event, nil)
+				PotluckItem.make_items_available(previous_state, event)
+				attendee.dish = [] 
 			end
+		end
+
+		def get_deltas_from_list(previous_list)
+			delta_array = []
+			previous_list_cache = []
+			self.dish.each do |dish|
+				unless dish["is_custom"]
+					previous_dish = previous_list.find{ |x| x["category"].eql?(dish["category"]) && x["item"].eql?(dish["item"])}
+					if previous_dish.blank?
+						delta_array << dish
+					else
+						previous_list_cache << previous_dish
+						delta_array << {"category" => dish["category"], "item" => dish["item"], "is_custom" => dish["is_custom"], "quantity" => dish["quantity"] - previous_dish["quantity"] }
+					end
+				end
+			end
+			outstanding_items = previous_list.reject{|x| previous_list_cache.include?(x)}
+			outstanding_items.each do |outstanding_item|
+				unless outstanding_item["is_custom"]
+					copy_of_item = outstanding_item
+					copy_of_item["quantity"] = -1 * copy_of_item["quantity"]
+					copy_of_item["removed"] = true
+					delta_array << copy_of_item
+				end
+			end
+			delta_array
 		end
 
 		def verify_items_are_available
@@ -156,9 +204,9 @@ class Attendee < ActiveRecord::Base
 			unique_list.each do |uniq_item|
 				unless uniq_item["is_custom"]
 					potluck_item = self.event.get_potluck_list_per_category(uniq_item["category"])
-					items_available = potluck_item.dishes.find_all{|i| i == uniq_item["item"] }.count
+					items_available = potluck_item.dishes.find_all{|i| i["item"] == uniq_item["item"] }.count
 					attendee_item_count = complete_list.find_all{|i| i.eql?(uniq_item)}.count
-					taken_item_count = potluck_item.taken_items.find_all {|i| i.eql?({"id" => self.id, "item" => uniq_item["item"]})}.count
+					taken_item_count = potluck_item.taken_items.find_all {|i| i["item"].eql?(uniq_item["item"]) && i["guests"].include?(self.id)}.count
 					unless (items_available + taken_item_count) >= attendee_item_count
 							errors.add(:dish, 'Attempted to use one too many of the same item to rsvp with')
 					end

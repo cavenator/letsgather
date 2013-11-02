@@ -1,6 +1,6 @@
 class Event < ActiveRecord::Base
 		has_many :attendees 
-		has_many :potluck_items, :dependent => :destroy
+		has_many :potluck_items
 		has_many :suggestions, :dependent => :destroy
 		has_one :settings, :dependent => :destroy
 		belongs_to :user
@@ -27,6 +27,7 @@ class Event < ActiveRecord::Base
 			AttendeeMailer.delay.send_event_cancellation(email_list, event.name, host.full_name, host.email)
 		end
 		event.attendees.destroy_all
+		event.potluck_items.destroy_all
 	end
 
 	def start_date_must_be_in_the_future

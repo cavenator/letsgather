@@ -3,7 +3,7 @@
 FactoryGirl.define do
   factory :potluck_item do
 		category "Beer"
-		dishes ["Stout", "IPA", "Pale Ale","Brown Ale"]
+		dishes [{"item" => "Stout", "quantity" => 1}, {"item" => "IPA", "quantity" => 2}, {"item" => "Pale Ale", "quantity" => 2},{"item" => "Brown Ale", "quantity" => 1}]
 		host_quantity 2
 		event
   end
