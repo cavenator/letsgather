@@ -6,7 +6,9 @@
 <div class="row">
 	<div class="span6">
 		<% available_items["available_items"].each do |item| %>
-			<%= item %> <br/>
+			<% unless item["quantity"] == 0 %>
+				<%= item["item"] %> x <%= item["quantity"] %> <br/>
+			<% end %>
 		<% end %>
 	</div>
 </div>

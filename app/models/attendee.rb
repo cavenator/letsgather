@@ -160,6 +160,7 @@ class Attendee < ActiveRecord::Base
 			if attendee.rsvp == "Going"
 				#get deltas per list
 				deltas = attendee.get_deltas_from_list(previous_list)
+				logger.debug "deltas = #{deltas}"
 				#unless no deltas exist, merge and update with the potluck list
 				unless deltas.blank?
 					PotluckItem.mergeDeltasAndUpdateIfNecessary(deltas, attendee)
@@ -179,7 +180,7 @@ class Attendee < ActiveRecord::Base
 				unless dish["is_custom"]
 					previous_dish = previous_list.find{ |x| x["category"].eql?(dish["category"]) && x["item"].eql?(dish["item"])}
 					if previous_dish.blank?
-						delta_array << dish
+						delta_array << { "category" => dish["category"], "item" => dish["item"], "is_custom" => dish["is_custom"], "quantity" => dish["quantity"] }
 					else
 						previous_list_cache << previous_dish
 						delta_array << {"category" => dish["category"], "item" => dish["item"], "is_custom" => dish["is_custom"], "quantity" => dish["quantity"] - previous_dish["quantity"] }

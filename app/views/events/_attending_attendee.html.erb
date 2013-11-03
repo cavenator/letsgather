@@ -9,7 +9,7 @@
 		<p>Dish(es):  <% if attending_attendee.dish.blank? %> Undecided <% else %>
 				<% attending_attendee.dish.each do |dish_item| %>
 					<div>
-						<span class="label"><%= dish_item["category"] %></span>&nbsp;&nbsp;&nbsp;<span style="font-weight:bold"><%= dish_item["item"] %></span>
+						<span class="label"><%= dish_item["category"] %></span>&nbsp;&nbsp;&nbsp;<span style="font-weight:bold"><%= dish_item["item"] %> x <%= dish_item["quantity"] %></span>
 					</div>
 				<% end %>
 			<% end %>

@@ -174,7 +174,12 @@ class Event < ActiveRecord::Base
 				guest.dish.each do |item|
 					items.each do |stored_items|
 						if item["category"].eql?(stored_items["category"])
-							stored_items["taken_items"] << item["item"]
+							taken_item_index = stored_items["taken_items"].index{ |x| x["item"].eql?(item["item"]) }
+							if taken_item_index.blank?
+								stored_items["taken_items"] << {"item" => item["item"], "count" => 1}
+							else
+								stored_items["taken_items"][taken_item_index]["count"] = stored_items["taken_items"][taken_item_index]["count"] + 1
+							end
 						end
 					end
 				end

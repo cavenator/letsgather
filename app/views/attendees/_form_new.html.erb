@@ -30,15 +30,6 @@
 			<div><span style="font-weight:bold">Comments? </span><span id="count-down-limit"></span></div>
 		<%= f.text_area :comment, :placeholder => "Gonna be five mins late", :style=>"height:8em;width:35em" %>
 	</div>
-	<div id="guestcount_div">
-		<%= f.label :num_of_guests, "Number of guests you are bringing (excluding yourself):" %>
-		<%= f.text_field :num_of_guests %>
-		<div id="items_box">
-			<label>I am bringing </label>
-			<div id="items">
-			</div>
-		</div>
-	</div>
 
   <div>
 		<button id="add_items" class="btn btn-success" style="color:white">Add more</button>

@@ -6,7 +6,7 @@
 <div class="row-fluid">
 	<div class="span8">
 		<% taken_items["taken_items"].each do |item| %>
-			<%= item %> <br/>
+			<%= item["item"] %> <% unless item["count"]==1 %><%= "[#{item["count"]} people]" %><% end %><br/>
 		<% end %>
 	</div>
 </div>

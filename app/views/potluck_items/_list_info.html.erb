@@ -9,8 +9,8 @@
 	</div>
 	<div class="span4 guest-info-body">
 		<ul>
-			<% list_info.taken_items.map{|i| i["item"] }.each do |taken_item| %>
-				<li><%= taken_item %></li>
+			<% list_info.taken_items.each do |taken_item| %>
+				<li><%= taken_item["item"] %><% unless taken_item["guests"].count == 1 %><%= " [#{taken_item["guests"].count} people]" %><% end %></li>
 			<% end %>
 		</ul>
 	</div>

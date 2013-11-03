@@ -42,24 +42,6 @@ class PotluckItem < ActiveRecord::Base
 		end
 	end
 
-	#this method returns the delta from the previous rsvp items and the current rsvp items
-	#Sadly this method mutates teh state of the previous_items parameter and returns the modified state as a result
-	#Find a cleaner way to do this
-#	def self.return_taken_list_delta(guest, event, previous_items)
-#		guest.dish.each do |item|
-#			potluck_item = event.get_potluck_list_per_category(item["category"])
-#			potluck_item.initialize_taken_items
-#			unless item["is_custom"] 
-#				if previous_items.blank? || previous_items.find_index(item).nil?
-#					potluck_item.remove_dish_from_list(item["item"], guest.id)
-#				elsif previous_items.find_index(item)
-#					previous_items.delete_at(previous_items.find_index(item))
-#				end
-#			end
-#		end
-#		previous_items
-#	end
-
 	def self.mergeDeltasAndUpdateIfNecessary(deltas_list, guest)
 		grouped_deltas = deltas_list.group_by{ |x| x["category"] }
 		grouped_deltas.each do |category, item_list|
@@ -96,18 +78,6 @@ class PotluckItem < ActiveRecord::Base
 		end
 	end
 
-#	def self.make_items_available(guest, event, list)
-#		if list.blank?
-#			list = guest.dish
-#		end
-#		list.each do |remove_item|
-#			unless remove_item["is_custom"]
-#				potluck_item = event.get_potluck_list_per_category(remove_item["category"])
-#				potluck_item.make_item_available(remove_item["item"], guest.id)
-#			end
-#		end
-#	end
-
 	def self.make_items_available(guest, event)
 		groupedBy_list = guest.dish.select{|x| x["is_custom"] == false }.group_by{ |x| x["category"] }
 		groupedBy_list.each do |key, lists|
@@ -130,11 +100,13 @@ class PotluckItem < ActiveRecord::Base
 	def self.export_remaining_lists_from(potluck_items)
 		available_items = potluck_items.select{|item| item.dishes.count > 0}.map{|item| [item.category, item.dishes] }
 		CSV.generate do |csv|
-			csv << ["Category","Item"]
+			csv << ["Category","Item","Quantity"]
 			available_items.each do |category_item|
 				category = category_item[0]
 				category_item[1].each do |item|
-					csv << [category, item]
+					unless item["quantity"] == 0
+						csv << [category, item["item"],item["quantity"]]
+					end
 				end
 			end
 		end
