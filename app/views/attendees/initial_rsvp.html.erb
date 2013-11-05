@@ -38,7 +38,6 @@
 <script>
 
 		function rsvp(answer){
-			console.log(answer);
 			$("#attendee_rsvp").val(answer);
 			if (answer == "Going"){
 				$("#guestcount_div").show();
@@ -111,7 +110,6 @@
 				success: function(data){
 					$.each(data, function(index, item){
 						category_array.push(item.category);
-//						dishes[item.category] = item.dishes;
 						dishes[item.category] = $.grep(item.dishes, function(data, index){ return data.quantity != 0 });
 					});
 				}
@@ -119,7 +117,6 @@
 
 			function updateAllDishSelects(){
 				var item_divs = $(".item");
-		//		$.each(item_divs, function(position, item_div){
 				for (var i = 0; i < item_divs.length; i++){
 					var category = $(".item").eq(i).find("#attendee_category").val(), attendee_dish_select = $(".item").eq(i).find("#attendee_select_dish"), options, available_for_category, selected_value, mappedAvailableItems;
 					options = $(".item").eq(i).find("#attendee_select_dish option").map(function(){ return $(this).val(); });
@@ -144,7 +141,6 @@
 						}
 					});
 				}
-			//	});
 			}
 
 			// this should return the div class='item' so that the add and/or remove button could be appended to it
