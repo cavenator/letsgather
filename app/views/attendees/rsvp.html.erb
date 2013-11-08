@@ -33,7 +33,7 @@
 				</div>
 			</div>
 		</div>
-  	<div>
+  	<div style="margin: 2em 0 2em 0">
 			<button id="add_items" class='btn btn-success'>Add items</button>
     	<button id="submit" class="btn btn-primary">RSVP</button>
   	</div>
@@ -59,8 +59,8 @@
 				$("#guestcount_div").hide();
 				$("#add_items").hide();
 			}
-//			$("#comment-box").show();
 		}
+
 	$(document).ready(function(){
 		var category_array = [], dishes = {}, flash_message = $("#notice"), taken_queue = [];
 		$("#guestcount_div").hide();
@@ -146,6 +146,7 @@
 					dish_div.append(attendee_quantity);
 					checkbox_div.append(label_checkbox);
 					label_checkbox.append(checkbox);
+					label_checkbox.hide();
 					item_div.append(checkbox_div);
 
 				//populate the category select tag
@@ -159,8 +160,11 @@
 					var dish_array;
 					if (data != ""){
 						dish_array = dishes[data];
+						label_checkbox.show();
 					} else {
 						dish_array = [];
+						label_checkbox.hide();
+						checkbox.attr('checked',false).change();
 					}
 					dishes_select.empty();
 					dishes_quantity.empty();
