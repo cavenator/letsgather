@@ -41,7 +41,7 @@ describe Suggestion do
 			Event.destroy_all
 			@event = FactoryGirl.create(:event)
 			@guest = Attendee.create(:event_id => @event.id, :rsvp => "going", :email => "guest.person@gmail.com", :full_name => "ba barracus")
-			@existing_list = PotluckItem.create(:event_id => @event.id, :category => "Appetizers", :host_quantity => 1, :dishes => ["Nachos","Buffalo Wings","Taquitos"])
+			@existing_list = PotluckItem.create(:event_id => @event.id, :category => "Appetizers", :host_quantity => 1, :dishes => [{"item" => "Nachos", "quantity" => 1},{"item" => "Buffalo Wings", "quantity" => 1},{"item" => "Taquitos", "quantity" => 1}])
 		end
 
 		it "should not try to suggest a category that exists" do
@@ -78,7 +78,7 @@ describe Suggestion do
 			Event.destroy_all
 			@event = FactoryGirl.create(:event)
 			@guest = Attendee.create(:event_id => @event.id, :rsvp => "going", :email => "guest.person@gmail.com", :full_name => "ba barracus")
-			@existing_list = PotluckItem.create(:event_id => @event.id, :category => "Appetizers", :host_quantity => 1, :dishes => ["Nachos","Buffalo Wings","Taquitos"])
+			@existing_list = PotluckItem.create(:event_id => @event.id, :category => "Appetizers", :host_quantity => 1, :dishes => [{"item" => "Nachos", "quantity" => 1},{"item" => "Buffalo Wings", "quantity" => 1},{"item" => "Taquitos", "quantity" => 1}])
 		end
 
 		it "should not suggest existing items to an existing list" do

@@ -24,7 +24,7 @@ class Suggestion < ActiveRecord::Base
 
 	def verify_existing_list_criteria
 		potluck_items = self.event.potluck_items.where("category = ?", self.category).first
-		available_dishes = potluck_items.dishes.blank? ? [] : potluck_items.dishes
+		available_dishes = potluck_items.dishes.blank? ? [] : potluck_items.dishes.map{|item| item["item"]}
 		existing_items = potluck_items.taken_items.map{|i| i["item"] } | available_dishes
 		errors.add(:suggested_items, "Suggestion includes items that already exists for the event") unless existing_items.blank? || (existing_items.map{|item| item.downcase} & self.suggested_items.map{|item| item.downcase}).count == 0
 		verify_no_duplicates_in_suggested_items

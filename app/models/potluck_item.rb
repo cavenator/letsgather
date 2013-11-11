@@ -128,11 +128,12 @@ class PotluckItem < ActiveRecord::Base
 	end
 
 	def self.build_from_suggestion(suggestion)
+		transformed_suggestions = suggestion.suggested_items.map{|suggestion| {"item" => suggestion, "quantity" => 1} }
 		if suggestion.new_or_existing.eql?("New")
-			return PotluckItem.new(:event_id => suggestion.event_id, :category => suggestion.category, :dishes => suggestion.suggested_items, :host_quantity => 1)
+			return PotluckItem.new(:event_id => suggestion.event_id, :category => suggestion.category, :dishes => transformed_suggestions, :host_quantity => 1)
 		else
 			potluck_item = suggestion.event.potluck_items.find{|item| item.category.eql?(suggestion.category)}
-			potluck_item.dishes |= suggestion.suggested_items
+			potluck_item.dishes |= transformed_suggestions
 			return potluck_item
 		end
 	end

@@ -28,15 +28,24 @@
 <script>
 	$(document).ready(function(){
 
+		function updatePendingCount(count){
+			if (count > 0)
+				$("#pending_count").html("("+count+")");
+			else
+				$("#pending_count").empty();
+		}
+
 		$(".suggestion-approval").click(function(){
 			var url = $(this).attr("href");
 
 			$.ajax({
 				url: url,
 				dataType: "html",
-				success: function(){
+				success: function(data){
+					var parsed = $.parseJSON(data);
 					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
 					$("#notice").html("Items have been added to your event");
+					updatePendingCount(parsed.count);
 					$("#potluck_list").click();
 				},
 				error: function(xhr){
@@ -58,9 +67,11 @@
 			$.ajax({
 				url: url,
 				dataType: "html",
-				success: function(){
+				success: function(data){
+					var parsed = $.parseJSON(data);
 					$("#notice").removeClass("alert alert-error alert-success").addClass("alert alert-success");
 					$("#notice").html("Suggestion has been rejected");
+					updatePendingCount(parsed.count);
 					$("#pending_suggestions").click();
 				},
 				error: function(xhr){

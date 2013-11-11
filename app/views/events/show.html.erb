@@ -66,7 +66,7 @@
 		</li>
 		<% unless @event.has_disabled_suggestions %>
 		<li class="phoney-button">
-			<a id="pending_suggestions">Pending suggestions</a>
+			<a id="pending_suggestions">Pending suggestions <span id='pending_count'><% unless @event.suggestions.count == 0 %>(<%= @event.suggestions.count %>)<% end %></span></a>
 		</li>
 		<% end %>
 		<li class="phoney-button">

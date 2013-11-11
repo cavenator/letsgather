@@ -73,7 +73,7 @@ class SuggestionsController < ApplicationController
 		if @potluck_item.save
 			SuggestionMailer.delay.approval_email(@suggestion.requester_email, @suggestion.category)
 			@suggestion.destroy
-			render :nothing => true, status: :ok, notice: 'Suggestion was approved'
+			render json: {"count" => @event.suggestions.count}, status: :ok, notice: 'Suggestion was approved'
 		else
 			render :nothing => true, status: :unprocessable_entity, json: @potluck_item.errors, notice: 'Items from suggestion could not be added to event'
 		end
@@ -83,7 +83,7 @@ class SuggestionsController < ApplicationController
 		@suggestion = Suggestion.find(params[:id])
 		if @suggestion.destroy
 			SuggestionMailer.delay.rejection_email(@suggestion.requester_email, @suggestion.category)
-			render :nothing => true, status: :ok, notice: 'Suggestion was rejected'
+			render json: {"count" => @event.suggestions.count}, status: :ok, notice: 'Suggestion was rejected'
 		else
 			render :nothing => true, status: :unprocessable_entity, notice: 'Suggestion could not be rejected. Please notify your administrator'
 		end
