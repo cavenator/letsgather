@@ -38,7 +38,7 @@
 			<div class="alert alert-success" style="text-align: center; margin:auto; width:100%">Host does not have any outstanding items left. Hooray! </div>
 	<% else %>
 			<div class="alert alert-info" style="margin: auto; width:100%">Host still needs the following items for this event: <% @event.get_remaining_items_for_guests.each do |category, category_count|  %>
-					<span style="float:right"><%= category %> =&gt; <%= category_count %></span><br />
+					<span style="float:right"><%= category %>: <%= category_count %> more </span><br />
 				<% end %>
 			</div>
 	<% end %>

@@ -1,3 +1,7 @@
 <h1>Thank you for your rsvp<h1>
-
 <p>Have a nice rest of the day! I a currently working on making this page more friendly as you commence about your day :)</p>
+<p>RSVP:<%= @attendee.rsvp %></p>
+<p>Number of additional guests you are bringing:<%= @attendee.num_of_guests %></p>
+<p>Comment: <%= @attendee.comment %></p>
+<p>Dishes: <%= @attendee.dish.map{ |dish| "#{dish["quantity"]} #{dish["item"]} (#{dish["category"]})"}.join(",") %>
+</p>

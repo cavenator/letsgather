@@ -143,6 +143,7 @@ class AttendeesController < ApplicationController
 	end
 
 	def thank_you
+		@attendee = Attendee.find(session[:attendee_id])
 		session[:attendee_id] = nil
 		render :layout => "application"
 	end
