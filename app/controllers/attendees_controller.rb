@@ -145,7 +145,7 @@ class AttendeesController < ApplicationController
 	def thank_you
 		@attendee = Attendee.find(session[:attendee_id])
 		session[:attendee_id] = nil
-		render :layout => "application"
+		render :layout => false
 	end
 
   def send_guest_email

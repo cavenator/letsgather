@@ -1,7 +1,49 @@
-<h1>Thank you for your rsvp<h1>
-<p>Have a nice rest of the day! I a currently working on making this page more friendly as you commence about your day :)</p>
-<p>RSVP:<%= @attendee.rsvp %></p>
-<p>Number of additional guests you are bringing:<%= @attendee.num_of_guests %></p>
-<p>Comment: <%= @attendee.comment %></p>
-<p>Dishes: <%= @attendee.dish.map{ |dish| "#{dish["quantity"]} #{dish["item"]} (#{dish["category"]})"}.join(",") %>
+<!DOCTYPE html>
+<html style="margin: 0;padding: 0;">
+<head style="margin: 0;padding: 0;">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" style="margin: 0;padding: 0;">
+
+<title style="margin: 0;padding: 0;">Thank you for using LetsGather</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" style="margin: 0;padding: 0;">
+
+<%= stylesheet_link_tag 'application','https://fonts.googleapis.com/css?family=Nothing+You+Could+Do|Montserrat+Alternates|Mate' %>
+
+</head>
+
+<body style="margin: 0;padding: 0;background: #ddd;">
+
+<div id="page" style="margin: 0;padding: 2em 0;">
+
+<div class="inner" style="margin: 0 auto;padding: 0;width: 75%;">
+
+<div id="box" style="margin: 60px auto;padding: 2em 1.5em 1em;position: relative;background: #ffffff;-moz-border-radius: 4px;border-radius: 4px;color: rgba(0,0,0, .8);">
+
+<div style="text-align:center"><%= image_tag "LG_Lets_Gather_480.png", alt: "Let's Gather" -%></div>
+<div id="invite" style="margin: 0;padding: 0;font-family: 'Nothing You Could Do', cursive;line-height: 1.5;text-align: center;font-size: 2em;margin-top: 30px;margin-bottom: 50px;">
+<h1 style="font-size: 2em;margin-bottom: 1.1em">Thank you for using LetsGather!</h1>
+<p style="font-family: 'Nothing You Could Do', cursive;line-height: 1.5;text-align: center;font-size: 1.25em">Have a nice rest of the day! Below is your RSVP confirmation:</p>
+<div style="margin-top: 1.25em">
+<p style="font-family: 'Nothing You Could Do', cursive;line-height: 1.5;text-align: center;font-size: 1em; border: 2px; border-color: lightblue">
+	<span style="font-weight:bold">RSVP:</span> <%= @attendee.rsvp %>.<br stye="margin: 0; padding: 0;">
+	<span style="font-weight:bold">Number of additional guests you are bringing:</span> <%= @attendee.num_of_guests %>.<br style="margin: 0;padding: 0;">
+	<span style="font-weight:bold">Comment: </span><%= @attendee.comment %><br style="margin: 0; padding: 0;">
+	<% unless @attendee.dish.blank? %><span style="font-weight:bold">Dishes: </span><br>
+		<%= simple_format @attendee.dish.map{ |dish| "#{dish["quantity"]} #{dish["item"]} <span class='label label-info'>#{dish["category"]}</span><br/>"}.join("") %>
+	<% end %>
 </p>
+</div>
+</div><!-- end invite -->
+
+</div><!-- end box -->
+
+<div id="RSVP-button" style="margin: 0;padding: 0;margin-top: 40px;text-align: center;">
+	<%= link_to 'Create an account', new_user_registration_path, { :style => "margin: 0;padding: 10px 15px;color: #FFF;text-decoration: none;background: #870026;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;border: solid 1px #20538D;font-family: 'Montserrat Alternates', sans-serif;font-size: 21px;text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);-webkit-transition-duration: 0.2s;-moz-transition-duration: 0.2s;transition-duration: 0.2s;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;"} %>
+</div><!-- end RSVP-button -->
+
+
+</div><!-- end inner -->
+</div><!-- end page -->
+
+</body>
+</html>
