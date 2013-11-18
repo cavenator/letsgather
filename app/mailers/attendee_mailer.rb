@@ -7,6 +7,7 @@ class AttendeeMailer < ActionMailer::Base
 		@event = Event.find(guest.event_id)
 		@host = host
 		calendar_event = CalendarInviteBuilder.createCalendarInviteFor(@event, guest.email)
+		attachments.inline['logo.png'] = File.read("#{Rails.root.to_s + '/app/assets/images/LG_Lets_Gather_480.png'}")
 
 		attachments['event.ics'] = {:mime_type => 'text/calendar', :content => calendar_event.export() } 
 		subject = "You have been invited to #{@event.name} by #{@host.full_name}"

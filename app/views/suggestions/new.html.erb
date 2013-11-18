@@ -80,7 +80,7 @@
 				addErrorBackgroundFill(categoryElement);
 				counter++;
 			}
-			$.each(listElement.find(".input-large"), function(index, elem){
+			$.each(listElement.find("textarea"), function(index, elem){
 				var list = $(elem).val();
 				if ($.trim(list).length == 0){
 					addErrorBackgroundFill($(elem));
@@ -93,30 +93,12 @@
 		function fillInFormForSubmission(type, categoryElement, listElement){
 			var category = categoryElement.val(), lists = [];
 			if (passedValidation(categoryElement, listElement)) {
-				lists = $.map(listElement.find(".input-large"), function(item){
-					return $(item).val();
-				});
+				lists = listElement.find("textarea").val().split(",");
 				$("form").find("#suggestion_new_or_existing").val(type);
 				$("form").find("#suggestion_category").val(category);
 				$("form").find("#suggestion_suggested_items").val(JSON.stringify(lists));
 				submitForm();
 			}
-		}
-
-		function addInputElementTo(divElement){
-			var element = divElement;
-			var additionalDiv = $("<div></div>");
-			var itemText = $("<span style='font-weight:bold'>Item: </span><input type='text' class='input-large' placeholder='List item here ....'>");
-			var removeButton = $("<button class='btn btn-small btn-danger' style='margin-bottom:0.5em;margin-left:0.5em'><i class='icon-remove-sign'></i></button>");
-			removeButton.click(function(){
-				additionalDiv.remove();
-			});
-			itemText.click(function(){
-				removeErrorBackgroundFill($(this));
-			});
-			additionalDiv.appendTo(element);
-			itemText.appendTo(additionalDiv);
-			removeButton.appendTo(additionalDiv);
 		}
 
 		$("input[type=radio]").change(function(){
@@ -126,15 +108,11 @@
 
 		$("input[type=radio]").eq(0).prop("checked",true).change();
 
-		$("#add-new-button").click(function(){
-			addInputElementTo($("#new-list"));
-		});
-
-		$("#new-existing-button").click(function(){
-			addInputElementTo($("#existing-list"));
-		});
-
 		$("#new-category").click(function(){
+			removeErrorBackgroundFill($(this));
+		});
+
+		$("textarea").click(function(){
 			removeErrorBackgroundFill($(this));
 		});
 
@@ -144,7 +122,7 @@
 				$("#existing-actions").hide();
 			} else {
 				$("#existing-list").show();
-				$("existing-actions").show();
+				$("#existing-actions").show();
 			}
 		});
 

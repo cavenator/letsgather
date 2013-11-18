@@ -6,10 +6,9 @@
 </div>
 <div class="row">
 	<div id="existing-list">
-		<span style="font-weight:bold">Item: </span><%= text_field_tag nil, nil, {:class=>"input-large", :placeholder => "Enter list item here"} %>
+		<span style="font-weight:bold">Items: </span><textarea style="width:100%" rows="4" placeholder="Enter items here via comma-delimited strings (ex: item1, item2, item3)"></textarea>
 	</div>
 	<div id="existing-actions">
-		<button id="new-existing-button" class="btn btn-success">Add items</button>
 		<button id="submit-existing-list" class="btn btn-primary">Submit</button>
 	</div>
 </div>

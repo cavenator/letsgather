@@ -1,27 +1,58 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-  </head>
-  <body>
-		<div style="font-size:20px;font-style:italic;font-weight:bold">Please do not reply to this email!</div>
-    <h4>Salutations!</h4>
-    <p style="text-align:center;margin:2em 0 2em 0">
-			<%= @host.full_name %> has invited you to their event: <%= @event.name%>. <br/>
-			Start Date: <%= @event.display_start_time %>.<br/>
-			RSVP: <%= @event.display_rsvp_time %>.<br/>
-			<% if @event.location %>
-				<span style="font-weight:bold">Location:</span>  <%= @event.location1 + ","+@event.location2 %><br/>
-			<% else %>
-				<span style="font-weight:bold">Location:</span> TBD<br/>
-			<% end %>
-		</p>
-		<p style="margin-bottom:1em"> Click <%= link_to 'here', event_url(@event, :auth_token => @attendee.authentication_token) %> to RSVP.</p>
-		<p>If you do wish to create an account, you may <%= link_to 'create one here', new_user_registration_url %> with the following email address: <%= @attendee.email %>.  Creating an account allows you do so much more and only takes a few seconds to do.</p>
-		<p>Notify <%= @host.full_name %> at <%= @host.email %> if you wish to use a different email address.  Otherwise, please <%= link_to 'sign in', root_url %><br /><br/>
-    </p>
-    <p>Thanks and have a great day!</p>
+<html style="margin: 0;padding: 0;">
+<head style="margin: 0;padding: 0;">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" style="margin: 0;padding: 0;">
 
-  </body>
+<title style="margin: 0;padding: 0;">Let's Gather Invitation</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" style="margin: 0;padding: 0;">
+
+<%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Nothing+You+Could+Do|Montserrat+Alternates|Mate' %>
+
+</head>
+
+<body style="margin: 0;padding: 0;background: #ddd;">
+
+<div id="page" style="margin: 0;padding: 2em 0;">
+
+<div class="inner" style="margin: 0 auto;padding: 0;width: 75%;">
+
+<div id="box" style="margin: 60px auto;padding: 2em 1.5em 1em;position: relative;background: #ffffff;-moz-border-radius: 4px;border-radius: 4px;color: rgba(0,0,0, .8);">
+
+<div style="font-size: 20px;font-style: italic;font-weight: bold;margin: 0;padding: 0;">Please do not reply to this email!</div>
+<%= image_tag attachments['logo.png'].url, alt: "Let's Gather" -%>
+<div id="invite" style="margin: 0;padding: 0;font-family: 'Nothing You Could Do', cursive;line-height: 1.5;text-align: center;font-size: 21px;margin-top: 30px;margin-bottom: 50px;">
+<h4 style="margin: 0;padding: 0;">Hey there!</h4>
+<p style="margin: 0;padding: 0;margin-bottom: 18px;">I am having a party and I would like you to come!</p>
+<p style="margin: 0;padding: 0;margin-bottom: 18px;">
+	Name: <%= @event.name%> <br style="margin: 0; padding: 0;">
+	Starts on <%= @event.display_start_time %>.<br style="margin: 0;padding: 0;">
+	RSVP by <%= @event.display_rsvp_time %>.<br style="margin: 0;padding: 0;">
+</p>
+<p style="margin: 0;padding: 0;margin-bottom: 18px;">
+			<% if @event.location %>
+				<span style="font-weight: bold;margin: 0;padding: 0;">Location:</span>  <%= @event.location1 + ","+@event.location2 %><br style="margin: 0;padding: 0;">
+			<% else %>
+				<span style="font-weight: bold;margin: 0;padding: 0;">Location:</span> TBD<br style="margin: 0;padding: 0;">
+			<% end %>
+</p>
+
+<p style="margin: 0;padding: 0;margin-bottom: 18px;">Hope to see you there,<br style="margin: 0;padding: 0;">
+<%= @host.full_name %>
+</p>
+
+</div><!-- end invite -->
+
+</div><!-- end box -->
+
+<div id="RSVP-button" style="margin: 0;padding: 0;margin-top: 40px;text-align: center;">
+	<%= link_to 'RSVP', event_url(@event, :auth_token => @attendee.authentication_token), { :style => "margin: 0;padding: 10px 15px;color: #FFF;text-decoration: none;background: #870026;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;border: solid 1px #20538D;font-family: 'Montserrat Alternates', sans-serif;font-size: 21px;text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);-webkit-transition-duration: 0.2s;-moz-transition-duration: 0.2s;transition-duration: 0.2s;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;"} %>
+</div><!-- end RSVP-button -->
+
+
+</div><!-- end inner -->
+</div><!-- end page -->
+
+</body>
 </html>
 
