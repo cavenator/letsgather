@@ -237,7 +237,7 @@ class EventsController < ApplicationController
 	def change_roles
 		@event = Event.find(params[:id])
 		@attendee = Attendee.find(params[:attendee_id])
-		verdict = @attendee.change_roles
+		verdict = @attendee.change_roles_and_notify(current_user)
 
 		if verdict
 			render :nothing => true, :status => :no_content

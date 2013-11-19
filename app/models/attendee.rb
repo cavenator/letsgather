@@ -242,7 +242,7 @@ class Attendee < ActiveRecord::Base
 			return false
 		end
 
-		def change_roles
+		def change_roles_and_notify(host)
 			if self.user_id.blank?
 				if self.is_host
 					self.is_host = false
@@ -262,6 +262,7 @@ class Attendee < ActiveRecord::Base
 					role.privilege = Role.GUEST
 				end
 				if role.save
+					NotificationMailer.delay.notify_guest_of_new_privileges(self, role.privilege, host)
 					return true
 				else
 					return false

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html style="margin: 0;padding: 0;">
+<head style="margin: 0;padding: 0;">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" style="margin: 0;padding: 0;">
+
+<title style="margin: 0;padding: 0;">No longer a cohost</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" style="margin: 0;padding: 0;">
+
+<%= stylesheet_link_tag 'https://fonts.googleapis.com/css?family=Nothing+You+Could+Do|Montserrat+Alternates|Mate' %>
+
+</head>
+
+<body style="margin: 0;padding: 0;background: #ddd;">
+
+<div id="page" style="margin: 0;padding: 2em 0;">
+
+<div class="inner" style="margin: 0 auto;padding: 0;width: 75%;">
+
+<div id="box" style="margin: 60px auto;padding: 2em 1.5em 1em;position: relative;background: #ffffff;-moz-border-radius: 4px;border-radius: 4px;color: rgba(0,0,0, .8);">
+
+<div style="font-size: 20px;font-style: italic;font-weight: bold;margin: 0;padding: 0;">Please do not reply to this email!</div>
+<%= image_tag attachments['logo.png'].url, alt: "Let's Gather" -%>
+<div id="invite" style="margin: 0;padding: 0;font-family: 'Nothing You Could Do', cursive;line-height: 1.5;text-align: center;font-size: 21px;margin-top: 30px;margin-bottom: 50px;">
+<h4 style="margin: 0;padding: 0;">Hey there!</h4>
+<p style="margin: 0;padding: 0;margin-bottom: 18px;">You are no longer cohosting my party. You may use the following link at the bottom of this email to access the party details.</p>
+<p style="margin: 0;padding: 0;margin-bottom: 18px;">If you need to contact me, please email me back at <%= @host.email %>
+</p>
+
+<p style="margin: 0;padding: 0;margin-bottom: 18px;">Thanks and have a wonderful day!<br style="margin: 0;padding: 0;">
+<%= @host.full_name %>
+</p>
+
+</div><!-- end invite -->
+
+</div><!-- end box -->
+
+<div id="RSVP-button" style="margin: 0;padding: 0;margin-top: 40px;text-align: center;">
+	<%= link_to 'RSVP', event_url(@event, :auth_token => @attendee.authentication_token), { :style => "margin: 0;padding: 10px 15px;color: #FFF;text-decoration: none;background: #870026;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;border: solid 1px #20538D;font-family: 'Montserrat Alternates', sans-serif;font-size: 21px;text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);-webkit-transition-duration: 0.2s;-moz-transition-duration: 0.2s;transition-duration: 0.2s;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;"} %>
+</div><!-- end RSVP-button -->
+
+
+</div><!-- end inner -->
+</div><!-- end page -->
+
+</body>
+</html>
+
