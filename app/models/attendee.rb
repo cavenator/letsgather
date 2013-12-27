@@ -14,8 +14,8 @@ class Attendee < ActiveRecord::Base
 		validates :rsvp, :inclusion => { :in => ["Going", "Not Going", "Undecided","No Response"] , :message => "needs to be submitted with 'Going', 'Not Going', 'Undecided'" }
 		validates :num_of_guests, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :message => "need to be specified with a number" }
 		validate  :verify_host_is_not_guest, :unless => Proc.new {|a| a.event.blank? }
-		validate  :verify_correctness_of_dishes, :unless => Proc.new { |a| a.is_dish_empty? || a.id.blank? }
-		validate  :verify_items_are_available, :unless => Proc.new { |a| a.is_dish_empty? || a.id.blank? || a.has_obsolete_key? }
+		validate  :verify_correctness_of_dishes, :unless => Proc.new { |a| a.is_dish_empty? }
+		validate  :verify_items_are_available, :unless => Proc.new { |a| a.is_dish_empty? || a.id.blank? }
 
 		#deleted after_create callback since no longer able to add potlick_items to new attendee. New constraints
 			#TODO:  Remove the JS functions from the attendees/new.html.erb
@@ -37,8 +37,10 @@ class Attendee < ActiveRecord::Base
 			end
 
 			Role.destroy(role) unless role.blank?
-
-			PotluckItem.make_items_available(attendee, attendee.event)
+			
+			unless Time.now < "2013-09-01"
+				PotluckItem.make_items_available(attendee, attendee.event)
+			end
 		#	attendee.dish.each do |item|
 		#		potluck_item = attendee.event.get_potluck_list_per_category(item["category"])
 		#		unless item["is_custom"]
