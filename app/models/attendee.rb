@@ -38,7 +38,7 @@ class Attendee < ActiveRecord::Base
 
 			Role.destroy(role) unless role.blank?
 			
-			self.event.start_date < "2013-09-01"
+			unless self.event.start_date < "2013-09-01"
 				PotluckItem.make_items_available(attendee, attendee.event)
 			end
 		#	attendee.dish.each do |item|
