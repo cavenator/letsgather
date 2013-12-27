@@ -15,7 +15,7 @@ class Attendee < ActiveRecord::Base
 		validates :num_of_guests, :numericality => { :only_integer => true, :greater_than_or_equal_to => 0, :message => "need to be specified with a number" }
 		validate  :verify_host_is_not_guest, :unless => Proc.new {|a| a.event.blank? }
 		validate  :verify_correctness_of_dishes, :unless => Proc.new { |a| a.is_dish_empty? || a.id.blank? }
-		validate  :verify_items_are_available, :unless => Proc.new { |a| a.is_dish_empty? || a.id.blank? || a.has_obsolete_entry? }
+		validate  :verify_items_are_available, :unless => Proc.new { |a| a.is_dish_empty? || a.id.blank? || a.has_obsolete_key? }
 
 		#deleted after_create callback since no longer able to add potlick_items to new attendee. New constraints
 			#TODO:  Remove the JS functions from the attendees/new.html.erb
