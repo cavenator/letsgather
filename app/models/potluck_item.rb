@@ -84,15 +84,13 @@ class PotluckItem < ActiveRecord::Base
 			potluck_item = PotluckItem.where('event_id = ? and category = ?', event.id, key).first
 			lists.each do |iterItem|
 				item_index = potluck_item.dishes.index{|x| x["item"].eql?(iterItem["item"]) }
-				unless item_index.blank?
-					item = potluck_item.dishes.at(item_index)
-					item["quantity"] = item["quantity"] + iterItem["quantity"]
-					taken_index = potluck_item.taken_items.index { |x| x["item"].eql?(iterItem["item"]) }
-					taken_item = potluck_item.taken_items.at(taken_index)
-					taken_item["guests"].delete(guest.id)
-					if taken_item["guests"].blank?
-						potluck_item.taken_items.delete_at(taken_index)
-					end
+				item = potluck_item.dishes.at(item_index)
+				item["quantity"] = item["quantity"] + iterItem["quantity"]
+				taken_index = potluck_item.taken_items.index { |x| x["item"].eql?(iterItem["item"]) }
+				taken_item = potluck_item.taken_items.at(taken_index)
+				taken_item["guests"].delete(guest.id)
+				if taken_item["guests"].blank?
+					potluck_item.taken_items.delete_at(taken_index)
 				end
 			end
 			potluck_item.save

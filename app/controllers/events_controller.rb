@@ -260,7 +260,10 @@ class EventsController < ApplicationController
 	def align_attendee_events
 		unless @attendee
 			user_attendee_event = Attendee.where("user_id is null and email=?",current_user.email)
-			user_attendee_event.each do |attendee_user|
+			event_ids = user_attendee_event.map{ |attendee| attendee.event_id }
+			events = Event.where("id in (?) and start_date >= ?", event_ids, Time.now)
+			user_attendees = user_attendee_event.select{ |a| event_ids.include?(a.event.id) }
+			user_attendees.each do |attendee_user|
 				attendee_user.user_id = current_user.id
 				attendee_user.full_name = current_user.full_name
 				if attendee_user.is_host
