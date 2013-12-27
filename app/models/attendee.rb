@@ -24,9 +24,11 @@ class Attendee < ActiveRecord::Base
 			unless attendee.id.blank?
 			#only perform this block once the attendee has actually been created and has an id
 			# obsolete -> attendee.sort_out_taken_items
-				Attendee.compareWithPreviousStateAndUpdateDeltas(attendee)
-				if attendee.event.has_notification_settings_on?
-					NotificationDelegator.send_notifications_to_host_from(attendee)
+				unless self.has_obsolete_key?
+					Attendee.compareWithPreviousStateAndUpdateDeltas(attendee)
+					if attendee.event.has_notification_settings_on?
+						NotificationDelegator.send_notifications_to_host_from(attendee)
+					end
 				end
 			end
 		end
