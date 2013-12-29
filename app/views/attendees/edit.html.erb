@@ -286,6 +286,7 @@
 				type: "GET",
 				success: function(data){
 					var attendee_dishes = data.dish;
+					$("#attendee_rsvp").val(data.rsvp).change();
 					$.each(attendee_dishes, function(index, item){
 						if (index == 0){
 							$("#attendee_category").val(item.category).change();
@@ -320,6 +321,7 @@
 				var attendee_guestcount = $("#attendee_num_of_guests").val();
 				var rsvp_item_array = [];
 				var items_collection = $(".item");
+				var url = $("form").attr('action');
 				if (attendee_rsvp != "Going"){
 					$("#attendee_num_of_guests").val(0);
 					$("#attendee_category").val("");
