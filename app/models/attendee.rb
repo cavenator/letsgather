@@ -139,31 +139,6 @@ class Attendee < ActiveRecord::Base
 			end
 		end
 
-#		def sort_out_taken_items
-#			previous_state = Attendee.find(self.id)
-#			previous_list = previous_state.dish
-#			event = self.event
-#
-#			if self.rsvp == "Going"
-#					#execute the block if attendee has items. Mark available items as taken
-#					#find the delta (previous state versus what we have now) and run the loop 
-#					#returns the delta as a comprehensive map 
-#				unless self.dish.blank?
-#					leftover_taken_items = PotluckItem.return_taken_list_delta(self, event, previous_list)
-#					unless leftover_taken_items.blank?
-#						PotluckItem.make_items_available(previous_state, event, leftover_taken_items)
-#					end
-#				else #updated attendee dish selection is empty while previous state has items defined. Make items available for selection again
-#					unless self.id.blank?
-#						PotluckItem.make_items_available(previous_state, event, nil)
-#					end
-#				end
-#			else
-#			#Attendee is not going. Make sure to return taken items to available column again
-#				PotluckItem.make_items_available(previous_state, event, nil)
-#			end
-#		end
-
 		def self.compareWithPreviousStateAndUpdateDeltas(attendee)
 			previous_state = Attendee.find(attendee.id)
 			previous_list = previous_state.dish
@@ -174,8 +149,9 @@ class Attendee < ActiveRecord::Base
 				deltas = attendee.get_deltas_from_list(previous_list)
 				logger.debug "deltas = #{deltas}"
 				#unless no deltas exist, merge and update with the potluck list
-				unless deltas.blank?
-					PotluckItem.mergeDeltasAndUpdateIfNecessary(deltas, attendee)
+				unapplied_deltas = PotluckItem.mergeDeltasAndUpdateIfNecessary(deltas, event, attendee.id)
+				unapplied_deltas.each do |delta|
+					attendee.unapply_delta(delta)
 				end
 			else
 			#Attendee is not going. Make sure to return taken items to available column again

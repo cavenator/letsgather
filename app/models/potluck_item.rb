@@ -42,10 +42,12 @@ class PotluckItem < ActiveRecord::Base
 		end
 	end
 
-	def self.mergeDeltasAndUpdateIfNecessary(deltas_list, guest)
+	# Returns a list of unapplied deltas that must be rolledback from guests rsvp before saving
+	def self.mergeDeltasAndUpdateIfNecessary(deltas_list, event, guest_id)
 		grouped_deltas = deltas_list.group_by{ |x| x["category"] }
+		unapplied_deltas = []
 		grouped_deltas.each do |category, item_list|
-			potluck_item = PotluckItem.where("event_id = ? and category = ?",guest.event.id, category).first
+			potluck_item = event.potluck_items.where("category = ?", category).first
 			available_items = potluck_item.dishes
 			taken_items = potluck_item.taken_items
 			item_list.each do |item_hash|
@@ -56,26 +58,27 @@ class PotluckItem < ActiveRecord::Base
 					taken_index = taken_items.index{ |x| x["item"].eql?(item_hash["item"]) }
 					if item_hash["removed"] #remove person from taken_list
 						rsvped_item = potluck_item.taken_items.at(taken_index)
-						rsvped_item["guests"].delete(guest.id)
+						rsvped_item["guests"].delete(guest_id)
 						if rsvped_item["guests"].blank? #remove it from the taken_index
 							potluck_item.taken_items.delete_if { |x| x["item"].eql?(item_hash["item"]) }
 						end
 					else  #add person to the taken_items list
 						if taken_index.blank? #if first one to rsvp, add it
-							potluck_item.taken_items << {"item" => item_hash["item"], "guests" => [guest.id]}
+							potluck_item.taken_items << {"item" => item_hash["item"], "guests" => [guest_id]}
 						else #add guest id to "guests" array (if not already in there)
 							rsvped_item = potluck_item.taken_items.at(taken_index)
-							unless rsvped_item["guests"].include?(guest.id)
-								rsvped_item["guests"] << guest.id
+							unless rsvped_item["guests"].include?(guest_id)
+								rsvped_item["guests"] << guest_id
 							end
 						end
 					end
 				else
-					guest.unapply_delta(item_hash)
+					unapplied_deltas << item_hash
 				end
 			end
 			potluck_item.save
 		end
+		unapplied_deltas
 	end
 
 	def self.make_items_available(guest, event)

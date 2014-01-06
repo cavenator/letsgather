@@ -105,7 +105,7 @@ describe PotluckItem do
 		it "should be able to merge empty lists" do
 			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Beer", :host_quantity => 2, :dishes => [{"item" => "IPA", "quantity" => 2},{"item" => "Red Ale", "quantity" => 1}, {"item" => "Stout", "quantity" => 1}])
 
-			PotluckItem.mergeDeltasAndUpdateIfNecessary([], @attendee)
+			PotluckItem.mergeDeltasAndUpdateIfNecessary([], @event, @attendee.id)
 			actual_potluck_item = PotluckItem.find(@potluck_item.id)
 			expect(actual_potluck_item.dishes).to eq([{"item" => "IPA", "quantity" => 2},{"item" => "Red Ale", "quantity" => 1}, {"item" => "Stout", "quantity" => 1}])
 			expect(actual_potluck_item.taken_items).to eq([])
@@ -114,7 +114,7 @@ describe PotluckItem do
 		it "should be able to merge deltas of a first rsvp" do
 			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Beer", :host_quantity => 2, :dishes => [{"item" => "IPA", "quantity" => 2},{"item" => "Red Ale", "quantity" => 1}, {"item" => "Stout", "quantity" => 1}])
 
-			PotluckItem.mergeDeltasAndUpdateIfNecessary([{"category" => "Beer", "item" => "IPA", "quantity" => 1, "is_custom" => false},{"category" => "Beer", "item" => "Stout", "quantity" => 1, "is_custom" => false}], @attendee)
+			PotluckItem.mergeDeltasAndUpdateIfNecessary([{"category" => "Beer", "item" => "IPA", "quantity" => 1, "is_custom" => false},{"category" => "Beer", "item" => "Stout", "quantity" => 1, "is_custom" => false}], @event, @attendee.id)
 
 			actual_potluck_item = PotluckItem.find(@potluck_item.id)
 			expect(actual_potluck_item.dishes).to eq([{"item" => "IPA", "quantity" => 1},{"item" => "Red Ale", "quantity" => 1}, {"item" => "Stout", "quantity" => 0}])
@@ -124,7 +124,7 @@ describe PotluckItem do
 		it "should be able to merge deltas of another guests who rsvps an already rsvped item" do
 			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Beer", :host_quantity => 2, :dishes => [{"item" => "IPA", "quantity" => 1},{"item" => "Red Ale", "quantity" => 1}, {"item" => "Stout", "quantity" => 1}], :taken_items => [{"item" => "IPA", "guests" => [0]}])
 
-			PotluckItem.mergeDeltasAndUpdateIfNecessary([{"category" => "Beer", "item" => "IPA", "quantity" => 1, "is_custom" => false},{"category" => "Beer", "item" => "Stout", "quantity" => 1, "is_custom" => false}], @attendee)
+			PotluckItem.mergeDeltasAndUpdateIfNecessary([{"category" => "Beer", "item" => "IPA", "quantity" => 1, "is_custom" => false},{"category" => "Beer", "item" => "Stout", "quantity" => 1, "is_custom" => false}], @event, @attendee.id)
 
 			actual_potluck_item = PotluckItem.find(@potluck_item.id)
 			expect(actual_potluck_item.dishes).to eq([{"item" => "IPA", "quantity" => 0},{"item" => "Red Ale", "quantity" => 1}, {"item" => "Stout", "quantity" => 0}])
@@ -134,7 +134,7 @@ describe PotluckItem do
 		it "should be able to merge deltas if guests remove an item from their rsvp" do
 			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Beer", :host_quantity => 2, :dishes => [{"item" => "IPA", "quantity" => 0},{"item" => "Red Ale", "quantity" => 1}, {"item" => "Stout", "quantity" => 1 }], :taken_items => [{"item" => "IPA", "guests" => [0, @attendee.id]}])
 
-			PotluckItem.mergeDeltasAndUpdateIfNecessary([{"category" => "Beer", "item" => "IPA", "quantity" => -1, "is_custom" => false, "removed" => true}], @attendee)
+			PotluckItem.mergeDeltasAndUpdateIfNecessary([{"category" => "Beer", "item" => "IPA", "quantity" => -1, "is_custom" => false, "removed" => true}], @event, @attendee.id)
 
 			actual_potluck_item = PotluckItem.find(@potluck_item.id)
 			expect(actual_potluck_item.dishes).to eq([{"item" => "IPA", "quantity" => 1},{"item" => "Red Ale", "quantity" => 1}, {"item" => "Stout", "quantity" => 1}])
@@ -144,23 +144,23 @@ describe PotluckItem do
 		it "should remove the entry in the taken_items if the guests array is blank" do
 			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Beer", :host_quantity => 2, :dishes => [{"item" => "IPA", "quantity" => 0},{"item" => "Red Ale", "quantity" => 1}, {"item" => "Stout", "quantity" => 1 }], :taken_items => [{"item" => "IPA", "guests" => [ @attendee.id]}])
 
-			PotluckItem.mergeDeltasAndUpdateIfNecessary([{"category" => "Beer", "item" => "IPA", "quantity" => -1, "is_custom" => false, "removed" => true}], @attendee)
+			PotluckItem.mergeDeltasAndUpdateIfNecessary([{"category" => "Beer", "item" => "IPA", "quantity" => -1, "is_custom" => false, "removed" => true}], @event, @attendee.id)
 
 			actual_potluck_item = PotluckItem.find(@potluck_item.id)
 			expect(actual_potluck_item.dishes).to eq([{"item" => "IPA", "quantity" => 1},{"item" => "Red Ale", "quantity" => 1}, {"item" => "Stout", "quantity" => 1}])
 			expect(actual_potluck_item.taken_items).to eq([])
 		end
 
-		it "should not allow the delta to merge if quantity sum is less than 0" do
+		it "should put delta in unapplied deltas return if quantity sum is less than 0" do
 
 			@potluck_item = PotluckItem.create(:event_id => @event.id, :category => "Beer", :host_quantity => 2, :dishes => [{"item" => "IPA", "quantity" => 2 },{"item" => "Red Ale", "quantity" => 1}, {"item" => "Stout", "quantity" => 1 }], :taken_items => [])
 			@attendee.dish = [{"category" => "Beer", "item" => "IPA", "quantity" => 2, "is_custom" => false }, {"category" => "Beer", "item" => "Red Ale", "quantity" => 2, "is_custom" => false}]
-			PotluckItem.mergeDeltasAndUpdateIfNecessary([{"category" => "Beer", "item" => "IPA", "quantity" => 2, "is_custom" => false }, {"category" => "Beer", "item" => "Red Ale", "quantity" => 2, "is_custom" => false}], @attendee)
+			unapplied_deltas = PotluckItem.mergeDeltasAndUpdateIfNecessary([{"category" => "Beer", "item" => "IPA", "quantity" => 2, "is_custom" => false }, {"category" => "Beer", "item" => "Red Ale", "quantity" => 2, "is_custom" => false}], @event, @attendee.id)
 
 			actual_potluck_item = PotluckItem.find(@potluck_item.id)
 			expect(actual_potluck_item.dishes).to eq([{"item" => "IPA", "quantity" => 0 },{"item" => "Red Ale", "quantity" => 1}, {"item" => "Stout", "quantity" => 1}])
 			expect(actual_potluck_item.taken_items).to eq([{"item" => "IPA", "guests" => [@attendee.id]}])
-			expect(@attendee.dish).to eq([{"category" => "Beer", "item" => "IPA", "quantity" => 2, "is_custom" => false }])
+			expect(unapplied_deltas).to eq([{"category" => "Beer", "item" => "Red Ale", "quantity" => 2, "is_custom" => false }])
 		end
 	end
 
