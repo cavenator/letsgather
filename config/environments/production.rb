@@ -30,13 +30,13 @@ MaximusSamurai::Application.configure do
     :port => 587,
     :authentication => :plain,
 	 :domain => 'gmail.com',
-	 :user_name => 'letsgather.apartyapp@gmail.com',
-	 :password => 'L3tsG#th3r',
+	 :user_name =>,'<ENTER EMAIL USERNAME HERE>'
+	 :password => '<ENTER EMAIL PASSOWRD HERE>',
     :enable_starttls_auto => true
   }
 
   # Don't care if the mailer can't send
-  config.action_mailer.default_url_options = { :host => 'letsgather.herokuapp.com' }
+  config.action_mailer.default_url_options = { :host => '<# ENTER PRODUCT HOST HERE #>' }
 
   # Defaults to nil and saved in location specified by config.assets.prefix
   # config.assets.manifest = YOUR_PATH

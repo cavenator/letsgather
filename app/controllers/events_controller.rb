@@ -257,21 +257,22 @@ class EventsController < ApplicationController
 
 	protected
 
+	#This method only gets executed if a user actually logs in with their credentials and not use the generated session token authentication.
 	def align_attendee_events
 		unless @attendee
-			user_attendee_event = Attendee.where("user_id is null and email=?",current_user.email)
-			event_ids = user_attendee_event.map{ |attendee| attendee.event_id }
-			events = Event.where("id in (?) and start_date >= ?", event_ids, Time.now)
-			user_attendees = user_attendee_event.select{ |a| event_ids.include?(a.event.id) }
-			user_attendees.each do |attendee_user|
-				attendee_user.user_id = current_user.id
-				attendee_user.full_name = current_user.full_name
-				if attendee_user.is_host
-					Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => Role.HOST)
+			guests_not_aligned_with_events = Attendee.where("user_id is null and email=?",current_user.email)
+			event_ids = guests_not_aligned_with_events.map{ |attendee| attendee.event_id }
+			recent_event_ids = Event.where("id in (?) and start_date >= ?", event_ids, Time.now).map{ |e| e.id }
+			recent_unaligned_guests = guests_not_aligned_with_events.select{ |a| recent_event_ids.include?(a.event.id) }
+			recent_unaligned_guests.each do |guest_user|
+				guest_user.user_id = current_user.id
+				guest_user.full_name = current_user.full_name
+				if guest_user.is_host
+					Role.create(:user_id => current_user.id, :event_id => guest_user.event_id, :privilege => Role.HOST)
 				else
-					Role.create(:user_id => current_user.id, :event_id => attendee_user.event_id, :privilege => Role.GUEST)
+					Role.create(:user_id => current_user.id, :event_id => guest_user.event_id, :privilege => Role.GUEST)
 				end
-				attendee_user.save
+				guest_user.save
 			end
 		end
 	end

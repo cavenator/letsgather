@@ -23,8 +23,8 @@ MaximusSamurai::Application.configure do
     :port => 587,
     :authentication => :plain,
 	 :domain => 'gmail.com',
-	 :user_name => 'mydevmailer@gmail.com',
-	 :password => 'MyD3vM#*l3r',
+	 :user_name => '<REPLACE ME WITH ACTUAL EMAIL>',
+	 :password => '<REPLACE ME WITH ACTUAL PASSWORD>',
     :enable_starttls_auto => true
   }
   # Don't care if the mailer can't send

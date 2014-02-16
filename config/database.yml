@@ -43,4 +43,4 @@ production:
   database: eventapp_production
   pool: 5
   username: eventapp
-  password: MyLife4Auir
+#  password: EnterSomethingClever

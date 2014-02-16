@@ -17,9 +17,6 @@ class Attendee < ActiveRecord::Base
 		validate  :verify_correctness_of_dishes, :unless => Proc.new { |a| a.is_dish_empty? }
 		validate  :verify_items_are_available, :unless => Proc.new { |a| a.is_dish_empty? || a.id.blank? }
 
-		#deleted after_create callback since no longer able to add potlick_items to new attendee. New constraints
-			#TODO:  Remove the JS functions from the attendees/new.html.erb
-
 		before_save do |attendee|
 			unless attendee.id.blank?
 			#only perform this block once the attendee has actually been created and has an id
@@ -37,16 +34,9 @@ class Attendee < ActiveRecord::Base
 			end
 
 			Role.destroy(role) unless role.blank?
-			
-			unless self.event.start_date < "2013-09-01"
-				PotluckItem.make_items_available(attendee, attendee.event)
-			end
-		#	attendee.dish.each do |item|
-		#		potluck_item = attendee.event.get_potluck_list_per_category(item["category"])
-		#		unless item["is_custom"]
-		#			potluck_item.make_item_available(item["item"], attendee.id)
-		#		end
-		#	end
+
+		#NOTE: If you change the potluck item data representation, be sure to account for backwards compatibility (especially with this block)
+			PotluckItem.make_items_available(attendee, attendee.event)
 		end
 
 		#accepts an email list in the form of an Array and the event object
