@@ -33,8 +33,13 @@ Caveats
 
 Will define in greater detail later
 
-Wishlist of enhancements as per beta users of earlier test runs
+Wishlist of user enhancements
 =========================================================================
 
-Will define in greater detail later
+* Import the user's email contacts into the "Invite guests" textbox so that they can send invites just like they would via email
+* Facebook integration (use Facebook credentials to log into the system and import friends)
+* Readonly view of past events
+* User should have a profile picture
+* Themes
+* Upload photo(s)
 
