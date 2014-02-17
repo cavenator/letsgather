@@ -35,7 +35,7 @@ Caveats
 * Not everything has tests. There is sufficient test coverage on the business logic regarding users and events and the basic authentication/authorization. 
 * Qunit tests for the Javascript code should be created.
 * The code used for the email templates are duplicated for all templates. I couldn't get the premailer gem to work for this.
-* The guest views should be converted into a single page app. 
+* The guest RSVP page should be converted into a single page app.  Look at the screen mockups under the public/LET'S GATHER V6&7 and look at the invite_v06.html
 
 Wishlist of user enhancements
 =========================================================================
