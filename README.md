@@ -31,7 +31,11 @@ TBD
 Caveats
 ===================
 
-Will define in greater detail later
+* The Javascript logic around the party items signup for guests is probably the biggest code smell of the application. This should be refactored to use BackboneJS since it would remove the duplication, be self-documenting and provide real value to the project.
+* Not everything has tests. There is sufficient test coverage on the business logic regarding users and events and the basic authentication/authorization. 
+* Qunit tests for the Javascript code should be created.
+* The code used for the email templates are duplicated for all templates. I couldn't get the premailer gem to work for this.
+* The guest views should be converted into a single page app. 
 
 Wishlist of user enhancements
 =========================================================================
