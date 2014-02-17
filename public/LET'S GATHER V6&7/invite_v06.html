@@ -1,0 +1,443 @@
+<!doctype html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<title>Let's Gather Invitation</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<link href='http://fonts.googleapis.com/css?family=Nothing+You+Could+Do|Montserrat+Alternates|Mate' rel='stylesheet' type='text/css'>
+
+<style type="text/css" media="screen, projection">
+
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	background: #ffffff;
+}
+
+p { margin-bottom: 18px;
+}
+
+
+a {
+	color: #870026;
+	text-decoration: underline;
+}
+a:hover {
+	color: red;
+}
+#page {
+	padding: 2em 0;
+}
+
+ul.nav { 
+	font-family: 'Montserrat Alternates', sans-serif;
+	font-color: #870026;
+	font-size: 21px;
+	position: fixed;
+	height: 132px;
+	left: 10%;
+	top: 202px;
+	width: 33%;
+	list-style: none;
+	margin:0px; 
+	padding:0px;	
+}
+
+ul.nav a {
+ color: #870026;
+ cursor: pointer;
+ display:block;
+ height: 25px;
+ line-height: 25px;
+ text-indent: 10px;
+ text-decoration: none;
+ text-align: left;
+ width: 33%;
+}
+
+ul.nav a:hover{
+ color: red;
+}
+
+.inner {
+	margin: 0 auto;
+	width: 33%;	/* 960px / 1024px */
+}
+	
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;    
+}
+
+#invite {
+	font-family: 'Nothing You Could Do', cursive;
+	line-height: 1.5;
+	text-align: center;
+	font-size: 21px;
+	margin-top: 30px;
+	margin-bottom: 50px;
+}
+
+#menu {
+	font-family: 'Nothing You Could Do', cursive;
+	text-align: center;
+	font-size: 21px;
+	margin-top: 0px;
+	margin-bottom: 50px;
+}
+
+p.menuforN {
+	margin-bottom: 30px;
+}
+
+h2.menucategory {
+	font-family: 'Montserrat Alternates', sans-serif;
+	text-align: center;
+	font-size: 21px;
+}
+
+p.menuneeded {
+	font-family: 'Mate', serif;
+	text-align: center;
+	font-size: 21px;
+	color: #870026;
+}
+
+ul.menuitems {
+	list-style: none;
+	display: block;
+	margin-bottom: 30px;
+}
+
+#guests {
+	font-family: 'Mate', serif;
+	text-align: center;
+	text-transform: uppercase;
+	font-size: 21px;
+	margin-top: 30px;
+	margin-bottom: 50px;
+}
+
+h2.guestcategory {
+	font-family: 'Montserrat Alternates', sans-serif;
+	text-align: center;
+	font-size: 21px;
+	margin-bottom: 10px;
+}
+
+.guestlist {
+	list-style: none;
+	display: block;
+	margin-bottom: 30px;
+	color: #870026;
+}
+
+.guestname {
+	outline: none; 
+	cursor: pointer;
+}
+
+.guestname:hover {
+	color: red;
+}
+
+.tooltip:hover {
+	text-decoration: none;
+	display: block;
+}
+
+.tooltip {
+	z-index: 10;
+	display: none;
+	padding: 20px 24px;
+	margin-top: -40px; 
+	margin-left: 55px;
+	text-align: left;
+	line-height: 20px;
+	-moz-box-shadow: 5px 5px 8px #CCC;
+	-webkit-box-shadow: 5px 5px 8px #CCC;
+	box-shadow: 5px 5px 8px #CCC;
+}
+
+.guestname:hover .tooltip {
+	display: inline; 
+	position: absolute;
+	color: white;
+	border: 3px solid black; 
+	background: #870026;
+}
+
+.guestname:hover .tooltip a {
+	text-decoration: underline;
+	display: inline;
+	color: white;
+}
+
+.lowercase {
+	text-transform: none
+}
+
+#comments {
+	margin-left: 60px;
+	margin-right: 60px;
+	font-family: 'Mate', serif;
+	text-align: left;
+	font-size: 21px;
+}
+
+textarea#commentbox {
+	margin-top: 30px;
+	width: 400px;
+	height: 120px;
+	border: 2px solid black;
+	font-family: 'Mate', serif;
+	text-align: left;
+	font-size: 21px;
+	padding: 5px;
+}
+
+input#commentname {
+	margin-top: 10px;
+	margin-bottom: 20px;
+	border: 2px solid black;
+	font-family: 'Mate', serif;
+	text-align: left;
+	font-size: 21px;
+	padding: 5px;
+}
+
+input#commentsubmit {
+	margin-top: 10px;
+	font-family: 'Montserrat Alternates', sans-serif;
+	text-align: center;
+	font-size: 15px;
+	padding: 5px;
+	cursor: pointer;
+}
+
+.commentlist { 
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.commentlistname {
+	text-transform: uppercase;
+	color: #870026;
+	padding-right: 7px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<a id="TOP"></a>
+
+<div id="page">
+
+	<ul class="nav">
+		<li><a href="#">RSPV</a></li>
+		<li><a class="scroll" data-speed="1000" href="#MENU">MENU</a></li>
+		<li><a class="scroll" data-speed="1000" href="#GUESTS">GUESTS&nbsp;(9/20)</a></li>
+		<li><a class="scroll" data-speed="1000" href="#COMMENTS">COMMENTS</a></li>
+		<li><a href="#">DIRECTIONS</a></li>
+		<li><a class="scroll" data-speed="1000" href="#TOP">TOP</a></li>
+	</ul>
+
+<div class="inner">
+
+<img src="images/LG_Lets_Gather_480.png" title="Let's Gather" alt="Let's Gather">
+
+<div id="invite">
+
+<p>Stop and smell the roses !<br>
+End of Summer Potluck Picnic<br>
+Miriam and I invite you to join us</p>
+
+<p>Saturday, September 21, 2013<br>
+Noon to 5:00 PM</p>
+
+<p>Gardens of the World<br>
+2001 Thousand Oaks Boulevard<br>
+Thousand Oaks, CA 91362<br>
+</p>
+
+<p>Hope to see you there,<br>
+AJ
+</p>
+
+</div>
+
+<a id="MENU"></a>
+
+<img src="images/LG_MENU_480.png" title="Menu" alt="Menu">
+
+<div id="menu">
+
+<p class="menuforN">for 20</p>
+
+<h2 class="menucategory">APPETIZERS</h2>
+<p class="menuneeded">(1 More Needed )</p>
+
+<ul class="menuitems">
+	<li>Watermelon Salad&nbsp;&nbsp;1</li>
+	<li>Crackers & Cheese&nbsp;&nbsp;1</li> 
+</ul>
+
+<h2 class="menucategory">ENTREES</h2>
+<p class="menuneeded">( 2 More Needed )</p>
+
+<ul class="menuitems">
+	<li>Baja Fish Tacos&nbsp;&nbsp;1</li>
+	<li>Roasted Corn On The Cobb&nbsp;&nbsp;1</li>
+</ul>
+
+<h2 class="menucategory">DRINKS</h2>
+
+<ul class="menuitems">
+	<li>Paso Robles Wines&nbsp;&nbsp;3</li>
+	<li>Mango Lemonade&nbsp;&nbsp;1</li>
+	<li>Corona&nbsp;&nbsp;12</li>
+</ul>
+
+</div>
+
+<a id="GUESTS"></a>
+
+<img src="images/LG_Guests_480.png" title="Guests" alt="Guests">
+
+<div id="guests">
+
+<h2 class="guestcategory">ATTENDING (9)</h2>
+
+<div class="guestlist">
+	<div class="guestname">AJ CAVE (HOST)
+		<div class="tooltip">AJ CAVE<br>
+		<span class="lowercase"><a href="mailto:cavenator@gmail.com">cavenator@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> HOST<br>
+		<span class="lowercase">Bringing:</span> PASO ROBLES WINES
+		</div></div>
+	<div class="guestname">MIRIAM CHOI (HOST)
+		<div class="tooltip">MIRIAM CHOI<br>
+		<span class="lowercase"><a href="mailto:miriamchoi@gmail.com">miriamchoi@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> HOST<br>
+		<span class="lowercase">Bringing:</span> CRACKERS AND CHEESE
+		</div></div>
+	<div class="guestname">MICKEY MOUSE
+		<div class="tooltip">MICKEY MOUSE<br>
+		<span class="lowercase"><a href="mailto:mickeymouse@gmail.com">mickeymouse@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> GUEST<br>
+		<span class="lowercase">Bringing:</span> MANGO LEMONADE
+		</div></div>
+	<div class="guestname">MINNIE MOUSE
+		<div class="tooltip">MINNIE MOUSE<br>
+		<span class="lowercase"><a href="mailto:minniemouse@gmail.com">minniemouse@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> GUEST<br>
+		<span class="lowercase">Bringing:</span> CORONA
+		</div></div>
+	<div class="guestname">GOOFY +1
+		<div class="tooltip">GOOFY<br>
+		<span class="lowercase"><a href="mailto:goofy@gmail.com">goofy@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> GUEST +1<br>
+		<span class="lowercase">Bringing:</span> ROASTED CORN ON THE COBB
+		</div></div>
+	<div class="guestname">DONALD DUCK
+		<div class="tooltip">DONALD DUCK<br>
+		<span class="lowercase"><a href="mailto:donaldduck@gmail.com">donaldduck@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> GUEST<br>
+		<span class="lowercase">Bringing:</span> WATERMELON SALAD
+		</div></div>
+	<div class="guestname">DAISY DUCK
+		<div class="tooltip">DAISY DUCK<br>
+		<span class="lowercase"><a href="mailto:daisyduck@gmail.com">daisyduck@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> GUEST<br>
+		<span class="lowercase">Bringing:</span> WATERMELON SALAD
+		</div></div>
+	<div class="guestname">RACHEL MAXIMO
+		<div class="tooltip">RACHEL MAXIMO<br>
+		<span class="lowercase"><a href="mailto:rachel@gmail.com">rachel@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> GUEST<br>
+		<span class="lowercase">Bringing:</span> BAJA FISH TACOS
+		</div></div>
+</div>
+
+<h2 class="guestcategory">AWAITING REPLY (9)</h2>
+
+<div class="guestlist">
+	<div class="guestname">CINDERELLA
+		<div class="tooltip">CINDERELLA<br>
+		<span class="lowercase"><a href="mailto:cinderella@gmail.com">cinderella@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> TBA<br>
+		<span class="lowercase">Bringing:</span> TBA
+		</div></div>
+	<div class="guestname">SNOW WHITE
+		<div class="tooltip">SNOW WHITE<br>
+		<span class="lowercase"><a href="mailto:whiteassnow@gmail.com">whiteassnow@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> TBA<br>
+		<span class="lowercase">Bringing:</span> TBA
+		</div></div>
+	<div class="guestname">BLAH BLAH
+		<div class="tooltip">BLAH BLAH<br>
+		<span class="lowercase"><a href="mailto:blahblah@gmail.com">blahblah@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> TBA<br>
+		<span class="lowercase">Bringing:</span> TBA
+		</div></div>
+</div>
+
+
+<h2 class="guestcategory">NOT ATTENDING (2)</h2>
+
+<div class="guestlist">
+	<div class="guestname">FROG
+		<div class="tooltip">FROG<br>
+		<span class="lowercase"><a href="mailto:cinderella@gmail.com">frog@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> NOT ATTENDING<br>
+		</div></div>
+	<div class="guestname">TOAD
+		<div class="tooltip">TOAD<br>
+		<span class="lowercase"><a href="mailto:toad@gmail.com">toad@gmail.com</a></span><br><br>
+		<span class="lowercase">Status:</span> NOT ATTENDING<br>
+		</div></div>
+</div>
+
+</div>
+
+<a id="COMMENTS"></a>
+
+<img src="images/LG_COMMENTS_480.png" title="Comments" alt="Comments">
+
+<div id="comments">
+	
+	<textarea id="commentbox" name="textfield" type="text" placeholder="Add a comment" rows="8" cols="50"></textarea>
+
+	<input id="commentname" name="textfield" type="text" placeholder="Name" />
+
+	<input id="commentsubmit" type="submit" value="Submit" align="middle" />
+	
+	
+		<div class="commentlist">
+		<span class="commentlistname">FROG</span> Sorry, Toad and I can't make it !
+		</div>
+		
+		<div class="commentlist">
+		<span class="commentlistname">AJ CAVE</span> @Frog It's cool, hope your summer was awesome.
+		</div>
+
+</div>
+	
+</div>
+</div>
+
+<!-- Javascript -->
+<script src="Javascript/smooth-scroll.js"></script>
+
+</body>
+</html>
