@@ -25,8 +25,38 @@ There are two scheduled jobs for LetsGather: One to send out RSVP reminders and 
 
 Installation instructions
 ====================================
+This project uses the following:
+* Rails 3.2
+* Ruby 1.9.3-p194
+* PostgresSQL (for database)
+* Devise (for authentication)
+* DelayedJob (for asynchronous jobs)
+* Unicorn (web server)
 
-TBD
+This project already contains a .rvmrc file which should automatically create your ruby workspace along with your project gemset but in the event it does not, look at the .rvmrc file.  It'll let you know what ruby version to download and which gemset to create.
+
+For Mac
+------------------------------------
+1. If you do not have Xcode installed, then download from the Apple Mac Store.
+2. Download (RVM)[http://rvm.io/rvm/install]
+3. git clone this project
+4. navigate to this project (if the rvm script doesn't install the ruby version and create the gemset space for you, then you will need to do so. Look (here)[http://rvm.io/rubies/installing] for installing rubies and (here)[http://rvm.io/gemsets/creating] for creating gemsets).
+5. execute 'bundle install'. This should install all of the necessary gems for use (including postressql).
+6. Then, navigate to config/initializers/devise.rb file and edit the following line:  config.mailer.sender
+7. Then, navigate to config/environments/development.rb file and enter your email username/password so that the emails will work. (NOTE: You will have to change your config/environments/production.rb file if you decide to promote this to a production environment).
+8. Execute 'bundle exec rake db:migrate' to update your database. I believe this is all you need to do but in case I am wrong, you will need to run a rake command to create the database first before running the migration.
+9. Finally, execute 'bundle exec foreman start'. You should now be able to open up a web browser and navigate to 'http://localhost:5000'. Enjoy!
+
+For Linux
+------------------------------------
+1. Follow the tutorial (here)[http://gorails.com/setup/ubuntu/13.10] for all of your necessities.
+2. Git clone this project.
+3. navigate to this project (if the rvm script doesn't install the ruby version and create the gemset space for you, then you will need to do so. Look (here)[http://rvm.io/rubies/installing] for installing rubies and (here)[http://rvm.io/gemsets/creating] for creating gemsets).
+4. execute 'bundle install'. This should install all of the necessary gems for use (including postressql).
+5. Then, navigate to config/initializers/devise.rb file and edit the following line:  config.mailer.sender
+6. Then, navigate to config/environments/development.rb file and enter your email username/password so that the emails will work. (NOTE: You will have to change your config/environments/production.rb file if you decide to promote this to a production environment).
+7. Execute 'bundle exec rake db:migrate' to update your database. I believe this is all you need to do but in case I am wrong, you will need to run a rake command to create the database first before running the migration.
+8. Finally, execute 'bundle exec foreman start'. You should now be able to open up a web browser and navigate to 'http://localhost:5000'. Enjoy!
 
 Caveats
 ===================
