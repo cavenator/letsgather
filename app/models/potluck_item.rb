@@ -18,8 +18,8 @@ class PotluckItem < ActiveRecord::Base
 	validate :verify_that_item_quantity_is_not_less_than_zero
 
 	attr_accessible :event_id, :category, :dishes, :host_quantity, :taken_items
-	serialize :dishes
-	serialize :taken_items
+	serialize :dishes, Array
+	serialize :taken_items, Array
 
 	def remove_dish_from_list(dish, attendee_id)
 		index_for_available_item = self.dishes.find_index(dish)

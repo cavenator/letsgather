@@ -2,9 +2,10 @@ class Attendee < ActiveRecord::Base
 		belongs_to :event
 		devise :token_authenticatable
 		attr_accessible :event_id, :user_id, :invitation_id, :full_name, :email, :rsvp, :num_of_guests, :comment, :dish, :is_host, :invite_sent
-		serialize :dish
+		serialize :dish, Array
 
 		before_validation do |attendee|
+		    logger.info "inside before_validation block = #{attendee}"
 			attendee.dish = JSON.parse(attendee.dish) unless attendee.dish.blank? || attendee.dish.is_a?(Array)
 		end
 
@@ -41,6 +42,7 @@ class Attendee < ActiveRecord::Base
 
 		#accepts an email list in the form of an Array and the event object
 		def self.invite(email_list, event, inviter)
+		    logger.info "email list = #{email_list}"
 			email_hash = {"successful" => [], "unsuccessful" => [], "duplicated" => []}
 			email_list.each do |email|
 				attendee = Attendee.new(:event_id => event.id, :email => email, :rsvp => "No Response", :invite_sent => true)
