@@ -7,9 +7,12 @@ gem 'rails', '3.2.12'
 
 gem 'devise'
 gem 'tlsmail'
-gem 'pg'
+gem 'sqlite3'
+#gem 'pg'
 gem 'ri_cal'
-# gem 'thin'
+gem 'thin'
+gem 'foreman'
+gem 'json'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -18,7 +21,7 @@ group :assets do
   gem 'coffee-rails', '~> 3.2.1'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platform => :ruby
+  gem 'therubyracer', :platform => :ruby
 
   gem 'uglifier', '>= 1.0.3'
 end
@@ -33,7 +36,7 @@ gem 'delayed_job_active_record'
 group :test, :development do
   gem 'rspec-rails'
 	gem 'webrat'
-#  gem 'sqlite3'
+  gem 'sqlite3'
 #  gem 'mysql'
   gem 'factory_girl_rails'
 	gem 'qunit-rails' #https://github.com/frodsan/qunit-rails
