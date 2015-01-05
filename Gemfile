@@ -7,8 +7,7 @@ gem 'rails', '3.2.12'
 
 gem 'devise'
 gem 'tlsmail'
-gem 'sqlite3'
-#gem 'pg'
+gem 'pg'
 gem 'ri_cal'
 gem 'thin'
 gem 'foreman'
@@ -36,7 +35,7 @@ gem 'delayed_job_active_record'
 group :test, :development do
   gem 'rspec-rails'
 	gem 'webrat'
-  gem 'sqlite3'
+#  gem 'sqlite3'
 #  gem 'mysql'
   gem 'factory_girl_rails'
 	gem 'qunit-rails' #https://github.com/frodsan/qunit-rails
