@@ -12,8 +12,8 @@ development:
       encoding: unicode
       database: eventapp_dev
       pool: 5
-      username: postgres
-        #  password: 1234
+      username: eventapp
+      password: 1234
       host: <%= ENV['POSTGRES_PORT_5432_TCP_ADDR'] %>
       port: <%= ENV['POSTGRES_PORT_5432_TCP_PORT'] %>
 
@@ -46,5 +46,5 @@ production:
       pool: 5
       username: eventapp
       password: EnterSomethingClever
-      host: localhost
-      port: 5432
+      host: <%= ENV['POSTGRES_PORT_5432_TCP_ADDR'] %>
+      port: <%= ENV['POSTGRES_PORT_5432_TCP_PORT'] %>
